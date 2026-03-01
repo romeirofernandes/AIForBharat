@@ -1,1 +1,38 @@
 @import "tailwindcss";
+
+@theme {
+  --color-primary: #454545;
+  --color-background-light: #eeeeee;
+  --color-background-dark: #191919;
+  --color-border-muted: #b2b2b2;
+  --color-text-main: #444444;
+  --font-display: "Open Sans", sans-serif;
+  --font-sans: "Figtree", sans-serif;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-full: 9999px;
+}
+
+@layer base {
+  body {
+    background-color: var(--color-background-light);
+    color: var(--color-text-main);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+  }
+}
+
+@layer utilities {
+  .paper-border {
+    border-color: var(--color-border-muted);
+  }
+}

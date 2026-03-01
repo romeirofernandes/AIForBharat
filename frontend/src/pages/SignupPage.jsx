@@ -4,6 +4,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { Button } from '../components/button';
 import { HexagonBackground } from '../components/hexagon';
 import { ArrowLeft01Icon as ArrowLeft, ViewIcon, ViewOffIcon } from 'hugeicons-react';
+import { toast } from 'sonner';
 
 export default function SignupPage() {
     const navigate = useNavigate();
@@ -13,7 +14,6 @@ export default function SignupPage() {
         confirmPassword: ''
     });
     const [showPassword, setShowPassword] = useState(false);
-    const [error, setError] = useState('');
     const [isLoading, setIsLoading] = useState(false);
 
     const handleChange = (e) => {
@@ -22,10 +22,9 @@ export default function SignupPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        setError('');
 
         if (formData.password !== formData.confirmPassword) {
-            setError("Passwords do not match");
+            toast.error("Passwords do not match");
             return;
         }
 
@@ -46,9 +45,10 @@ export default function SignupPage() {
 
             // Save token and redirect
             localStorage.setItem('token', data.token);
+            toast.success("Account created securely");
             navigate('/');
         } catch (err) {
-            setError(err.message);
+            toast.error(err.message);
         } finally {
             setIsLoading(false);
         }
@@ -76,12 +76,6 @@ export default function SignupPage() {
                     <h1 className="text-2xl font-bold uppercase tracking-tight text-foreground mb-2">Create Account</h1>
                     <p className="text-sm font-medium text-muted-foreground">Join Civic Intelligence and access your rights.</p>
                 </div>
-
-                {error && (
-                    <div className="mb-6 p-4 bg-destructive/10 border border-destructive/20 rounded-lg text-destructive text-sm font-semibold text-center">
-                        {error}
-                    </div>
-                )}
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                     <div className="flex flex-col gap-2">

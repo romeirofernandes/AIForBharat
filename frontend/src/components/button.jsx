@@ -1,6 +1,6 @@
 import * as React from "react"
 import { Slot } from "@radix-ui/react-slot"
-import { cn } from "../../lib/utils"
+import { cn } from "../lib/utils"
 
 const buttonVariants = (variant, size, className) => {
     const baseStyles = "inline-flex items-center justify-center whitespace-nowrap font-semibold uppercase tracking-widest transition-all focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50"

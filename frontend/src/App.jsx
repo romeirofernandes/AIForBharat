@@ -1,12 +1,8 @@
-function App() {
+import React from 'react';
+import LandingPage from './pages/LandingPage';
 
+export default function App() {
   return (
-    <>
-      <h1 class="text-3xl font-bold">
-        Hello world!
-      </h1>
-    </>
-  )
+    <LandingPage />
+  );
 }
-
-export default App

@@ -17,6 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
 import { AnimatedShieldCheck } from '../components/animated-icons/shield-check-icon';
 import TextRotate from '../components/fancy/text/text-rotate';
+import { HexagonBackground } from '../components/animate-ui/components/backgrounds/hexagon';
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -55,7 +56,7 @@ export default function LandingPage() {
     return (
         <div className="min-h-screen flex flex-col items-center w-full bg-linear-to-b from-background to-muted/30">
             {/* Navbar Desktop & Mobile */}
-            <header className={`fixed top-0 z-50 w-full border-b paper-border transition-all duration-300 ${scrolled ? 'bg-background/95 backdrop-blur-md shadow-sm' : 'bg-background/80 backdrop-blur-sm'} px-6 md:px-12 lg:px-20 py-4`}>
+            <header className={`fixed top-0 z-50 w-full border-b subtle-border transition-all duration-300 ${scrolled ? 'bg-background/95 backdrop-blur-md shadow-sm' : 'bg-background/80 backdrop-blur-sm'} px-6 md:px-12 lg:px-20 py-4`}>
                 <div className="mx-auto flex max-w-7xl items-center justify-between w-full">
                     <div className="flex items-center gap-2 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
                         <span className="material-symbols-outlined text-primary text-2xl md:text-3xl">account_balance</span>
@@ -64,7 +65,7 @@ export default function LandingPage() {
 
                     <div className="hidden md:flex items-center gap-10">
                         <nav className="flex items-center gap-8">
-                            {['Solutions', 'Framework', 'Impact', 'Insights'].map((item) => (
+                            {['Solutions', 'Impact', 'Insights', 'Framework'].map((item) => (
                                 <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-xs font-semibold uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors cursor-pointer">
                                     {item}
                                 </button>
@@ -90,7 +91,7 @@ export default function LandingPage() {
                     className="fixed inset-0 z-40 bg-background pt-24 px-6 flex flex-col md:hidden"
                 >
                     <nav className="flex flex-col gap-6 text-center mt-10">
-                        {['Solutions', 'Framework', 'Impact', 'Insights'].map((item) => (
+                        {['Solutions', 'Impact', 'Insights', 'Framework'].map((item) => (
                             <button key={item} onClick={() => scrollToSection(item.toLowerCase())} className="text-xl font-bold uppercase tracking-widest text-primary cursor-pointer">
                                 {item}
                             </button>
@@ -105,7 +106,8 @@ export default function LandingPage() {
             <main className="flex-1 w-full flex flex-col pt-20">
 
                 {/* Hero Section */}
-                <section className="px-6 md:px-12 lg:px-20 py-20 md:py-32 lg:py-40 flex flex-col items-center text-center border-b paper-border w-full relative overflow-hidden">
+                <section className="px-6 md:px-12 lg:px-20 py-20 md:py-32 lg:py-40 flex flex-col items-center text-center border-b subtle-border w-full relative overflow-hidden">
+                    <HexagonBackground className="absolute inset-0 flex items-center justify-center rounded-xl" />
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-lg blur-[100px] -z-10 pointer-events-none"></div>
 
                     <motion.div
@@ -160,7 +162,7 @@ export default function LandingPage() {
                 </section>
 
                 {/* Problem / Pillars Grid */}
-                <section id="solutions" className="px-6 md:px-12 lg:px-20 py-20 lg:py-28 border-b paper-border bg-muted/20 w-full scroll-mt-20">
+                <section id="solutions" className="px-6 md:px-12 lg:px-20 py-20 lg:py-28 border-b subtle-border bg-muted/20 w-full scroll-mt-20">
                     <motion.div
                         initial="hidden"
                         whileInView="visible"
@@ -171,15 +173,15 @@ export default function LandingPage() {
                         <motion.h3 variants={fadeInUp} className="text-xs font-bold uppercase tracking-[0.2em] mb-12 opacity-50 text-muted-foreground text-center md:text-left">
                             Core Pillars
                         </motion.h3>
-                        <div className="grid grid-cols-1 md:grid-cols-3 border paper-border rounded-lg shadow-sm bg-background overflow-hidden relative">
-                            <motion.div variants={fadeInUp} className="p-8 md:p-10 border-b md:border-b-0 md:border-r paper-border bg-linear-to-br from-background to-muted/30 hover:to-primary/5 transition-colors group cursor-default">
+                        <div className="grid grid-cols-1 md:grid-cols-3 border subtle-border rounded-lg shadow-sm bg-background overflow-hidden relative">
+                            <motion.div variants={fadeInUp} className="p-8 md:p-10 border-b md:border-b-0 md:border-r subtle-border bg-linear-to-br from-background to-muted/30 hover:to-primary/5 transition-colors group cursor-default">
                                 <span className="text-5xl font-light text-primary/20 mb-8 block font-mono">01</span>
                                 <h3 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tight text-foreground group-hover:text-primary transition-colors">Linguistic Access</h3>
                                 <p className="text-sm md:text-base leading-relaxed text-muted-foreground font-medium">
                                     Report grievances in your mother tongue. Our AI structures vernacular voice inputs for instant government triage.
                                 </p>
                             </motion.div>
-                            <motion.div variants={fadeInUp} className="p-8 md:p-10 border-b md:border-b-0 md:border-r paper-border bg-linear-to-br from-background to-muted/30 hover:to-primary/5 transition-colors group cursor-default">
+                            <motion.div variants={fadeInUp} className="p-8 md:p-10 border-b md:border-b-0 md:border-r subtle-border bg-linear-to-br from-background to-muted/30 hover:to-primary/5 transition-colors group cursor-default">
                                 <span className="text-5xl font-light text-primary/20 mb-8 block font-mono">02</span>
                                 <h4 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tight text-foreground group-hover:text-primary transition-colors">Welfare Discovery</h4>
                                 <p className="text-sm md:text-base leading-relaxed text-muted-foreground font-medium">
@@ -213,14 +215,14 @@ export default function LandingPage() {
                             <motion.p variants={fadeInUp} className="text-base md:text-lg text-muted-foreground leading-relaxed font-medium">
                                 Civic Intelligence isn't just a dashboard—it's a lifeline. By integrating with India Stack, we ensure that every citizen, regardless of their tech-literacy or language, can access their rights with dignity.
                             </motion.p>
-                            <motion.ul variants={staggerContainer} className="space-y-6 pt-6 border-t paper-border">
+                            <motion.ul variants={staggerContainer} className="space-y-6 pt-6 border-t subtle-border">
                                 {[
                                     { text: "Vernacular voice-to-grievance structuring using Bhashini.", icon: <Database className="text-primary w-6 h-6" /> },
                                     { text: "Proactive AI-matching for 500+ Central and State schemes.", icon: <TrendingUp className="text-primary w-6 h-6" /> },
                                     { text: "Automated escalation logic for delayed civic resolutions.", icon: <Globe className="text-primary w-6 h-6" /> }
                                 ].map((item, index) => (
                                     <motion.li variants={fadeInUp} key={index} className="flex items-start gap-4 p-4 hover:bg-muted border border-transparent hover:border-border rounded-lg transition-colors cursor-default">
-                                        <div className="p-3 border paper-border rounded-lg bg-background shadow-sm text-primary">{item.icon}</div>
+                                        <div className="p-3 border subtle-border rounded-lg bg-background shadow-sm text-primary">{item.icon}</div>
                                         <span className="text-sm md:text-base font-bold text-foreground leading-relaxed tracking-wide pt-1">{item.text}</span>
                                     </motion.li>
                                 ))}
@@ -232,7 +234,7 @@ export default function LandingPage() {
                             whileInView="visible"
                             viewport={{ once: true, margin: "-100px" }}
                             variants={staggerContainer}
-                            className="lg:w-1/2 w-full grid grid-cols-2 gap-px bg-border border paper-border shadow-lg shadow-primary/5 rounded-lg overflow-hidden"
+                            className="lg:w-1/2 w-full grid grid-cols-2 gap-px bg-border border subtle-border shadow-lg shadow-primary/5 rounded-lg overflow-hidden"
                         >
                             {[
                                 { number: "98%", label: "Data Accuracy" },
@@ -250,7 +252,7 @@ export default function LandingPage() {
                 </section>
 
                 {/* Insights Bento Grid */}
-                <section id="insights" className="px-6 md:px-12 lg:px-20 py-20 lg:py-32 border-t paper-border bg-muted/10 w-full scroll-mt-20">
+                <section id="insights" className="px-6 md:px-12 lg:px-20 py-20 lg:py-32 border-t subtle-border bg-muted/10 w-full scroll-mt-20">
                     <motion.div
                         initial="hidden"
                         whileInView="visible"
@@ -263,7 +265,7 @@ export default function LandingPage() {
                         </motion.h3>
 
                         <div className="grid grid-cols-1 md:grid-cols-4 grid-rows-none md:grid-rows-2 gap-4 pb-2">
-                            <motion.div variants={fadeInUp} className="col-span-1 md:col-span-2 row-span-1 md:row-span-2 p-8 md:p-10 border paper-border rounded-lg bg-linear-to-br from-background to-muted/30 shadow-sm flex flex-col justify-between group cursor-default relative overflow-hidden">
+                            <motion.div variants={fadeInUp} className="col-span-1 md:col-span-2 row-span-1 md:row-span-2 p-8 md:p-10 border subtle-border rounded-lg bg-linear-to-br from-background to-muted/30 shadow-sm flex flex-col justify-between group cursor-default relative overflow-hidden">
                                 <div>
                                     <div className="flex items-center gap-3 mb-8">
                                         <div className="p-4 bg-primary/10 w-fit rounded-lg group-hover:bg-primary/20 transition-colors text-primary">
@@ -276,14 +278,14 @@ export default function LandingPage() {
 
                                     <div className="flex flex-wrap gap-2 mb-10">
                                         {['Ward Analytics', 'Budget Allocation', 'Predictive AI', 'SLA Tracking'].map(tag => (
-                                            <span key={tag} className="px-3 py-1 bg-background border paper-border rounded text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:border-primary/30 transition-colors">
+                                            <span key={tag} className="px-3 py-1 bg-background border subtle-border rounded text-[10px] font-bold uppercase tracking-wider text-muted-foreground group-hover:border-primary/30 transition-colors">
                                                 {tag}
                                             </span>
                                         ))}
                                     </div>
 
                                     {/* Mock Chart Visualization */}
-                                    <div className="flex items-end gap-2 h-20 mb-12 px-2 border-b paper-border pb-1">
+                                    <div className="flex items-end gap-2 h-20 mb-12 px-2 border-b subtle-border pb-1">
                                         {[40, 70, 45, 90, 65, 80, 50, 85].map((h, i) => (
                                             <motion.div
                                                 key={i}
@@ -303,7 +305,7 @@ export default function LandingPage() {
                                 </div>
                             </motion.div>
 
-                            <motion.div variants={fadeInUp} className="col-span-1 md:col-span-2 p-8 border paper-border rounded-lg bg-primary text-primary-foreground shadow-sm flex flex-col justify-end group cursor-default relative overflow-hidden">
+                            <motion.div variants={fadeInUp} className="col-span-1 md:col-span-2 p-8 border subtle-border rounded-lg bg-primary text-primary-foreground shadow-sm flex flex-col justify-end group cursor-default relative overflow-hidden">
                                 <div className="absolute top-8 right-8 text-primary-foreground/50 group-hover:text-primary-foreground/80 transition-colors">
                                     <File size={32} />
                                 </div>
@@ -313,7 +315,7 @@ export default function LandingPage() {
                                 </p>
                             </motion.div>
 
-                            <motion.div variants={fadeInUp} className="col-span-1 md:col-span-1 p-8 border paper-border rounded-lg bg-background shadow-sm flex flex-col justify-end group cursor-default">
+                            <motion.div variants={fadeInUp} className="col-span-1 md:col-span-1 p-8 border subtle-border rounded-lg bg-background shadow-sm flex flex-col justify-end group cursor-default">
                                 <div className="mb-6 text-primary">
                                     <Tick size={24} />
                                 </div>
@@ -323,7 +325,7 @@ export default function LandingPage() {
                                 </p>
                             </motion.div>
 
-                            <motion.div variants={fadeInUp} className="col-span-1 md:col-span-1 p-8 border paper-border rounded-lg bg-background shadow-sm flex flex-col justify-end group cursor-default">
+                            <motion.div variants={fadeInUp} className="col-span-1 md:col-span-1 p-8 border subtle-border rounded-lg bg-background shadow-sm flex flex-col justify-end group cursor-default">
                                 <div className="mb-6 text-primary">
                                     <User size={24} />
                                 </div>
@@ -337,7 +339,7 @@ export default function LandingPage() {
                 </section>
 
                 {/* Vertical Workflow Timeline */}
-                <section id="framework" className="px-6 md:px-12 lg:px-20 py-20 lg:py-32 border-t paper-border bg-primary/5 w-full flex justify-center scroll-mt-20">
+                <section id="framework" className="px-6 md:px-12 lg:px-20 py-20 lg:py-32 border-t subtle-border bg-primary/5 w-full flex justify-center scroll-mt-20">
                     <div className="w-full max-w-7xl relative pl-0 md:pl-20">
                         <motion.h3
                             initial={{ opacity: 0 }}
@@ -359,7 +361,7 @@ export default function LandingPage() {
                                     { step: "04", title: "Resolve", desc: "Track progress and auto-escalate if the resolution misses its SLA deadline.", highlight: true },
                                 ].map((item, i) => (
                                     <motion.div variants={fadeInUp} key={i} className={`relative pl-16 md:pl-28 ${i !== 3 ? 'pb-16' : ''}`}>
-                                        <div className={`absolute left-0 top-0 w-14 h-14 md:w-16 md:h-16 flex items-center justify-center border paper-border rounded-lg z-10 shadow-sm transition-transform duration-300 hover:scale-105
+                                        <div className={`absolute left-0 top-0 w-14 h-14 md:w-16 md:h-16 flex items-center justify-center border subtle-border rounded-lg z-10 shadow-sm transition-transform duration-300 hover:scale-105
                       ${item.highlight ? 'bg-primary text-primary-foreground border-transparent shadow-md' : 'bg-background text-primary'}`}>
                                             <span className="text-sm md:text-base font-black font-mono">{item.step}</span>
                                         </div>
@@ -395,7 +397,7 @@ export default function LandingPage() {
             </main>
 
             {/* Footer */}
-            <footer className="w-full px-6 md:px-12 lg:px-20 py-24 border-t paper-border bg-background mt-auto">
+            <footer className="w-full px-6 md:px-12 lg:px-20 py-24 border-t subtle-border bg-background mt-auto">
                 <div className="max-w-7xl mx-auto w-full">
                     <div className="flex flex-col lg:flex-row justify-between items-start gap-16 pb-20">
 
@@ -439,7 +441,7 @@ export default function LandingPage() {
 
                     </div>
 
-                    <div className="pt-10 border-t paper-border flex justify-end items-center">
+                    <div className="pt-10 border-t subtle-border flex justify-end items-center">
                         <div className="flex gap-4">
                             <Globe className="w-4 h-4 text-muted-foreground/40 hover:text-primary transition-colors cursor-pointer" />
                             <AnimatedShieldCheck size={18} className="text-muted-foreground/40 hover:text-primary transition-colors cursor-pointer" />

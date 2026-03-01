@@ -144,4 +144,8 @@
   .paper-border {
     border-color: var(--border);
   }
+
+  .subtle-border {
+    border-color: color-mix(in srgb, var(--border), transparent 90%);
+  }
 }

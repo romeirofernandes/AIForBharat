@@ -14,10 +14,10 @@ import {
     Tick02Icon as Tick
 } from 'hugeicons-react';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../components/ui/button';
-import { AnimatedShieldCheck } from '../components/animated-icons/shield-check-icon';
-import TextRotate from '../components/fancy/text/text-rotate';
-import { HexagonBackground } from '../components/animate-ui/components/backgrounds/hexagon';
+import { Button } from '../components/button';
+import { AnimatedShieldCheck } from '../components/shield-check-icon';
+import TextRotate from '../components/text-rotate';
+import { HexagonBackground } from '../components/hexagon';
 
 const fadeInUp = {
     hidden: { opacity: 0, y: 30 },
@@ -35,7 +35,15 @@ const staggerContainer = {
 export default function LandingPage() {
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [scrolled, setScrolled] = useState(false);
+    const [textRotateIndex, setTextRotateIndex] = useState(0);
     const navigate = useNavigate();
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTextRotateIndex((prev) => (prev + 1) % 4);
+        }, 2500);
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -129,7 +137,7 @@ export default function LandingPage() {
                                     staggerDuration={0.025}
                                     splitLevelClassName="overflow-hidden pb-1 sm:pb-2 md:pb-2"
                                     transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                                    rotationInterval={2500}
+                                    activeIndex={textRotateIndex}
                                 />
                                 <span className="text-2xl md:text-4xl lg:text-5xl lowercase text-muted-foreground pt-1">and</span>
                                 <TextRotate
@@ -142,7 +150,7 @@ export default function LandingPage() {
                                     staggerDuration={0.025}
                                     splitLevelClassName="overflow-hidden pb-1 sm:pb-2 md:pb-2"
                                     transition={{ type: "spring", damping: 30, stiffness: 400 }}
-                                    rotationInterval={2500}
+                                    activeIndex={textRotateIndex}
                                 />
                             </div>
                         </motion.h1>

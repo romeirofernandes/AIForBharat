@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { cn } from '../../../lib/utils';
+import { cn } from '../lib/utils';
 
 export default function TextRotate({
     texts,
@@ -14,16 +14,21 @@ export default function TextRotate({
     transition = { type: "spring", damping: 30, stiffness: 400 },
     rotationInterval = 2000,
     splitLevelClassName = "",
-    elementLevelClassName = ""
+    elementLevelClassName = "",
+    activeIndex = null,
+    onNext = null
 }) {
-    const [index, setIndex] = useState(0);
+    const [internalIndex, setInternalIndex] = useState(0);
+    const index = activeIndex !== null ? activeIndex : internalIndex;
 
     useEffect(() => {
+        if (activeIndex !== null) return;
         const interval = setInterval(() => {
-            setIndex((current) => (current + 1) % texts.length);
+            setInternalIndex((current) => (current + 1) % texts.length);
+            if (onNext) onNext((index + 1) % texts.length);
         }, rotationInterval);
         return () => clearInterval(interval);
-    }, [texts, rotationInterval]);
+    }, [texts, rotationInterval, activeIndex, onNext, index]);
 
     const splittedText = useMemo(() => {
         const text = texts[index];

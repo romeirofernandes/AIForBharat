@@ -10,7 +10,7 @@ import { Toaster } from 'sonner';
 export default function App() {
   return (
     <>
-      <Toaster position="top-center" theme="dark" richColors />
+      <Toaster position="top-right" theme="light" richColors />
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />

@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { toast } from 'sonner';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import {
     Home09Icon as Home,
     FileSearchIcon as Schemes,
@@ -32,6 +33,23 @@ const adminLinks = [
     { to: '/admin/analytics', label: 'Analytics', icon: Analytics },
 ];
 
+function SidebarItemTooltip({ children, collapsed, label }) {
+    if (!collapsed) {
+        return children;
+    }
+
+    return (
+        <Tooltip>
+            <TooltipTrigger asChild>
+                <span className="block">{children}</span>
+            </TooltipTrigger>
+            <TooltipContent side="right" sideOffset={10}>
+                {label}
+            </TooltipContent>
+        </Tooltip>
+    );
+}
+
 export default function Sidebar({ collapsed, setCollapsed, role }) {
     const { logout } = useAuth();
     const navigate = useNavigate();
@@ -44,7 +62,7 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
     };
 
     return (
-        <>
+        <TooltipProvider delayDuration={120}>
             {/* Desktop Sidebar */}
             <motion.aside
                 animate={{ width: collapsed ? 70 : 240 }}
@@ -71,18 +89,45 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                 {/* Links */}
                 <nav className="flex-1 flex flex-col gap-1 px-2 py-4 overflow-y-auto">
                     {links.map((link) => (
-                        <NavLink
-                            key={link.to}
-                            to={link.to}
-                            className={({ isActive }) =>
-                                `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all duration-200 group
-                                ${isActive
-                                    ? 'bg-primary text-primary-foreground shadow-md'
-                                    : 'text-sidebar-foreground/70 hover:bg-primary/10 hover:text-sidebar-foreground'
-                                }`
-                            }
+                        <SidebarItemTooltip key={link.to} collapsed={collapsed} label={link.label}>
+                            <NavLink
+                                to={link.to}
+                                aria-label={link.label}
+                                className={({ isActive }) =>
+                                    `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all duration-200 group
+                                    ${isActive
+                                        ? 'bg-primary text-primary-foreground shadow-md'
+                                        : 'text-sidebar-foreground/70 hover:bg-primary/10 hover:text-sidebar-foreground'
+                                    }`
+                                }
+                            >
+                                <link.icon size={18} className="shrink-0" />
+                                <AnimatePresence>
+                                    {!collapsed && (
+                                        <motion.span
+                                            initial={{ opacity: 0, width: 0 }}
+                                            animate={{ opacity: 1, width: 'auto' }}
+                                            exit={{ opacity: 0, width: 0 }}
+                                            className="whitespace-nowrap overflow-hidden"
+                                        >
+                                            {link.label}
+                                        </motion.span>
+                                    )}
+                                </AnimatePresence>
+                            </NavLink>
+                        </SidebarItemTooltip>
+                    ))}
+                </nav>
+
+                {/* Logout */}
+                <div className="px-2 pb-4 border-t border-sidebar-border pt-4">
+                    <SidebarItemTooltip collapsed={collapsed} label="Logout">
+                        <button
+                            onClick={handleLogout}
+                            aria-label="Logout"
+                            className="flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/70 hover:bg-destructive/10 hover:text-destructive transition-all duration-200 w-full cursor-pointer"
                         >
-                            <link.icon size={18} className="shrink-0" />
+                            <LogoutIcon size={18} className="shrink-0" />
                             <AnimatePresence>
                                 {!collapsed && (
                                     <motion.span
@@ -91,34 +136,12 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                                         exit={{ opacity: 0, width: 0 }}
                                         className="whitespace-nowrap overflow-hidden"
                                     >
-                                        {link.label}
+                                        Logout
                                     </motion.span>
                                 )}
                             </AnimatePresence>
-                        </NavLink>
-                    ))}
-                </nav>
-
-                {/* Logout */}
-                <div className="px-2 pb-4 border-t border-sidebar-border pt-4">
-                    <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/70 hover:bg-destructive/10 hover:text-destructive transition-all duration-200 w-full cursor-pointer"
-                    >
-                        <LogoutIcon size={18} className="shrink-0" />
-                        <AnimatePresence>
-                            {!collapsed && (
-                                <motion.span
-                                    initial={{ opacity: 0, width: 0 }}
-                                    animate={{ opacity: 1, width: 'auto' }}
-                                    exit={{ opacity: 0, width: 0 }}
-                                    className="whitespace-nowrap overflow-hidden"
-                                >
-                                    Logout
-                                </motion.span>
-                            )}
-                        </AnimatePresence>
-                    </button>
+                        </button>
+                    </SidebarItemTooltip>
                 </div>
             </motion.aside>
 
@@ -138,7 +161,7 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                             animate={{ x: 0 }}
                             exit={{ x: -240 }}
                             transition={{ duration: 0.25, ease: 'easeInOut' }}
-                            className="fixed top-0 left-0 w-[240px] h-screen bg-sidebar border-r border-sidebar-border z-50 flex flex-col md:hidden"
+                            className="fixed top-0 left-0 w-60 h-screen bg-sidebar border-r border-sidebar-border z-50 flex flex-col md:hidden"
                         >
                             <div className="flex items-center justify-between px-4 h-16 border-b border-sidebar-border">
                                 <div className="flex items-center gap-2">
@@ -183,6 +206,6 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                     </>
                 )}
             </AnimatePresence>
-        </>
+        </TooltipProvider>
     );
 }

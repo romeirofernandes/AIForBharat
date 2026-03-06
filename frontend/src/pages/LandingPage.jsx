@@ -405,9 +405,9 @@ export default function LandingPage() {
             </main>
 
             {/* Footer */}
-            <footer className="w-full px-6 md:px-12 lg:px-20 py-24 border-t subtle-border bg-background mt-auto">
+            <footer className="w-full px-6 md:px-12 lg:px-20 py-16 border-t subtle-border bg-background mt-auto">
                 <div className="max-w-7xl mx-auto w-full">
-                    <div className="flex flex-col lg:flex-row justify-between items-start gap-16 pb-20">
+                    <div className="flex flex-col lg:flex-row justify-between items-start gap-16 pb-6">
 
                         <div className="max-w-sm">
                             <div className="flex items-center gap-2 mb-8 cursor-pointer" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>
@@ -445,14 +445,6 @@ export default function LandingPage() {
                                     <li><a href="#" className="hover:text-primary transition-colors cursor-pointer">Status</a></li>
                                 </ul>
                             </div>
-                        </div>
-
-                    </div>
-
-                    <div className="pt-10 border-t subtle-border flex justify-end items-center">
-                        <div className="flex gap-4">
-                            <Globe className="w-4 h-4 text-muted-foreground/40 hover:text-primary transition-colors cursor-pointer" />
-                            <AnimatedShieldCheck size={18} className="text-muted-foreground/40 hover:text-primary transition-colors cursor-pointer" />
                         </div>
                     </div>
                 </div>

@@ -6,7 +6,7 @@ export default function DashboardNavbar({ collapsed, setCollapsed }) {
     const { user } = useAuth();
 
     return (
-       <header className="sticky top-0 z-20 h-16 bg-background/95 backdrop-blur-md border-b border-sidebar-border flex items-center justify-between px-4 md:px-6">
+       <header className="sticky top-0 z-20 h-16 bg-background/95 backdrop-blur-md border-b border-border flex items-center justify-between px-4 md:px-6">
             <div className="flex items-center gap-3">
                 <button
                     onClick={() => setCollapsed(!collapsed)}

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate, Link } from 'react-router-dom';
-import { Button } from '../components/button';
+import { RichButton } from '../components/ui/rich-button';
 import { HexagonBackground } from '../components/hexagon';
 import { ArrowLeft01Icon as ArrowLeft, ViewIcon, ViewOffIcon } from 'hugeicons-react';
 import { toast } from 'sonner';
@@ -49,18 +49,20 @@ export default function LoginPage() {
         <div className="min-h-screen flex flex-col items-center justify-center w-full bg-linear-to-b from-background to-muted/30 relative px-6">
             <HexagonBackground className="absolute inset-0 flex items-center justify-center rounded-xl opacity-20" />
 
-            <button
+            <RichButton
                 onClick={() => navigate('/')}
-                className="absolute top-8 left-8 md:top-12 md:left-12 flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-muted-foreground hover:text-primary transition-colors z-10 cursor-pointer"
+                color="default"
+                size="sm"
+                className="absolute top-8 left-8 md:top-12 md:left-12 z-10"
             >
-                <ArrowLeft size={16} /> Back to Home
-            </button>
+                <ArrowLeft size={14} />
+            </RichButton>
 
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="w-full max-w-md bg-background/80 backdrop-blur-xl border subtle-border shadow-2xl shadow-primary/5 rounded-2xl p-8 md:p-12 z-10"
+                className="w-full max-w-md bg-background/80 backdrop-blur-xl border border-border shadow-2xl shadow-primary/5 rounded-2xl p-8 md:p-12 z-10"
             >
                 <div className="flex flex-col items-center text-center mb-10">
                     <span className="material-symbols-outlined text-primary text-4xl mb-4">account_balance</span>
@@ -77,7 +79,7 @@ export default function LoginPage() {
                             value={formData.email}
                             onChange={handleChange}
                             required
-                            className="h-12 px-4 rounded-lg bg-muted/40 border subtle-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm font-medium"
+                            className="h-12 px-4 rounded-lg bg-muted border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm font-medium"
                             placeholder="citizen@bharat.in"
                         />
                     </div>
@@ -91,7 +93,7 @@ export default function LoginPage() {
                                 value={formData.password}
                                 onChange={handleChange}
                                 required
-                                className="w-full h-12 px-4 rounded-lg bg-muted/40 border subtle-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm font-medium"
+                                className="w-full h-12 px-4 rounded-lg bg-muted border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm font-medium"
                                 placeholder="••••••••"
                             />
                             <button
@@ -108,9 +110,9 @@ export default function LoginPage() {
                         <a href="#" className="text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors">Forgot Password?</a>
                     </div>
 
-                    <Button type="submit" disabled={isLoading} className="mt-4 w-full h-12 rounded-lg cursor-pointer">
-                        {isLoading ? "Authenticating..." : "Login"}
-                    </Button>
+                    <RichButton type="submit" disabled={isLoading} color="primary" size="lg" className="mt-4 w-full">
+                        {isLoading ? 'Authenticating...' : 'Login'}
+                    </RichButton>
                 </form>
 
                 <div className="mt-8 text-center">

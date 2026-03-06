@@ -1,7 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
-import { Button } from '../../components/button';
+import { RichButton } from '../ui/rich-button';
 
 export function CTA({ fadeInUp, staggerContainer, scrollToSection }) {
     const navigate = useNavigate();
@@ -17,12 +17,12 @@ export function CTA({ fadeInUp, staggerContainer, scrollToSection }) {
                     Join thousands of citizens making Bharat better. Get started with the AI civic layer today.
                 </motion.p>
                 <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row justify-center gap-4 pt-8">
-                    <Button onClick={() => navigate('/login')} className="cursor-pointer w-full sm:w-auto h-14 px-10 rounded-lg text-lg shadow-xl shadow-primary/20 hover:scale-[1.02] transition-transform min-h-[44px]">
+                    <RichButton onClick={() => navigate('/login')} color="primary" size="lg" className="w-full sm:w-auto px-10">
                         Get Full Access
-                    </Button>
-                    <Button onClick={() => scrollToSection('impact')} variant="outline" className="cursor-pointer w-full sm:w-auto h-14 px-10 rounded-lg text-lg bg-background hover:scale-[1.02] transition-transform min-h-[44px]">
+                    </RichButton>
+                    <RichButton onClick={() => scrollToSection('impact')} color="default" size="lg" className="w-full sm:w-auto px-10">
                         View Platform Impact
-                    </Button>
+                    </RichButton>
                 </motion.div>
             </motion.div>
         </section>

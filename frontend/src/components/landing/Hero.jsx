@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { ArrowRight01Icon as ChevronRight } from 'hugeicons-react';
-import { Button } from '../../components/button';
+import { RichButton } from '../ui/rich-button';
 import { HexagonBackground } from '../../components/hexagon';
 import TextRotate from '../../components/text-rotate';
 
@@ -54,13 +54,12 @@ export function Hero({ textRotateIndex, scrollToSection, fadeInUp, staggerContai
                     The unified AI layer for Bharat. Proactively discover welfare eligibility, report grievances in your own language, and track government action with radical transparency.
                 </motion.p>
                 <motion.div variants={fadeInUp} className="flex flex-col sm:flex-row justify-center gap-4">
-                    <Button onClick={() => navigate('/login')} className="group gap-2 cursor-pointer w-full sm:w-auto h-12 px-8 rounded-lg shadow-primary/25 shadow-lg relative overflow-hidden min-h-[44px]">
-                        <span className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></span>
-                        <span className="relative flex items-center gap-2">Get Started <ChevronRight size={18} className="group-hover:translate-x-1 transition-transform" /></span>
-                    </Button>
-                    <Button onClick={() => scrollToSection('solutions')} variant="outline" className="cursor-pointer w-full sm:w-auto h-12 px-8 rounded-lg bg-background/50 backdrop-blur-md hover:bg-muted transition-colors min-h-[44px]">
+                    <RichButton onClick={() => navigate('/login')} color="primary" size="lg" className="w-full sm:w-auto px-8">
+                        Get Started <ChevronRight size={16} />
+                    </RichButton>
+                    <RichButton onClick={() => scrollToSection('solutions')} color="default" size="lg" className="w-full sm:w-auto px-8">
                         How It Works
-                    </Button>
+                    </RichButton>
                 </motion.div>
             </motion.div>
         </section>

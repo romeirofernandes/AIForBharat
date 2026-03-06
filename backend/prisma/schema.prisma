@@ -1,0 +1,18 @@
+// Prisma Schema for AIForBharat Civic Platform
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique @db.VarChar(255)
+  passwordHash String   @map("password_hash") @db.Text
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("users")
+}

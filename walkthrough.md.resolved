@@ -1,0 +1,61 @@
+# Prisma Team Workflow Guide (Local Databases)
+
+Since you are working with friends on the same codebase and **everyone has their own local Postgres database**, Prisma makes keeping everyone's database in sync super easy!
+
+Here is exactly how you and your friends should handle database steps, from first joining the project to pushing new schema changes.
+
+---
+
+## 1. First-Time Setup (When a friend just clones the repo!)
+When your friend first gets the project on their computer, they need to initialize their local database:
+
+1. They run `git clone` to get the latest code.
+2. In the `backend/` folder, they run:
+   ```bash
+   npm install
+   ```
+3. They must create a [.env](file:///c:/Users/Lenovo/Desktop/Aliqyaan%20Coding/AI%20For%20Bharat/AIForBharat/backend/.env) file in the `backend/` folder and add their specific local Postgres connection string. Example:
+   ```env
+   DATABASE_URL="postgres://postgres:THEIR_PASSWORD@localhost:5432/civic_platform"
+   ```
+4. Ask them to run the initial migration command, which will automatically create the `civic_platform` database (if it isn't there) and set up all the tables to match your exact schema!
+   ```bash
+   npx prisma migrate dev
+   ```
+5. *(Optional, usually automatic)* Just to be perfectly safe, they can guarantee VSCode knows their new DB tables for autofill by running:
+   ```bash
+   npx prisma generate
+   ```
+Their environment is completely ready!
+
+---
+
+## 2. When YOU make a change to the schema
+### (e.g., adding a table, adding a new column)
+
+1. You edit [backend/prisma/schema.prisma](file:///c:/Users/Lenovo/Desktop/Aliqyaan%20Coding/AI%20For%20Bharat/AIForBharat/backend/prisma/schema.prisma) (e.g., adding a `Post` model).
+2. Run this command to create a migration file:
+   ```bash
+   npm run db:migrate --name added_post_model
+   ```
+   *(This actually runs `npx prisma migrate dev --name added_post_model` under the hood).*
+3. Prisma will create a new SQL file inside `backend/prisma/migrations/`. 
+4. **Commit** that new migration folder and your `schema.prisma` file to Git and push to your repo!
+
+---
+
+## 3. When your FRIENDS pull your code
+### (Bringing your schema change into their laptop)
+
+1. Your friend runs `git pull` and sees you added new migration files and a new `schema.prisma`.
+2. To apply those changes to their local database, they **MUST run**:
+   ```bash
+   npx prisma migrate dev
+   ```
+3. This will automatically detect the new migration files and apply them to their local Postgres database, keeping them perfectly in sync with your schema!
+
+---
+
+### 💡 TL;DR Rule of Thumb for your team
+* If you **MAKE** a database change 👉 run `npm run db:migrate --name your_change_name`
+* If you **PULL** a database change 👉 run `npx prisma migrate dev`

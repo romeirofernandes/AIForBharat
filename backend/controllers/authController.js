@@ -1,4 +1,4 @@
-const pool = require("../config/db");
+const prisma = require("../config/prisma");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
@@ -13,8 +13,11 @@ exports.signup = async (req, res) => {
         }
 
         // Check if user already exists
-        const userCheck = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
-        if (userCheck.rows.length > 0) {
+        const existingUser = await prisma.user.findUnique({
+            where: { email },
+        });
+
+        if (existingUser) {
             return res.status(409).json({ error: "Email already registered" });
         }
 
@@ -23,12 +26,17 @@ exports.signup = async (req, res) => {
         const passwordHash = await bcrypt.hash(password, salt);
 
         // Insert new user
-        const result = await pool.query(
-            "INSERT INTO users (email, password_hash) VALUES ($1, $2) RETURNING id, email, created_at",
-            [email, passwordHash]
-        );
-
-        const user = result.rows[0];
+        const user = await prisma.user.create({
+            data: {
+                email,
+                passwordHash,
+            },
+            select: {
+                id: true,
+                email: true,
+                createdAt: true,
+            },
+        });
 
         // Generate JWT token
         const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
@@ -55,15 +63,16 @@ exports.login = async (req, res) => {
         }
 
         // Fetch user from DB
-        const result = await pool.query("SELECT * FROM users WHERE email = $1", [email]);
-        if (result.rows.length === 0) {
+        const user = await prisma.user.findUnique({
+            where: { email },
+        });
+
+        if (!user) {
             return res.status(401).json({ error: "Invalid email or password" });
         }
 
-        const user = result.rows[0];
-
         // Compare password
-        const isMatch = await bcrypt.compare(password, user.password_hash);
+        const isMatch = await bcrypt.compare(password, user.passwordHash);
         if (!isMatch) {
             return res.status(401).json({ error: "Invalid email or password" });
         }
@@ -79,7 +88,7 @@ exports.login = async (req, res) => {
             user: {
                 id: user.id,
                 email: user.email,
-                created_at: user.created_at,
+                created_at: user.createdAt,
             },
         });
     } catch (error) {

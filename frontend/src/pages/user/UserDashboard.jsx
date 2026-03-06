@@ -38,7 +38,7 @@ export default function UserDashboard() {
     const greeting = hour < 12 ? 'Good Morning' : hour < 17 ? 'Good Afternoon' : 'Good Evening';
 
     return (
-        <div className="max-w-6xl mx-auto space-y-8">
+        <div className="w-full space-y-8">
             <motion.div initial="hidden" animate="visible" variants={fadeIn}>
                 <h1 className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-foreground">
                     {greeting}, Citizen

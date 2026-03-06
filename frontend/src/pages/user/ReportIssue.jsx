@@ -33,7 +33,7 @@ export default function ReportIssue() {
     };
 
     return (
-        <div className="max-w-2xl mx-auto space-y-6">
+        <div className="w-full space-y-6">
             <motion.div initial="hidden" animate="visible" variants={fadeIn}>
                 <h1 className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-foreground">Report Issue</h1>
                 <p className="text-sm text-muted-foreground font-medium mt-1">Submit a civic grievance for resolution</p>

@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon server.js",
+    "dev": "prisma generate && nodemon server.js",
     "start": "node server.js",
     "prisma": "prisma",
     "db:push": "prisma db push",

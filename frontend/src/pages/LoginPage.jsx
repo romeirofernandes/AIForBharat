@@ -5,9 +5,12 @@ import { Button } from '../components/button';
 import { HexagonBackground } from '../components/hexagon';
 import { ArrowLeft01Icon as ArrowLeft, ViewIcon, ViewOffIcon } from 'hugeicons-react';
 import { toast } from 'sonner';
+import { login as loginAPI } from '../api/auth';
+import { useAuth } from '../context/AuthContext';
 
 export default function LoginPage() {
     const navigate = useNavigate();
+    const { login } = useAuth();
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -24,23 +27,17 @@ export default function LoginPage() {
         setIsLoading(true);
 
         try {
-            const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api';
-            const response = await fetch(`${API_URL}/auth/login`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: formData.email, password: formData.password })
-            });
+            const data = await loginAPI(formData.email, formData.password);
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || 'Login failed');
-            }
-
-            // Save token and redirect
-            localStorage.setItem('token', data.token);
+            login(data.token, data.user);
             toast.success("Login successful");
-            navigate('/');
+
+            // Redirect based on role
+            if (data.user.role === 'admin') {
+                navigate('/admin/dashboard');
+            } else {
+                navigate('/user/dashboard');
+            }
         } catch (err) {
             toast.error(err.message);
         } finally {

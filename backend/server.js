@@ -8,9 +8,14 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// Routes
 const authRoutes = require("./routes/authRoutes");
+const issueRoutes = require("./routes/issueRoutes");
+const userRoutes = require("./routes/userRoutes");
 
 app.use("/api/auth", authRoutes);
+app.use("/api/issues", issueRoutes);
+app.use("/api/users", userRoutes);
 
 app.get("/", (req, res) => {
     res.json({ message: "Civic Intelligence API running" });

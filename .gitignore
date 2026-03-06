@@ -27,3 +27,5 @@ skills-lock.json
 .agents
 .agent
 .claude
+.env
+.env.local

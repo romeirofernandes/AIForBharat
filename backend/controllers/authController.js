@@ -12,7 +12,6 @@ exports.signup = async (req, res) => {
             return res.status(400).json({ error: "Email and password are required" });
         }
 
-        // Check if user already exists
         const existingUser = await prisma.user.findUnique({
             where: { email },
         });
@@ -21,27 +20,29 @@ exports.signup = async (req, res) => {
             return res.status(409).json({ error: "Email already registered" });
         }
 
-        // Hash password
         const salt = await bcrypt.genSalt(10);
         const passwordHash = await bcrypt.hash(password, salt);
 
-        // Insert new user
+        // Signup always creates a "user" role — admins are inserted manually
         const user = await prisma.user.create({
             data: {
                 email,
                 passwordHash,
+                role: "user",
             },
             select: {
                 id: true,
                 email: true,
+                role: true,
                 createdAt: true,
             },
         });
 
-        // Generate JWT token
-        const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
-            expiresIn: "7d",
-        });
+        const token = jwt.sign(
+            { userId: user.id, email: user.email, role: user.role },
+            JWT_SECRET,
+            { expiresIn: "7d" }
+        );
 
         res.status(201).json({
             message: "User registered successfully",
@@ -62,7 +63,6 @@ exports.login = async (req, res) => {
             return res.status(400).json({ error: "Email and password are required" });
         }
 
-        // Fetch user from DB
         const user = await prisma.user.findUnique({
             where: { email },
         });
@@ -71,16 +71,16 @@ exports.login = async (req, res) => {
             return res.status(401).json({ error: "Invalid email or password" });
         }
 
-        // Compare password
         const isMatch = await bcrypt.compare(password, user.passwordHash);
         if (!isMatch) {
             return res.status(401).json({ error: "Invalid email or password" });
         }
 
-        // Generate JWT
-        const token = jwt.sign({ id: user.id, email: user.email }, JWT_SECRET, {
-            expiresIn: "7d",
-        });
+        const token = jwt.sign(
+            { userId: user.id, email: user.email, role: user.role },
+            JWT_SECRET,
+            { expiresIn: "7d" }
+        );
 
         res.json({
             message: "Login successful",
@@ -88,11 +88,35 @@ exports.login = async (req, res) => {
             user: {
                 id: user.id,
                 email: user.email,
-                created_at: user.createdAt,
+                role: user.role,
+                createdAt: user.createdAt,
             },
         });
     } catch (error) {
         console.error("Login error:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+exports.getProfile = async (req, res) => {
+    try {
+        const user = await prisma.user.findUnique({
+            where: { id: req.user.userId },
+            select: {
+                id: true,
+                email: true,
+                role: true,
+                createdAt: true,
+            },
+        });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        res.json({ user });
+    } catch (error) {
+        console.error("Profile error:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 };

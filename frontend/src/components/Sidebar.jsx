@@ -2,6 +2,7 @@ import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { toast } from 'sonner';
 import {
     Home09Icon as Home,
     FileSearchIcon as Schemes,
@@ -38,6 +39,7 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
 
     const handleLogout = () => {
         logout();
+        toast.success('Logged out successfully');
         navigate('/login');
     };
 
@@ -73,10 +75,10 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                             key={link.to}
                             to={link.to}
                             className={({ isActive }) =>
-                                `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200 group
+                                `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all duration-200 group
                                 ${isActive
-                                    ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                                    : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground'
+                                    ? 'bg-primary text-primary-foreground shadow-md'
+                                    : 'text-sidebar-foreground/70 hover:bg-primary/10 hover:text-sidebar-foreground'
                                 }`
                             }
                         >
@@ -155,10 +157,10 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                                         to={link.to}
                                         onClick={() => setCollapsed(true)}
                                         className={({ isActive }) =>
-                                            `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold uppercase tracking-wider transition-all duration-200
+                                            `flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-bold uppercase tracking-wider transition-all duration-200
                                             ${isActive
-                                                ? 'bg-sidebar-accent text-sidebar-accent-foreground'
-                                                : 'text-sidebar-foreground/70 hover:bg-sidebar-accent/50 hover:text-sidebar-foreground'
+                                                ? 'bg-primary text-primary-foreground shadow-md'
+                                                : 'text-sidebar-foreground/70 hover:bg-primary/10 hover:text-sidebar-foreground'
                                             }`
                                         }
                                     >

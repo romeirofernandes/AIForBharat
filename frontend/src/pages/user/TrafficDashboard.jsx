@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import {
@@ -41,6 +41,7 @@ export default function TrafficDashboard() {
     const [vehicleInput, setVehicleInput] = useState('');
     const [loading, setLoading] = useState(true);
     const [addingVehicle, setAddingVehicle] = useState(false);
+    const [vehicleDropdownOpen, setVehicleDropdownOpen] = useState(false);
 
     const fetchAll = async () => {
         try {
@@ -108,10 +109,102 @@ export default function TrafficDashboard() {
 
     return (
         <div className="w-full space-y-8">
-            {/* Header */}
-            <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-                <h1 className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-foreground">Traffic Dashboard</h1>
-                <p className="text-sm text-muted-foreground font-medium mt-1">Manage your vehicles, view e-challans, and check traffic fine rules</p>
+            {/* Header with My Vehicles Dropdown */}
+            <motion.div initial="hidden" animate="visible" variants={fadeIn} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div>
+                    <h1 className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-foreground">Traffic Dashboard</h1>
+                    <p className="text-sm text-muted-foreground font-medium mt-1">View e-challans and manage your vehicles</p>
+                </div>
+
+                {/* My Vehicles Dropdown */}
+                <div className="relative">
+                    <button
+                        onClick={() => setVehicleDropdownOpen(!vehicleDropdownOpen)}
+                        className="flex items-center gap-2 px-4 py-2.5 rounded-lg border border-border hover:border-primary/30 bg-muted/30 hover:bg-muted/50 transition-all text-xs font-bold uppercase tracking-wider text-foreground"
+                    >
+                        <CarIcon size={16} className="text-primary" />
+                        My Vehicles ({vehicles.length})
+                        <span
+                            className={`inline-block transition-transform ${vehicleDropdownOpen ? 'rotate-180' : ''}`}
+                        >
+                            ▼
+                        </span>
+                    </button>
+
+                    {/* Dropdown Content */}
+                    <AnimatePresence>
+                        {vehicleDropdownOpen && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -8, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                                transition={{ duration: 0.15 }}
+                                className="absolute top-full right-0 mt-2 w-80 bg-background border border-border rounded-lg shadow-lg z-40"
+                            >
+                                <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
+                                    {/* Add Vehicle Input */}
+                                    <div className="flex gap-2">
+                                        <Input
+                                            placeholder="e.g. MH01CP6748"
+                                            value={vehicleInput}
+                                            onChange={(e) => setVehicleInput(e.target.value.toUpperCase())}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleAddVehicle()}
+                                            className="font-mono text-sm tracking-widest"
+                                        />
+                                        <Button
+                                            onClick={handleAddVehicle}
+                                            disabled={addingVehicle}
+                                            size="sm"
+                                            className="shrink-0 gap-1 cursor-pointer"
+                                        >
+                                            <AddIcon size={14} />
+                                        </Button>
+                                    </div>
+
+                                    {/* Vehicles List */}
+                                    {vehicles.length === 0 ? (
+                                        <p className="text-xs text-muted-foreground text-center py-6 font-medium">
+                                            No vehicles linked.<br />Add one above.
+                                        </p>
+                                    ) : (
+                                        <div className="space-y-2">
+                                            {vehicles.map((v) => {
+                                                const challanCount = v.challans?.length || 0;
+                                                return (
+                                                    <div
+                                                        key={v.id}
+                                                        className="flex items-center gap-2.5 p-2.5 border border-border rounded-lg bg-muted/30 hover:border-primary/30 hover:bg-muted/50 transition-all group"
+                                                    >
+                                                        <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center shrink-0">
+                                                            <CarIcon size={16} className="text-primary" />
+                                                        </div>
+                                                        <div className="flex-1 min-w-0">
+                                                            <p className="font-mono text-xs font-bold tracking-widest text-foreground truncate">
+                                                                {v.vehicleNumber}
+                                                            </p>
+                                                            {challanCount > 0 && (
+                                                                <p className="text-[9px] font-bold text-red-500 uppercase">
+                                                                    {challanCount} challan{challanCount !== 1 ? 's' : ''}
+                                                                </p>
+                                                            )}
+                                                        </div>
+                                                        <button
+                                                            onClick={() => handleRemoveVehicle(v.id, v.vehicleNumber)}
+                                                            className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer p-1"
+                                                            aria-label={`Remove ${v.vehicleNumber}`}
+                                                        >
+                                                            <DeleteIcon size={13} className="text-red-400 hover:text-red-600" />
+                                                        </button>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    )}
+                                </div>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                </div>
             </motion.div>
 
             {/* Summary Stats */}
@@ -127,50 +220,6 @@ export default function TrafficDashboard() {
                     </motion.div>
                 ))}
             </div>
-
-            {/* Vehicle Management */}
-            <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.3 }}>
-                <Card>
-                    <CardHeader className="pb-3">
-                        <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                            <CarIcon size={16} /> My Vehicles
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="space-y-4">
-                        {/* Add Vehicle */}
-                        <div className="flex gap-2">
-                            <Input
-                                placeholder="Enter vehicle number (e.g. MH01CP6748)"
-                                value={vehicleInput}
-                                onChange={(e) => setVehicleInput(e.target.value.toUpperCase())}
-                                onKeyDown={(e) => e.key === 'Enter' && handleAddVehicle()}
-                                className="font-mono text-sm tracking-wider"
-                            />
-                            <Button onClick={handleAddVehicle} disabled={addingVehicle} size="sm" className="shrink-0 gap-1 cursor-pointer">
-                                <AddIcon size={14} /> Add
-                            </Button>
-                        </div>
-
-                        {/* Vehicle List */}
-                        {vehicles.length === 0 ? (
-                            <p className="text-xs text-muted-foreground font-medium py-4 text-center">No vehicles linked yet. Add a vehicle number above to see your challans.</p>
-                        ) : (
-                            <div className="flex flex-wrap gap-2">
-                                {vehicles.map((v) => (
-                                    <div key={v.id} className="flex items-center gap-2 px-3 py-2 border border-border rounded-lg bg-muted/30 group hover:border-primary/30 transition-all">
-                                        <CarIcon size={14} className="text-primary" />
-                                        <span className="text-sm font-bold font-mono tracking-wider text-foreground">{v.vehicleNumber}</span>
-                                        <Badge variant="secondary" className="text-[9px]">{v.challans?.length || 0} challans</Badge>
-                                        <button onClick={() => handleRemoveVehicle(v.id, v.vehicleNumber)} className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
-                                            <DeleteIcon size={14} className="text-red-500 hover:text-red-700" />
-                                        </button>
-                                    </div>
-                                ))}
-                            </div>
-                        )}
-                    </CardContent>
-                </Card>
-            </motion.div>
 
             {/* Top Fines Quick Cards */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 }}>

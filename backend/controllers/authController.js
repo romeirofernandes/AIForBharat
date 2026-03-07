@@ -4,10 +4,14 @@ const jwt = require("jsonwebtoken");
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback_super_secret";
 
-function generateAvatar(username, gender) {
-    const seed = Math.floor(Math.random() * 100000);
-    const validGender = gender ? gender.toLowerCase() : 'male';
-    return `https://api.dicebear.com/7.x/personas/svg?seed=${seed}&gender=${validGender}`;
+function generateAvatar(gender) {
+    const random = Math.floor(Math.random() * 100000);
+
+    if (gender === "male") {
+        return `https://api.dicebear.com/7.x/personas/svg?seed=male_${random}`;
+    } else {
+        return `https://api.dicebear.com/7.x/personas/svg?seed=female_${random}`;
+    }
 }
 
 exports.signup = async (req, res) => {
@@ -144,7 +148,7 @@ exports.updateProfile = async (req, res) => {
         if (req.file) {
             newAvatarUrl = req.file.location;
         } else if (!newAvatarUrl || (currentProfile && currentProfile.gender !== gender)) {
-            newAvatarUrl = generateAvatar(name, gender);
+            newAvatarUrl = generateAvatar(gender);
         }
 
         await prisma.citizenProfile.upsert({

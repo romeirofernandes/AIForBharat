@@ -24,9 +24,9 @@ export function Solutions({ fadeInUp, staggerContainer }) {
                     </motion.div>
                     <motion.div variants={fadeInUp} className="p-8 md:p-10 border-b md:border-b-0 md:border-r subtle-border bg-linear-to-br from-background to-muted/30 hover:to-primary/5 transition-colors group cursor-default">
                         <span className="text-5xl font-light text-primary/20 mb-8 block font-mono">02</span>
-                        <h4 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tight text-foreground group-hover:text-primary transition-colors">Welfare Discovery</h4>
+                        <h4 className="text-xl md:text-2xl font-bold mb-4 uppercase tracking-tight text-foreground group-hover:text-primary transition-colors">Community Forum</h4>
                         <p className="text-sm md:text-base leading-relaxed text-muted-foreground font-medium">
-                            No more searching for schemes. Our matching engine discovers your eligibility for state and central benefits based on your civic profile.
+                            A transparent, Reddit-style discussion board where citizens upvote, comment, and track civic issues reported across their city in real time.
                         </p>
                     </motion.div>
                     <motion.div variants={fadeInUp} className="p-8 md:p-10 bg-linear-to-br from-background to-muted/30 hover:to-primary/5 transition-colors group cursor-default">

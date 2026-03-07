@@ -15,13 +15,13 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 // User pages
 import UserDashboard from './pages/user/UserDashboard';
-import Schemes from './pages/user/Schemes';
 import ReportIssue from './pages/user/ReportIssue';
 import MyComplaints from './pages/user/MyComplaints';
 import Profile from './pages/user/Profile';
 import TrafficDashboard from './pages/user/TrafficDashboard';
 import AllFines from './pages/user/AllFines';
 import ChallanDetails from './pages/user/ChallanDetails';
+import DiscussionForum from './pages/user/DiscussionForum';
 
 // Admin pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -49,9 +49,9 @@ export default function App() {
         }>
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<UserDashboard />} />
-          <Route path="schemes" element={<Schemes />} />
           <Route path="report" element={<ReportIssue />} />
           <Route path="complaints" element={<MyComplaints />} />
+          <Route path="forum" element={<DiscussionForum />} />
           <Route path="traffic" element={<TrafficDashboard />} />
           <Route path="traffic/fines" element={<AllFines />} />
           <Route path="traffic/challan/:id" element={<ChallanDetails />} />

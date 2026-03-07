@@ -4,7 +4,6 @@ import { useAuth } from '../../context/AuthContext';
 import { getMyIssues } from '../../api/issues';
 import { useNavigate } from 'react-router-dom';
 import {
-    FileSearchIcon as Schemes,
     Alert02Icon as Report,
     TaskDone01Icon as Complaints,
     ArrowRight01Icon as ArrowRight,
@@ -29,7 +28,6 @@ export default function UserDashboard() {
     }, []);
 
     const cards = [
-        { title: 'Eligible Schemes', value: '12+', desc: 'Schemes matched to your profile', icon: Schemes, color: 'text-chart-2', bg: 'bg-chart-2/10', link: '/user/schemes' },
         { title: 'Active Complaints', value: issueCount - resolvedCount, desc: 'Pending grievances', icon: Report, color: 'text-chart-5', bg: 'bg-chart-5/10', link: '/user/complaints' },
         { title: 'Resolved', value: resolvedCount, desc: 'Complaints resolved', icon: Complaints, color: 'text-chart-1', bg: 'bg-chart-1/10', link: '/user/complaints' },
     ];
@@ -85,13 +83,13 @@ export default function UserDashboard() {
                             </div>
                         </button>
                         <button
-                            onClick={() => navigate('/user/schemes')}
+                            onClick={() => navigate('/user/complaints')}
                             className="flex items-center gap-3 p-4 rounded-lg border border-border hover:border-primary/30 hover:bg-primary/5 transition-all cursor-pointer text-left"
                         >
-                            <Schemes size={20} className="text-primary" />
+                            <Complaints size={20} className="text-primary" />
                             <div>
-                                <p className="text-sm font-bold text-foreground">Browse Schemes</p>
-                                <p className="text-xs text-muted-foreground">Check your benefit eligibility</p>
+                                <p className="text-sm font-bold text-foreground">My Complaints</p>
+                                <p className="text-xs text-muted-foreground">Track your reported grievances</p>
                             </div>
                         </button>
                     </div>

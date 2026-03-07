@@ -17,6 +17,9 @@ model User {
   issues       Issue[]
   profile      CitizenProfile?
   vehicles     UserVehicle[]
+  issueVotes   IssueVote[]
+  comments     IssueComment[]
+  commentVotes CommentVote[]
 
   @@map("users")
 }
@@ -37,8 +40,53 @@ model Issue {
   user         User        @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
+  votes        IssueVote[]
+  comments     IssueComment[]
 
   @@map("issues")
+}
+
+// ─── Forum: Votes & Threaded Comments ───────────────────────────
+
+model IssueVote {
+  id       Int    @id @default(autoincrement())
+  issueId  Int    @map("issue_id")
+  issue    Issue  @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  userId   Int    @map("user_id")
+  user     User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  value    Int    // +1 or -1
+
+  @@unique([issueId, userId])
+  @@map("issue_votes")
+}
+
+model IssueComment {
+  id        Int            @id @default(autoincrement())
+  body      String         @db.Text
+  issueId   Int            @map("issue_id")
+  issue     Issue          @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  userId    Int            @map("user_id")
+  user      User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parentId  Int?           @map("parent_id")
+  parent    IssueComment?  @relation("CommentThread", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   IssueComment[] @relation("CommentThread")
+  votes     CommentVote[]
+  createdAt DateTime       @default(now()) @map("created_at")
+  updatedAt DateTime       @updatedAt @map("updated_at")
+
+  @@map("issue_comments")
+}
+
+model CommentVote {
+  id        Int          @id @default(autoincrement())
+  commentId Int          @map("comment_id")
+  comment   IssueComment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+  userId    Int          @map("user_id")
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  value     Int          // +1 or -1
+
+  @@unique([commentId, userId])
+  @@map("comment_votes")
 }
 
 model CitizenProfile {

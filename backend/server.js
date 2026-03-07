@@ -14,12 +14,14 @@ const issueRoutes = require("./routes/issueRoutes");
 const userRoutes = require("./routes/userRoutes");
 const geminiRoutes = require("./routes/geminiRoutes");
 const trafficRoutes = require("./routes/trafficRoutes");
+const forumRoutes = require("./routes/forumRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/issues", issueRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/gemini", geminiRoutes);
 app.use("/api/traffic", trafficRoutes);
+app.use("/api/forum", forumRoutes);
 
 app.get("/", (req, res) => {
     res.json({ message: "Civic Intelligence API running" });

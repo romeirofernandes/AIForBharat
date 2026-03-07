@@ -22,7 +22,7 @@ export function Impact({ fadeInUp, staggerContainer }) {
                     <motion.ul variants={staggerContainer} className="space-y-6 pt-6 border-t subtle-border">
                         {[
                             { text: "Vernacular voice-to-grievance structuring using Bhashini.", icon: <Database className="text-primary w-6 h-6" /> },
-                            { text: "Proactive AI-matching for 500+ Central and State schemes.", icon: <TrendingUp className="text-primary w-6 h-6" /> },
+                            { text: "Community-driven civic issue tracking with real-time upvotes and discussion.", icon: <TrendingUp className="text-primary w-6 h-6" /> },
                             { text: "Automated escalation logic for delayed civic resolutions.", icon: <Globe className="text-primary w-6 h-6" /> }
                         ].map((item, index) => (
                             <motion.li variants={fadeInUp} key={index} className="flex items-start gap-4 p-4 hover:bg-muted border border-transparent hover:border-border rounded-lg transition-colors cursor-default">

@@ -1,0 +1,261 @@
+import React, { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
+import { toast } from 'sonner';
+import {
+    ArrowRight01Icon as ArrowRight,
+    Car01Icon as CarIcon,
+    Delete02Icon as DeleteIcon,
+    Add01Icon as AddIcon,
+    MoneyReceiveSquareIcon as FineIcon,
+    Alert02Icon as AlertIcon,
+    Tick02Icon as TickIcon,
+    Cancel01Icon as CancelIcon,
+    InformationCircleIcon as InfoIcon,
+} from 'hugeicons-react';
+import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
+import { Badge } from '../../components/ui/badge';
+import { Input } from '../../components/ui/input';
+import { Button } from '../../components/ui/button';
+import { Separator } from '../../components/ui/separator';
+import { getVehicles, addVehicle, removeVehicle, getChallans, getFines } from '../../api/traffic';
+
+const fadeIn = {
+    hidden: { opacity: 0, y: 15 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.4 } }
+};
+
+const statusConfig = {
+    unpaid: { label: 'Unpaid', class: 'bg-red-100 text-red-700 border-red-200', icon: AlertIcon },
+    paid: { label: 'Paid', class: 'bg-emerald-100 text-emerald-700 border-emerald-200', icon: TickIcon },
+    contested: { label: 'Contested', class: 'bg-amber-100 text-amber-700 border-amber-200', icon: InfoIcon },
+    cancelled: { label: 'Cancelled', class: 'bg-zinc-100 text-zinc-500 border-zinc-200', icon: CancelIcon },
+};
+
+export default function TrafficDashboard() {
+    const navigate = useNavigate();
+    const [vehicles, setVehicles] = useState([]);
+    const [challans, setChallans] = useState([]);
+    const [summary, setSummary] = useState({});
+    const [topFines, setTopFines] = useState([]);
+    const [vehicleInput, setVehicleInput] = useState('');
+    const [loading, setLoading] = useState(true);
+    const [addingVehicle, setAddingVehicle] = useState(false);
+
+    const fetchAll = async () => {
+        try {
+            const [vRes, cRes, fRes] = await Promise.all([
+                getVehicles(),
+                getChallans(),
+                getFines({ limit: 4 }),
+            ]);
+            setVehicles(vRes.vehicles || []);
+            setChallans(cRes.challans || []);
+            setSummary(cRes.summary || {});
+            setTopFines(fRes.fines || []);
+        } catch {
+            // Silently handle — user may have no vehicles yet
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    useEffect(() => { fetchAll(); }, []);
+
+    const handleAddVehicle = async () => {
+        const num = vehicleInput.trim().toUpperCase().replace(/\s+/g, '');
+        if (num.length < 4) {
+            toast.error('Enter a valid vehicle number');
+            return;
+        }
+        setAddingVehicle(true);
+        try {
+            await addVehicle(num);
+            toast.success(`Vehicle ${num} linked!`);
+            setVehicleInput('');
+            fetchAll();
+        } catch (err) {
+            toast.error(err.message || 'Failed to add vehicle');
+        } finally {
+            setAddingVehicle(false);
+        }
+    };
+
+    const handleRemoveVehicle = async (id, number) => {
+        try {
+            await removeVehicle(id);
+            toast.success(`Vehicle ${number} removed`);
+            fetchAll();
+        } catch {
+            toast.error('Failed to remove vehicle');
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="flex items-center justify-center py-20">
+                <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+            </div>
+        );
+    }
+
+    const summaryCards = [
+        { title: 'Total Challans', value: summary.total || 0, color: 'text-primary', bg: 'bg-primary/10' },
+        { title: 'Unpaid', value: summary.unpaid || 0, color: 'text-red-600', bg: 'bg-red-100' },
+        { title: 'Paid', value: summary.paid || 0, color: 'text-emerald-600', bg: 'bg-emerald-100' },
+        { title: 'Outstanding Fine', value: `₹${(summary.unpaidFine || 0).toLocaleString('en-IN')}`, color: 'text-chart-5', bg: 'bg-chart-5/10' },
+    ];
+
+    return (
+        <div className="w-full space-y-8">
+            {/* Header */}
+            <motion.div initial="hidden" animate="visible" variants={fadeIn}>
+                <h1 className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-foreground">Traffic Dashboard</h1>
+                <p className="text-sm text-muted-foreground font-medium mt-1">Manage your vehicles, view e-challans, and check traffic fine rules</p>
+            </motion.div>
+
+            {/* Summary Stats */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                {summaryCards.map((card, i) => (
+                    <motion.div key={card.title} initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: i * 0.08 }}>
+                        <Card className="border-border hover:border-primary/20 transition-all">
+                            <CardContent className="p-5">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{card.title}</p>
+                                <p className={`text-2xl font-bold mt-1 ${card.color}`}>{card.value}</p>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+                ))}
+            </div>
+
+            {/* Vehicle Management */}
+            <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.3 }}>
+                <Card>
+                    <CardHeader className="pb-3">
+                        <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                            <CarIcon size={16} /> My Vehicles
+                        </CardTitle>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                        {/* Add Vehicle */}
+                        <div className="flex gap-2">
+                            <Input
+                                placeholder="Enter vehicle number (e.g. MH01CP6748)"
+                                value={vehicleInput}
+                                onChange={(e) => setVehicleInput(e.target.value.toUpperCase())}
+                                onKeyDown={(e) => e.key === 'Enter' && handleAddVehicle()}
+                                className="font-mono text-sm tracking-wider"
+                            />
+                            <Button onClick={handleAddVehicle} disabled={addingVehicle} size="sm" className="shrink-0 gap-1 cursor-pointer">
+                                <AddIcon size={14} /> Add
+                            </Button>
+                        </div>
+
+                        {/* Vehicle List */}
+                        {vehicles.length === 0 ? (
+                            <p className="text-xs text-muted-foreground font-medium py-4 text-center">No vehicles linked yet. Add a vehicle number above to see your challans.</p>
+                        ) : (
+                            <div className="flex flex-wrap gap-2">
+                                {vehicles.map((v) => (
+                                    <div key={v.id} className="flex items-center gap-2 px-3 py-2 border border-border rounded-lg bg-muted/30 group hover:border-primary/30 transition-all">
+                                        <CarIcon size={14} className="text-primary" />
+                                        <span className="text-sm font-bold font-mono tracking-wider text-foreground">{v.vehicleNumber}</span>
+                                        <Badge variant="secondary" className="text-[9px]">{v.challans?.length || 0} challans</Badge>
+                                        <button onClick={() => handleRemoveVehicle(v.id, v.vehicleNumber)} className="opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer">
+                                            <DeleteIcon size={14} className="text-red-500 hover:text-red-700" />
+                                        </button>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
+                    </CardContent>
+                </Card>
+            </motion.div>
+
+            {/* Top Fines Quick Cards */}
+            <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 }}>
+                <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                        <FineIcon size={16} /> Common Traffic Fines
+                    </h2>
+                    <button onClick={() => navigate('/user/traffic/fines')} className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary hover:underline underline-offset-4 cursor-pointer">
+                        View All Fines <ArrowRight size={12} />
+                    </button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                    {topFines.map((fine, i) => (
+                        <motion.div key={fine.id} initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 + i * 0.06 }}>
+                            <Card className="border-border hover:border-primary/20 hover:shadow-md transition-all cursor-pointer h-full" onClick={() => navigate('/user/traffic/fines')}>
+                                <CardContent className="p-4 flex flex-col h-full">
+                                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-1">{fine.offenseSection}</p>
+                                    <p className="text-xs font-bold text-foreground mb-3 line-clamp-2 flex-1">{fine.offenseName}</p>
+                                    <div className="flex items-center justify-between">
+                                        <span className="text-lg font-bold text-chart-5">₹{fine.fineAmount.toLocaleString('en-IN')}</span>
+                                        <span className="text-[9px] font-medium text-muted-foreground">Repeat: {fine.repetitiveFine === 'Same' ? 'Same' : `₹${fine.repetitiveFine}`}</span>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    ))}
+                </div>
+            </motion.div>
+
+            <Separator />
+
+            {/* Challans Section */}
+            <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.5 }}>
+                <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4 flex items-center gap-2">
+                    <AlertIcon size={16} /> Your E-Challans
+                </h2>
+
+                {challans.length === 0 ? (
+                    <Card>
+                        <CardContent className="py-12 text-center">
+                            <p className="text-sm text-muted-foreground font-medium">
+                                {vehicles.length === 0
+                                    ? 'Link a vehicle above to see challans.'
+                                    : 'No challans found for your vehicles. Drive safe! 🎉'}
+                            </p>
+                        </CardContent>
+                    </Card>
+                ) : (
+                    <div className="space-y-3">
+                        {challans.map((challan, i) => {
+                            const sc = statusConfig[challan.status] || statusConfig.unpaid;
+                            return (
+                                <motion.div
+                                    key={challan.id}
+                                    initial="hidden"
+                                    animate="visible"
+                                    variants={fadeIn}
+                                    transition={{ delay: 0.5 + i * 0.04 }}
+                                    onClick={() => navigate(`/user/traffic/challan/${challan.id}`)}
+                                    className="border border-border rounded-lg p-5 bg-card hover:border-primary/20 hover:shadow-md transition-all cursor-pointer group"
+                                >
+                                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-center gap-2 mb-1.5">
+                                                <span className="text-xs font-bold font-mono tracking-wider text-foreground">{challan.challanNumber}</span>
+                                                <Badge className={`text-[9px] font-bold uppercase tracking-wider ${sc.class}`}>{sc.label}</Badge>
+                                            </div>
+                                            <p className="text-sm font-bold text-foreground truncate">{challan.fine?.offenseName}</p>
+                                            <div className="flex items-center gap-3 mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
+                                                <span>🚗 {challan.vehicleNumber}</span>
+                                                {challan.location && <span>📍 {challan.location}</span>}
+                                                <span>📅 {new Date(challan.issuedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                            </div>
+                                        </div>
+                                        <div className="flex items-center gap-3">
+                                            <span className="text-xl font-bold text-chart-5">₹{challan.amount.toLocaleString('en-IN')}</span>
+                                            <ArrowRight size={16} className="text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            );
+                        })}
+                    </div>
+                )}
+            </motion.div>
+        </div>
+    );
+}

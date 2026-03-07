@@ -16,6 +16,7 @@ model User {
   createdAt    DateTime @default(now()) @map("created_at")
   issues       Issue[]
   profile      CitizenProfile?
+  vehicles     UserVehicle[]
 
   @@map("users")
 }
@@ -63,4 +64,51 @@ model Department {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("departments")
+}
+
+// ─── Traffic & E-Challan Models ─────────────────────────────────
+
+model TrafficFine {
+  id              Int      @id @default(autoincrement())
+  srNo            String   @map("sr_no") @db.VarChar(10)
+  offenseSection  String   @map("offense_section") @db.VarChar(255)
+  offenseName     String   @map("offense_name") @db.Text
+  fineAmount      Int      @map("fine_amount")
+  repetitiveFine  String   @map("repetitive_fine") @db.VarChar(255)
+  challans        TrafficChallan[]
+  createdAt       DateTime @default(now()) @map("created_at")
+
+  @@map("traffic_fines")
+}
+
+model UserVehicle {
+  id            Int      @id @default(autoincrement())
+  vehicleNumber String   @map("vehicle_number") @db.VarChar(20)
+  userId        Int      @map("user_id")
+  user          User     @relation(fields: [userId], references: [id])
+  challans      TrafficChallan[]
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@unique([vehicleNumber, userId])
+  @@map("user_vehicles")
+}
+
+model TrafficChallan {
+  id              Int         @id @default(autoincrement())
+  challanNumber   String      @unique @map("challan_number") @db.VarChar(30)
+  vehicleNumber   String      @map("vehicle_number") @db.VarChar(20)
+  vehicle         UserVehicle? @relation(fields: [vehicleId], references: [id])
+  vehicleId       Int?        @map("vehicle_id")
+  fineId          Int         @map("fine_id")
+  fine            TrafficFine @relation(fields: [fineId], references: [id])
+  amount          Int
+  status          String      @default("unpaid") @db.VarChar(20) // unpaid, paid, contested, cancelled
+  location        String?     @db.VarChar(255)
+  imageUrl        String?     @map("image_url") @db.Text
+  issuedAt        DateTime    @map("issued_at")
+  paidAt          DateTime?   @map("paid_at")
+  createdAt       DateTime    @default(now()) @map("created_at")
+  updatedAt       DateTime    @updatedAt @map("updated_at")
+
+  @@map("traffic_challans")
 }

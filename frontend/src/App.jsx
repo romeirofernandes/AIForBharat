@@ -19,6 +19,9 @@ import Schemes from './pages/user/Schemes';
 import ReportIssue from './pages/user/ReportIssue';
 import MyComplaints from './pages/user/MyComplaints';
 import Profile from './pages/user/Profile';
+import TrafficDashboard from './pages/user/TrafficDashboard';
+import AllFines from './pages/user/AllFines';
+import ChallanDetails from './pages/user/ChallanDetails';
 
 // Admin pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -49,6 +52,9 @@ export default function App() {
           <Route path="schemes" element={<Schemes />} />
           <Route path="report" element={<ReportIssue />} />
           <Route path="complaints" element={<MyComplaints />} />
+          <Route path="traffic" element={<TrafficDashboard />} />
+          <Route path="traffic/fines" element={<AllFines />} />
+          <Route path="traffic/challan/:id" element={<ChallanDetails />} />
           <Route path="profile" element={<Profile />} />
         </Route>
 

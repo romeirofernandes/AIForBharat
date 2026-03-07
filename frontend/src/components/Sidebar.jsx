@@ -16,6 +16,7 @@ import {
     UserMultiple02Icon as UsersIcon,
     ChartHistogramIcon as Analytics,
     SidebarLeft01Icon as SidebarToggle,
+    Car01Icon as TrafficIcon,
 } from 'hugeicons-react';
 
 const userLinks = [
@@ -23,6 +24,7 @@ const userLinks = [
     { to: '/user/schemes', label: 'My Schemes', icon: Schemes },
     { to: '/user/report', label: 'Report Issue', icon: Report },
     { to: '/user/complaints', label: 'My Complaints', icon: Complaints },
+    { to: '/user/traffic', label: 'Traffic', icon: TrafficIcon },
 ];
 
 const adminLinks = [

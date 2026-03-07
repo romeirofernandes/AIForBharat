@@ -67,10 +67,10 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
             <motion.aside
                 animate={{ width: collapsed ? 70 : 240 }}
                 transition={{ duration: 0.25, ease: 'easeInOut' }}
-                className="hidden md:flex flex-col h-screen sticky top-0 bg-sidebar border-r border-sidebar-border z-30 overflow-hidden"
+                className="hidden md:flex flex-col h-screen sticky top-0 bg-sidebar border-r border-border z-30 overflow-hidden"
             >
                 {/* Header */}
-                <div className="flex items-center gap-2 px-4 h-16 border-b border-sidebar-border shrink-0">
+                <div className="flex items-center gap-2 px-4 h-16 border-b border-border shrink-0">
                     <span className="material-symbols-outlined text-sidebar-primary text-xl">account_balance</span>
                     <AnimatePresence>
                         {!collapsed && (
@@ -186,9 +186,9 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                             animate={{ x: 0 }}
                             exit={{ x: -240 }}
                             transition={{ duration: 0.25, ease: 'easeInOut' }}
-                            className="fixed top-0 left-0 w-60 h-screen bg-sidebar border-r border-sidebar-border z-50 flex flex-col md:hidden"
+                            className="fixed top-0 left-0 w-60 h-screen bg-sidebar border-r border-border z-50 flex flex-col md:hidden"
                         >
-                            <div className="flex items-center justify-between px-4 h-16 border-b border-sidebar-border">
+                            <div className="flex items-center justify-between px-4 h-16 border-b border-border">
                                 <div className="flex items-center gap-2">
                                     <span className="material-symbols-outlined text-sidebar-primary text-xl">account_balance</span>
                                     <span className="text-[11px] font-bold uppercase tracking-widest text-sidebar-primary">Civic Intel</span>

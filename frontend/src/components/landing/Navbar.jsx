@@ -2,7 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Menu01Icon as Menu, Cancel01Icon as X, ArrowRight01Icon as ChevronRight } from 'hugeicons-react';
-import { Button } from '../../components/button';
+import { RichButton } from '../ui/rich-button';
 
 export function Navbar({ scrolled, isMobileMenuOpen, setIsMobileMenuOpen, scrollToSection }) {
     const navigate = useNavigate();
@@ -24,9 +24,9 @@ export function Navbar({ scrolled, isMobileMenuOpen, setIsMobileMenuOpen, scroll
                                 </button>
                             ))}
                         </nav>
-                        <Button onClick={() => navigate('/login')} className="cursor-pointer gap-2 rounded-lg min-h-[44px]">
+                        <RichButton onClick={() => navigate('/login')} color="primary" size="default">
                             Login <ChevronRight size={16} />
-                        </Button>
+                        </RichButton>
                     </div>
 
                     <button className="md:hidden p-2 text-primary focus:outline-none cursor-pointer" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
@@ -48,9 +48,9 @@ export function Navbar({ scrolled, isMobileMenuOpen, setIsMobileMenuOpen, scroll
                                 {item}
                             </button>
                         ))}
-                        <Button onClick={() => navigate('/login')} variant="default" className="mt-8 w-full cursor-pointer rounded-lg gap-2 min-h-[44px]">
+                        <RichButton onClick={() => navigate('/login')} color="default" size="lg" className="mt-8 w-full">
                             Login <ChevronRight size={18} />
-                        </Button>
+                        </RichButton>
                     </nav>
                 </motion.div>
             )}

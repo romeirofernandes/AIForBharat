@@ -63,6 +63,7 @@ export default function App() {
           <Route path="issues" element={<AdminIssues />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
 
         {/* Catch-all */}

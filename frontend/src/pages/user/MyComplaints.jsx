@@ -65,8 +65,22 @@ export default function MyComplaints() {
                                 </span>
                             </div>
                             <p className="text-xs text-muted-foreground font-medium mb-3 line-clamp-2">{issue.description}</p>
+                            {(issue.imageUrl || issue.videoUrl) && (
+                                <div className="flex gap-2 mb-3">
+                                    {issue.imageUrl && (
+                                        <a href={issue.imageUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold uppercase tracking-wider text-primary hover:underline">
+                                            📷 Image
+                                        </a>
+                                    )}
+                                    {issue.videoUrl && (
+                                        <a href={issue.videoUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold uppercase tracking-wider text-primary hover:underline">
+                                            🎥 Video
+                                        </a>
+                                    )}
+                                </div>
+                            )}
                             <div className="flex items-center gap-4 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
-                                {issue.location && <span>📍 {issue.location}</span>}
+                                {issue.latitude && issue.longitude && <span>📍 {issue.latitude}, {issue.longitude}</span>}
                                 <span>{new Date(issue.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                             </div>
                         </motion.div>

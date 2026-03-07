@@ -15,6 +15,7 @@ model User {
   role         String   @default("user") @db.VarChar(20)
   createdAt    DateTime @default(now()) @map("created_at")
   issues       Issue[]
+  profile      CitizenProfile?
 
   @@map("users")
 }
@@ -23,12 +24,43 @@ model Issue {
   id          Int      @id @default(autoincrement())
   title       String   @db.VarChar(255)
   description String   @db.Text
-  location    String?  @db.VarChar(255)
-  status      String   @default("pending") @db.VarChar(50)
-  userId      Int      @map("user_id")
-  user        User     @relation(fields: [userId], references: [id])
+  latitude    Float?
+  longitude    Float?
+  imageUrl     String?     @map("image_url") @db.Text
+  videoUrl     String?     @map("video_url") @db.Text
+  status       String      @default("pending") @db.VarChar(50)
+  departmentId Int?        @map("department_id")
+  department   Department? @relation(fields: [departmentId], references: [id])
+  incidentType String?     @map("incident_type") @db.VarChar(255)
+  userId       Int         @map("user_id")
+  user         User        @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now()) @map("created_at")
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("issues")
+}
+
+model CitizenProfile {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique @map("user_id")
+  user      User     @relation(fields: [userId], references: [id])
+  name      String   @db.VarChar(255)
+  age       Int?
+  gender    String?  @db.VarChar(50)
+  imageUrl  String?  @map("image_url") @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("citizen_profiles")
+}
+
+model Department {
+  id          Int      @id @default(autoincrement())
+  name        String   @unique @db.VarChar(255)
+  description String?  @db.Text
+  issues      Issue[]
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  @@map("departments")
 }

@@ -3,8 +3,10 @@ const router = express.Router();
 const issueController = require("../controllers/issueController");
 const { requireAuth, requireAdmin } = require("../middleware/auth");
 
+const upload = require("../middleware/upload");
+
 // User routes
-router.post("/", requireAuth, issueController.createIssue);
+router.post("/", requireAuth, upload.fields([{ name: 'image', maxCount: 1 }, { name: 'vr_image', maxCount: 1 }]), issueController.createIssue);
 router.get("/my", requireAuth, issueController.getMyIssues);
 
 // Admin routes

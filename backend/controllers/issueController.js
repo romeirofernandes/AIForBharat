@@ -1,19 +1,46 @@
 const prisma = require("../config/prisma");
-
-// Create a new issue (user)
+// restart nodemon to load generated prisma client
 exports.createIssue = async (req, res) => {
     try {
-        const { title, description, location } = req.body;
+        const { department, incident_type, description, latitude, longitude } = req.body;
 
-        if (!title || !description) {
-            return res.status(400).json({ error: "Title and description are required" });
+        if (!department || !incident_type || !description) {
+            return res.status(400).json({ error: "Department, incident type, and description are required" });
         }
+
+        const title = `${department} - ${incident_type}`;
+
+        // Get file URLs from S3 upload (req.files)
+        let imageUrl = null;
+        let videoUrl = null;
+        
+        if (req.files) {
+            if (req.files['image'] && req.files['image'][0]) {
+                imageUrl = req.files['image'][0].location;
+            }
+            if (req.files['vr_image'] && req.files['vr_image'][0]) {
+                videoUrl = req.files['vr_image'][0].location; // using videoUrl to store vr_image
+            }
+        }
+
+        // Find the matching department by name
+        const foundDepartment = await prisma.department.findUnique({
+            where: { name: department }
+        });
+
+        // Use the ID if found, otherwise keep it null (or you can handle unknown departments)
+        const departmentId = foundDepartment ? foundDepartment.id : null;
 
         const issue = await prisma.issue.create({
             data: {
                 title,
                 description,
-                location: location || null,
+                latitude: latitude ? parseFloat(latitude) : null,
+                longitude: longitude ? parseFloat(longitude) : null,
+                imageUrl: imageUrl || null,
+                videoUrl: videoUrl || null,
+                departmentId,
+                incidentType: incident_type || null,
                 userId: req.user.userId,
             },
         });
@@ -52,6 +79,9 @@ exports.getAllIssues = async (req, res) => {
                 user: {
                     select: { id: true, email: true },
                 },
+                department: {
+                    select: { name: true }
+                }
             },
             orderBy: { createdAt: "desc" },
         });

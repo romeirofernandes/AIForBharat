@@ -23,7 +23,6 @@ const userLinks = [
     { to: '/user/schemes', label: 'My Schemes', icon: Schemes },
     { to: '/user/report', label: 'Report Issue', icon: Report },
     { to: '/user/complaints', label: 'My Complaints', icon: Complaints },
-    { to: '/user/profile', label: 'Profile', icon: ProfileIcon },
 ];
 
 const adminLinks = [
@@ -51,7 +50,8 @@ function SidebarItemTooltip({ children, collapsed, label }) {
 }
 
 export default function Sidebar({ collapsed, setCollapsed, role }) {
-    const { logout } = useAuth();
+    const { user, logout } = useAuth();
+    const profile = user?.profile || {};
     const navigate = useNavigate();
     const links = role === 'admin' ? adminLinks : userLinks;
 
@@ -119,8 +119,33 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                     ))}
                 </nav>
 
-                {/* Logout */}
-                <div className="px-2 pb-4 border-t border-sidebar-border pt-4">
+                {/* Profile & Logout */}
+                <div className="px-2 pb-4 border-t border-sidebar-border pt-4 flex flex-col gap-2">
+                    <SidebarItemTooltip collapsed={collapsed} label="Profile">
+                        <NavLink to={`/${role}/profile`} className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-sidebar-foreground/5 transition-colors cursor-pointer group shrink-0 overflow-hidden">
+                            <div className="w-7 h-7 rounded-sm bg-primary/20 text-primary flex items-center justify-center text-xs font-bold shrink-0 overflow-hidden">
+                                {profile.imageUrl ? (
+                                    <img src={profile.imageUrl} alt="Avatar" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
+                                ) : (
+                                    profile.name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'
+                                )}
+                            </div>
+                            <AnimatePresence>
+                                {!collapsed && (
+                                    <motion.div
+                                        initial={{ opacity: 0, width: 0 }}
+                                        animate={{ opacity: 1, width: 'auto' }}
+                                        exit={{ opacity: 0, width: 0 }}
+                                        className="flex flex-col whitespace-nowrap overflow-hidden"
+                                    >
+                                        <span className="text-[11px] font-bold text-sidebar-foreground/90 truncate">{profile.name || 'Set Profile'}</span>
+                                        <span className="text-[9px] uppercase tracking-wider text-sidebar-foreground/50 truncate w-[110px]">{user?.email}</span>
+                                    </motion.div>
+                                )}
+                            </AnimatePresence>
+                        </NavLink>
+                    </SidebarItemTooltip>
+
                     <SidebarItemTooltip collapsed={collapsed} label="Logout">
                         <button
                             onClick={handleLogout}
@@ -193,7 +218,25 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                                 ))}
                             </nav>
 
-                            <div className="px-2 pb-4 border-t border-sidebar-border pt-4">
+                            <div className="px-2 pb-4 border-t border-sidebar-border pt-4 flex flex-col gap-2">
+                                <NavLink
+                                    to={`/${role}/profile`}
+                                    onClick={() => setCollapsed(true)}
+                                    className="flex items-center gap-3 px-3 py-2 rounded-md hover:bg-sidebar-foreground/5 transition-colors cursor-pointer w-full"
+                                >
+                                    <div className="w-8 h-8 rounded-sm bg-primary/20 text-primary flex items-center justify-center text-sm font-bold shrink-0 overflow-hidden">
+                                        {profile.imageUrl ? (
+                                            <img src={profile.imageUrl} alt="Avatar" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
+                                        ) : (
+                                            profile.name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'
+                                        )}
+                                    </div>
+                                    <div className="flex flex-col overflow-hidden">
+                                        <span className="text-[11px] font-bold text-sidebar-foreground/90 truncate">{profile.name || 'Set Profile'}</span>
+                                        <span className="text-[9px] uppercase tracking-wider text-sidebar-foreground/50 truncate max-w-[120px]">{user?.email}</span>
+                                    </div>
+                                </NavLink>
+
                                 <button
                                     onClick={handleLogout}
                                     className="flex items-center gap-3 px-3 py-2.5 rounded-md text-xs font-semibold uppercase tracking-wider text-sidebar-foreground/70 hover:bg-destructive/10 hover:text-destructive transition-all duration-200 w-full cursor-pointer"

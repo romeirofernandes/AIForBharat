@@ -111,8 +111,22 @@ export default function AdminIssues() {
                                     </span>
                                 </div>
                                 <p className="text-xs text-muted-foreground font-medium line-clamp-2">{issue.description}</p>
-                                {issue.location && (
-                                    <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-wider mt-2">📍 {issue.location}</p>
+                                {issue.latitude && issue.longitude && (
+                                    <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-wider mt-2">📍 {issue.latitude}, {issue.longitude}</p>
+                                )}
+                                {(issue.imageUrl || issue.videoUrl) && (
+                                    <div className="flex gap-2 mt-3">
+                                        {issue.imageUrl && (
+                                            <a href={issue.imageUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold uppercase tracking-wider text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                                                View Image
+                                            </a>
+                                        )}
+                                        {issue.videoUrl && (
+                                            <a href={issue.videoUrl} target="_blank" rel="noopener noreferrer" className="text-[10px] font-bold uppercase tracking-wider text-primary hover:underline" onClick={(e) => e.stopPropagation()}>
+                                                View Video
+                                            </a>
+                                        )}
+                                    </div>
                                 )}
                             </div>
 

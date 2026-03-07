@@ -17,3 +17,11 @@ export function signup(email, password) {
 export function getProfile() {
     return apiFetch('/auth/profile');
 }
+
+export function updateProfile(data) {
+    const isFormData = data instanceof FormData;
+    return apiFetch('/auth/profile', {
+        method: 'PUT',
+        body: isFormData ? data : JSON.stringify(data),
+    });
+}

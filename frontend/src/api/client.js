@@ -12,6 +12,11 @@ export async function apiFetch(endpoint, options = {}) {
         ...options.headers,
     };
 
+    // Remove Content-Type if sending FormData so browser sets it with boundary
+    if (options.body instanceof FormData) {
+        delete headers['Content-Type'];
+    }
+
     const response = await fetch(`${API_URL}${endpoint}`, {
         ...options,
         headers,

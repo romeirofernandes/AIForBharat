@@ -136,6 +136,7 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --font-display: "Plus Jakarta Sans", sans-serif;
 }
 
 @layer base {
@@ -144,12 +145,21 @@
     @apply font-sans;
   }
 
+  body,
+  input,
+  textarea,
+  select,
+  button {
+    background-color: var(--background);
+    color: var(--foreground);
+    font-family: "Figtree Variable", "Figtree", sans-serif;
+    -webkit-font-smoothing: antialiased;
+    letter-spacing: -0.01em;
+  }
+
   body {
     background-color: var(--background);
     color: var(--foreground);
-    font-family: var(--font-sans);
-    -webkit-font-smoothing: antialiased;
-    letter-spacing: -0.01em;
   }
 
   h1,
@@ -158,8 +168,8 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-display);
-    font-weight: 600;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    font-weight: 700;
     letter-spacing: -0.02em;
   }
 }

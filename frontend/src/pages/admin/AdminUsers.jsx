@@ -34,10 +34,10 @@ export default function AdminUsers() {
                     <div className="border border-border rounded-lg overflow-hidden bg-card">
                         {/* Table header */}
                         <div className="hidden sm:grid grid-cols-[1fr_100px_80px_120px] gap-4 px-5 py-3 bg-muted/40 border-b border-border">
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Email</span>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Role</span>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Issues</span>
-                            <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Joined</span>
+                            <span className="text-xs font-medium text-muted-foreground">Email</span>
+                            <span className="text-xs font-medium text-muted-foreground">Role</span>
+                            <span className="text-xs font-medium text-muted-foreground">Issues</span>
+                            <span className="text-xs font-medium text-muted-foreground">Joined</span>
                         </div>
 
                         {/* Rows */}

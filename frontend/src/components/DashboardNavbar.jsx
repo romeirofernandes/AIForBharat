@@ -105,7 +105,7 @@ export default function DashboardNavbar({ collapsed, setCollapsed }) {
             <div className="flex items-center gap-3">
                 <div className="text-right hidden sm:block">
                     <p className="text-xs font-semibold text-foreground">{user?.email}</p>
-                    <p className="text-[10px] font-bold uppercase tracking-widest text-primary">{user?.role}</p>
+                    <p className="text-xs font-medium text-primary">{user?.role}</p>
                 </div>
                 <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center text-primary text-xs font-bold uppercase shrink-0">
                     {user?.email?.[0]}

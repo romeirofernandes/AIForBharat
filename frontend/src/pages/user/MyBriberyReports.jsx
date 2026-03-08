@@ -60,7 +60,7 @@ function StatusTimeline({ status }) {
                             <div className={`w-6 h-6 rounded-full flex items-center justify-center text-[9px] font-bold ${filled ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground'}`}>
                                 {stepNum}
                             </div>
-                            <span className={`text-[8px] font-bold uppercase tracking-wider text-center ${filled ? 'text-foreground' : 'text-muted-foreground/50'}`}>
+                            <span className={`text-xs font-medium text-center ${filled ? 'text-foreground' : 'text-muted-foreground/50'}`}>
                                 {step.label}
                             </span>
                         </div>
@@ -73,7 +73,7 @@ function StatusTimeline({ status }) {
             {isDismissed && (
                 <div className="flex flex-col items-center gap-1 ml-2">
                     <div className="w-6 h-6 rounded-full flex items-center justify-center bg-red-500 text-white text-[9px] font-bold">✕</div>
-                    <span className="text-[8px] font-bold uppercase tracking-wider text-red-600">Dismissed</span>
+                    <span className="text-xs font-medium text-red-600">Dismissed</span>
                 </div>
             )}
         </div>
@@ -129,7 +129,7 @@ export default function MyBriberyReports() {
                         <Card key={s.label} className="border-border">
                             <CardContent className="p-3 text-center">
                                 <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
-                                <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
+                                <p className="text-xs font-medium text-muted-foreground">{s.label}</p>
                             </CardContent>
                         </Card>
                     ))}
@@ -143,7 +143,7 @@ export default function MyBriberyReports() {
                         <button
                             key={f}
                             onClick={() => setFilter(f)}
-                            className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${filter === f
+                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer ${filter === f
                                     ? 'bg-primary text-primary-foreground'
                                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
                                 }`}
@@ -196,12 +196,12 @@ export default function MyBriberyReports() {
                                             <span className="text-xs font-bold font-mono tracking-wider text-foreground">#{c.id}</span>
                                             <Badge className={`text-[9px] font-bold uppercase tracking-wider ${sc.class}`}>{sc.label}</Badge>
                                         </div>
-                                        <span className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
+                                        <span className="text-xs text-muted-foreground/60">
                                             {new Date(c.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                                         </span>
                                     </div>
                                     <p className="text-sm font-bold text-foreground">{c.complaintType === 'Other' ? c.otherComplaintType || 'Other' : c.complaintType}</p>
-                                    <div className="flex items-center gap-4 mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
+                                    <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground/60">
                                         <span className="flex items-center gap-1"><BadgeIcon size={11} /> {c.badgeNumber}</span>
                                         {c.location && <span className="flex items-center gap-1"><LocationIcon size={11} /> {c.location}</span>}
                                         {c.amountDemanded && <span className="flex items-center gap-1"><MoneyIcon size={11} /> ₹{c.amountDemanded.toLocaleString('en-IN')}</span>}
@@ -220,27 +220,27 @@ export default function MyBriberyReports() {
                                             <div className="p-5 space-y-4">
                                                 {/* Description */}
                                                 <div>
-                                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-1">Description</p>
+                                                    <p className="text-xs font-medium text-muted-foreground mb-1">Description</p>
                                                     <p className="text-xs text-foreground font-medium leading-relaxed">{c.description}</p>
                                                 </div>
 
                                                 {/* Details Grid */}
                                                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                                                     <div>
-                                                        <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Incident</p>
+                                                        <p className="text-xs font-medium text-muted-foreground">Incident</p>
                                                         <p className="text-xs font-medium text-foreground">
                                                             {new Date(c.incidentAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                                         </p>
                                                     </div>
                                                     {c.challanNumber && (
                                                         <div>
-                                                            <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Challan #</p>
+                                                            <p className="text-xs font-medium text-muted-foreground">Challan #</p>
                                                             <p className="text-xs font-mono font-medium text-foreground">{c.challanNumber}</p>
                                                         </div>
                                                     )}
                                                     {c.amountDemanded && (
                                                         <div>
-                                                            <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Amount Demanded</p>
+                                                            <p className="text-xs font-medium text-muted-foreground">Amount Demanded</p>
                                                             <p className="text-xs font-bold text-red-600">₹{c.amountDemanded.toLocaleString('en-IN')}</p>
                                                         </div>
                                                     )}
@@ -249,7 +249,7 @@ export default function MyBriberyReports() {
                                                 {/* Media */}
                                                 {c.mediaUrls && c.mediaUrls.length > 0 && (
                                                     <div>
-                                                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2">Proof / Evidence</p>
+                                                        <p className="text-xs font-medium text-muted-foreground mb-2">Proof / Evidence</p>
                                                         <div className="flex flex-wrap gap-2">
                                                             {c.mediaUrls.map((url, j) => {
                                                                 const isVideo = url.match(/\.(mp4|webm|mov|avi)/i);
@@ -259,7 +259,7 @@ export default function MyBriberyReports() {
                                                                         href={url}
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
-                                                                        className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-md bg-muted/30 hover:bg-muted/60 transition-colors text-[10px] font-bold uppercase tracking-wider text-primary"
+                                                                        className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-md bg-muted/30 hover:bg-muted/60 transition-colors text-xs font-medium text-primary"
                                                                     >
                                                                         {isVideo ? <VideoIcon size={12} /> : <ImageIcon size={12} />}
                                                                         {isVideo ? 'Video' : 'Photo'} {j + 1}
@@ -272,14 +272,14 @@ export default function MyBriberyReports() {
 
                                                 {/* Status Timeline */}
                                                 <div>
-                                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-1">Status Progress</p>
+                                                    <p className="text-xs font-medium text-muted-foreground mb-1">Status Progress</p>
                                                     <StatusTimeline status={c.status} />
                                                 </div>
 
                                                 {/* Admin Note */}
                                                 {c.adminNote && (
                                                     <div className="border border-amber-200 bg-amber-50 rounded-lg p-3">
-                                                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-amber-700 mb-1">Admin Note</p>
+                                                        <p className="text-xs font-medium text-amber-700 mb-1">Admin Note</p>
                                                         <p className="text-xs text-amber-800 font-medium">{c.adminNote}</p>
                                                     </div>
                                                 )}

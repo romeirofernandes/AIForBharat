@@ -7,7 +7,7 @@
  * NOTE:  Run seed-fines.js first so the TrafficFine rows exist.
  */
 
-require("dotenv").config();
+require("dotenv").config({ path: require("path").resolve(__dirname, "../.env") });
 const prisma = require("../config/prisma");
 
 // Random Unsplash traffic / road images (static seeds for reproducibility)

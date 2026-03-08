@@ -332,7 +332,7 @@ const ReportIncident = () => {
                                 {isPast ? <Check className="w-4 h-4 stroke-[3]" /> : <Icon className="w-4 h-4" />}
                             </div>
                             <div className="flex-1 min-w-0">
-                                <p className={`text-[10px] font-bold uppercase tracking-[0.15em] ${isCurrent || isPast ? 'text-foreground' : 'text-muted-foreground'}`}>
+                                <p className={`text-xs font-medium ${isCurrent || isPast ? 'text-foreground' : 'text-muted-foreground'}`}>
                                     Step {idx + 1}
                                 </p>
                                 <p className={`text-xs font-bold truncate ${isCurrent || isPast ? 'text-foreground' : 'text-muted-foreground/60'}`}>
@@ -456,7 +456,7 @@ const ReportIncident = () => {
                                             </div>
                                             <div>
                                                 <p className="text-xs font-bold text-foreground truncate max-w-[180px]">{vrImage ? vrImage.name : 'Add Video'}</p>
-                                                <p className="text-[9px] text-muted-foreground uppercase font-bold tracking-widest">Optional</p>
+                                                <p className="text-xs font-medium text-muted-foreground">Optional</p>
                                             </div>
                                         </div>
                                         {vrImage && <CheckCircle2 className="w-4 h-4 text-primary" />}
@@ -513,7 +513,7 @@ const ReportIncident = () => {
                                         )}
                                     </div>
                                     {voiceError && (
-                                        <p className="text-[10px] font-bold text-destructive mt-1.5">{voiceError}</p>
+                                        <p className="text-xs font-medium text-destructive mt-1.5">{voiceError}</p>
                                     )}
 
                                     {/* Classification badges */}
@@ -583,7 +583,7 @@ const ReportIncident = () => {
                                     </div>
 
                                     <RichButton
-                                        color="default"
+                                        color="primary"
                                         size="sm"
                                         onClick={handleLocation}
                                         disabled={fetchingLocation}
@@ -617,7 +617,7 @@ const ReportIncident = () => {
                 </div>
 
                 <RichButton
-                    color="default"
+                    color="primary"
                     size="default"
                     onClick={nextStep}
                     disabled={loading}

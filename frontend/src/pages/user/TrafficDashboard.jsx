@@ -51,7 +51,7 @@ export default function TrafficDashboard() {
             const [vRes, cRes, fRes] = await Promise.all([
                 getVehicles(),
                 getChallans(),
-                getFines({ limit: 4 }),
+                getFines({ limit: 5 }),
             ]);
             setVehicles(vRes.vehicles || []);
             setChallans(cRes.challans || []);
@@ -191,7 +191,7 @@ export default function TrafficDashboard() {
                                                                 {v.vehicleNumber}
                                                             </p>
                                                             {challanCount > 0 && (
-                                                                <p className="text-[9px] font-bold text-red-500 uppercase">
+                                                                <p className="text-xs font-medium text-red-500">
                                                                     {challanCount} challan{challanCount !== 1 ? 's' : ''}
                                                                 </p>
                                                             )}
@@ -221,7 +221,7 @@ export default function TrafficDashboard() {
                     <motion.div key={card.title} initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: i * 0.08 }}>
                         <Card className="border-border hover:border-primary/20 transition-all">
                             <CardContent className="p-5">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{card.title}</p>
+                                <p className="text-xs font-medium text-muted-foreground">{card.title}</p>
                                 <p className={`text-2xl font-bold mt-1 ${card.color}`}>{card.value}</p>
                             </CardContent>
                         </Card>
@@ -229,22 +229,99 @@ export default function TrafficDashboard() {
                 ))}
             </div>
 
-            {/* Top Fines Quick Cards */}
-            <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 }}>
+            {/* Report Misconduct CTA — moved to top */}
+            <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.35 }}>
+                <Card className="border-primary/20 bg-gradient-to-r from-red-50 to-transparent hover:shadow-lg transition-all">
+                    <CardContent className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div className="flex items-start gap-4">
+                            <div className="p-3 rounded-lg bg-red-100 shrink-0">
+                                <ShieldIcon size={24} className="text-red-600" />
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Report Police Misconduct</h3>
+                                <p className="text-xs text-muted-foreground font-medium mt-1 max-w-md">
+                                    Experienced bribery, unfair treatment, or corruption by traffic police? File a confidential report with proof.
+                                    You can even fill the entire form using just your voice.
+                                </p>
+                            </div>
+                        </div>
+                        <div className="flex gap-2 shrink-0">
+                            <Button variant="outline" onClick={() => navigate('/user/traffic/my-reports')} className="gap-2 cursor-pointer font-bold uppercase tracking-wider text-xs">
+                                My Reports
+                            </Button>
+                            <Button onClick={() => navigate('/user/traffic/report-bribery')} className="gap-2 cursor-pointer font-bold uppercase tracking-wider text-xs">
+                                File Report <ArrowRight size={14} />
+                            </Button>
+                        </div>
+                    </CardContent>
+                </Card>
+            </motion.div>
+
+            {/* Recent Reports — moved here */}
+            {recentReports.length > 0 && (
+                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 }}>
+                    <div className="flex items-center justify-between mb-3">
+                        <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                            <ShieldIcon size={16} /> My Recent Reports
+                        </h2>
+                        <button onClick={() => navigate('/user/traffic/my-reports')} className="flex items-center gap-1 text-xs font-medium text-primary hover:underline underline-offset-4 cursor-pointer">
+                            View All <ArrowRight size={12} />
+                        </button>
+                    </div>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        {recentReports.map((report) => {
+                            const statusCfg = {
+                                submitted: { label: 'Submitted', class: 'bg-blue-100 text-blue-700' },
+                                under_review: { label: 'Under Review', class: 'bg-amber-100 text-amber-700' },
+                                action_taken: { label: 'Action Taken', class: 'bg-purple-100 text-purple-700' },
+                                resolved: { label: 'Resolved', class: 'bg-emerald-100 text-emerald-700' },
+                                dismissed: { label: 'Dismissed', class: 'bg-red-100 text-red-700' },
+                            };
+                            const rs = statusCfg[report.status] || statusCfg.submitted;
+                            return (
+                                <div
+                                    key={report.id}
+                                    onClick={() => navigate('/user/traffic/my-reports')}
+                                    className="border border-border rounded-lg p-4 bg-card hover:border-primary/20 hover:shadow-sm transition-all cursor-pointer group flex items-center justify-between gap-3"
+                                >
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="text-xs font-bold font-mono text-foreground">#{report.id}</span>
+                                            <Badge className={`text-[9px] font-bold uppercase tracking-wider ${rs.class}`}>{rs.label}</Badge>
+                                        </div>
+                                        <p className="text-xs font-bold text-foreground truncate">
+                                            {report.complaintType === 'Other' ? report.otherComplaintType || 'Other' : report.complaintType}
+                                        </p>
+                                        <p className="text-xs text-muted-foreground/60 mt-0.5">
+                                            Badge: {report.badgeNumber} · {new Date(report.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                                        </p>
+                                    </div>
+                                    <ArrowRight size={14} className="text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                                </div>
+                            );
+                        })}
+                    </div>
+                </motion.div>
+            )}
+
+            <Separator />
+
+            {/* Common Traffic Fines */}
+            <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.45 }}>
                 <div className="flex items-center justify-between mb-4">
                     <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
                         <FineIcon size={16} /> Common Traffic Fines
                     </h2>
-                    <button onClick={() => navigate('/user/traffic/fines')} className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary hover:underline underline-offset-4 cursor-pointer">
+                    <button onClick={() => navigate('/user/traffic/fines')} className="flex items-center gap-1 text-xs font-medium text-primary hover:underline underline-offset-4 cursor-pointer">
                         View All Fines <ArrowRight size={12} />
                     </button>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                     {topFines.map((fine, i) => (
                         <motion.div key={fine.id} initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 + i * 0.06 }}>
                             <Card className="border-border hover:border-primary/20 hover:shadow-md transition-all cursor-pointer h-full" onClick={() => navigate('/user/traffic/fines')}>
                                 <CardContent className="p-4 flex flex-col h-full">
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-1">{fine.offenseSection}</p>
+                                    <p className="text-xs font-medium text-muted-foreground mb-1">{fine.offenseSection}</p>
                                     <p className="text-xs font-bold text-foreground mb-3 line-clamp-2 flex-1">{fine.offenseName}</p>
                                     <div className="flex items-center justify-between">
                                         <span className="text-lg font-bold text-chart-5">₹{fine.fineAmount.toLocaleString('en-IN')}</span>
@@ -259,7 +336,7 @@ export default function TrafficDashboard() {
 
             <Separator />
 
-            {/* Challans Section */}
+            {/* E-Challans Section */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.5 }}>
                 <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4 flex items-center gap-2">
                     <AlertIcon size={16} /> Your E-Challans
@@ -296,7 +373,7 @@ export default function TrafficDashboard() {
                                                 <Badge className={`text-[9px] font-bold uppercase tracking-wider ${sc.class}`}>{sc.label}</Badge>
                                             </div>
                                             <p className="text-sm font-bold text-foreground truncate">{challan.fine?.offenseName}</p>
-                                            <div className="flex items-center gap-3 mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
+                                            <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground/60">
                                                 <span>{challan.vehicleNumber}</span>
                                                 {challan.location && <span>{challan.location}</span>}
                                                 <span>{new Date(challan.issuedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
@@ -313,78 +390,6 @@ export default function TrafficDashboard() {
                     </div>
                 )}
             </motion.div>
-
-            <Separator />
-
-            {/* Report Misconduct CTA */}
-            <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.6 }}>
-                <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-transparent hover:shadow-lg transition-all">
-                    <CardContent className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div className="flex items-start gap-4">
-                            <div className="p-3 rounded-lg bg-red-100 shrink-0">
-                                <ShieldIcon size={24} className="text-red-600" />
-                            </div>
-                            <div>
-                                <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Report Police Misconduct</h3>
-                                <p className="text-xs text-muted-foreground font-medium mt-1 max-w-md">
-                                    Experienced bribery, unfair treatment, or corruption by traffic police? File a confidential report with proof.
-                                    You can even fill the entire form using just your voice.
-                                </p>
-                            </div>
-                        </div>
-                        <Button onClick={() => navigate('/user/traffic/report-bribery')} className="gap-2 cursor-pointer font-bold uppercase tracking-wider text-xs shrink-0">
-                            File Report <ArrowRight size={14} />
-                        </Button>
-                    </CardContent>
-                </Card>
-            </motion.div>
-
-            {/* Recent Reports */}
-            {recentReports.length > 0 && (
-                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.65 }}>
-                    <div className="flex items-center justify-between mb-4">
-                        <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                            <ShieldIcon size={16} /> My Recent Reports
-                        </h2>
-                        <button onClick={() => navigate('/user/traffic/my-reports')} className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary hover:underline underline-offset-4 cursor-pointer">
-                            View All Reports <ArrowRight size={12} />
-                        </button>
-                    </div>
-                    <div className="space-y-2">
-                        {recentReports.map((report) => {
-                            const statusCfg = {
-                                submitted: { label: 'Submitted', class: 'bg-blue-100 text-blue-700' },
-                                under_review: { label: 'Under Review', class: 'bg-amber-100 text-amber-700' },
-                                action_taken: { label: 'Action Taken', class: 'bg-purple-100 text-purple-700' },
-                                resolved: { label: 'Resolved', class: 'bg-emerald-100 text-emerald-700' },
-                                dismissed: { label: 'Dismissed', class: 'bg-red-100 text-red-700' },
-                            };
-                            const rs = statusCfg[report.status] || statusCfg.submitted;
-                            return (
-                                <div
-                                    key={report.id}
-                                    onClick={() => navigate('/user/traffic/my-reports')}
-                                    className="border border-border rounded-lg p-4 bg-card hover:border-primary/20 hover:shadow-sm transition-all cursor-pointer group flex items-center justify-between gap-3"
-                                >
-                                    <div className="flex-1 min-w-0">
-                                        <div className="flex items-center gap-2 mb-1">
-                                            <span className="text-xs font-bold font-mono text-foreground">#{report.id}</span>
-                                            <Badge className={`text-[9px] font-bold uppercase tracking-wider ${rs.class}`}>{rs.label}</Badge>
-                                        </div>
-                                        <p className="text-xs font-bold text-foreground truncate">
-                                            {report.complaintType === 'Other' ? report.otherComplaintType || 'Other' : report.complaintType}
-                                        </p>
-                                        <p className="text-[10px] text-muted-foreground/60 font-bold uppercase tracking-wider mt-0.5">
-                                            Badge: {report.badgeNumber} • {new Date(report.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
-                                        </p>
-                                    </div>
-                                    <ArrowRight size={14} className="text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-1 transition-all" />
-                                </div>
-                            );
-                        })}
-                    </div>
-                </motion.div>
-            )}
         </div>
     );
 }

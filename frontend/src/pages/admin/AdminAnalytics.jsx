@@ -56,13 +56,13 @@ export default function AdminAnalytics() {
             {/* Summary Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.2 }} className="border border-border rounded-lg p-6 bg-card">
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2">Resolution Rate</h3>
+                    <h3 className="text-xs font-medium text-muted-foreground mb-2">Resolution Rate</h3>
                     <p className="text-4xl font-bold text-chart-2">
                         {stats?.totalIssues ? Math.round((stats.resolvedIssues / stats.totalIssues) * 100) : 0}%
                     </p>
                 </motion.div>
                 <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.3 }} className="border border-border rounded-lg p-6 bg-card">
-                    <h3 className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2">Active Backlog</h3>
+                    <h3 className="text-xs font-medium text-muted-foreground mb-2">Active Backlog</h3>
                     <p className="text-4xl font-bold text-chart-5">{stats?.pendingIssues ?? 0}</p>
                 </motion.div>
             </div>

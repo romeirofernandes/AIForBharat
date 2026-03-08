@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "prisma generate && nodemon server.js",
-    "start": "node server.js",
+    "dev": "prisma migrate deploy && prisma generate && nodemon server.js",
+    "start": "prisma migrate deploy && prisma generate && node server.js",
     "prisma": "prisma",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev"
@@ -28,6 +28,7 @@
     "jsonwebtoken": "^9.0.3",
     "multer": "^2.1.1",
     "multer-s3": "^3.0.1",
+    "nodemailer": "^8.0.1",
     "node-fetch": "^3.3.2",
     "pg": "^8.20.0",
     "twilio": "^5.12.2"

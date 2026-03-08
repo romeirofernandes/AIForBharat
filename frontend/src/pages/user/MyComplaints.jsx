@@ -88,7 +88,7 @@ export default function MyComplaints() {
                         <button
                             key={f}
                             onClick={() => setActiveFilter(f)}
-                            className={`px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider rounded-md transition-all cursor-pointer whitespace-nowrap
+                            className={`px-3 py-1.5 text-sm font-medium rounded-md transition-all cursor-pointer whitespace-nowrap
                                 ${activeFilter === f ? 'bg-primary text-primary-foreground' : 'bg-muted text-muted-foreground hover:text-foreground'}`}
                         >
                             {filterLabels[f]}
@@ -164,7 +164,7 @@ export default function MyComplaints() {
                                     </span>
                                 </div>
                                 <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 flex-1">{issue.description}</p>
-                                <div className="flex items-center justify-between pt-2 border-t border-border text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/60 mt-auto">
+                                <div className="flex items-center justify-between pt-2 border-t border-border text-xs text-muted-foreground/60 mt-auto">
                                     {issue.latitude && issue.longitude ? (
                                         <span className="flex items-center gap-1">
                                             <MapPin className="w-3 h-3" />

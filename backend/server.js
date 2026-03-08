@@ -16,6 +16,8 @@ const userRoutes = require("./routes/userRoutes");
 const geminiRoutes = require("./routes/geminiRoutes");
 const trafficRoutes = require("./routes/trafficRoutes");
 const forumRoutes = require("./routes/forumRoutes");
+const workflowRoutes = require("./routes/workflowRoutes");
+const leaderboardRoutes = require("./routes/leaderboardRoutes");
 const briberyRoutes = require("./routes/briberyRoutes");
 const whatsappRoutes = require("./routes/whatsappRoutes");
 
@@ -25,8 +27,10 @@ app.use("/api/users", userRoutes);
 app.use("/api/gemini", geminiRoutes);
 app.use("/api/traffic", trafficRoutes);
 app.use("/api/forum", forumRoutes);
+app.use("/api/workflows", workflowRoutes);
 app.use("/api/bribery", briberyRoutes);
 app.use("/api/whatsapp", whatsappRoutes);
+app.use("/api/leaderboard", leaderboardRoutes);
 
 app.get("/", (req, res) => {
     res.json({ message: "Civic Intelligence API running" });

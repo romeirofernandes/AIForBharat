@@ -85,11 +85,11 @@ export default function AllFines() {
                             <Table>
                                 <TableHeader>
                                     <TableRow>
-                                        <TableHead className="text-[10px] font-bold uppercase tracking-[0.15em] w-[60px]">Sr.</TableHead>
-                                        <TableHead className="text-[10px] font-bold uppercase tracking-[0.15em] w-[180px]">Section</TableHead>
-                                        <TableHead className="text-[10px] font-bold uppercase tracking-[0.15em]">Offense</TableHead>
-                                        <TableHead className="text-[10px] font-bold uppercase tracking-[0.15em] text-right w-[100px]">Fine (₹)</TableHead>
-                                        <TableHead className="text-[10px] font-bold uppercase tracking-[0.15em] text-right w-[140px]">Repeat Fine</TableHead>
+                                        <TableHead className="text-xs font-medium w-[60px]">Sr.</TableHead>
+                                        <TableHead className="text-xs font-medium w-[180px]">Section</TableHead>
+                                        <TableHead className="text-xs font-medium">Offense</TableHead>
+                                        <TableHead className="text-xs font-medium text-right w-[100px]">Fine (₹)</TableHead>
+                                        <TableHead className="text-xs font-medium text-right w-[140px]">Repeat Fine</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -97,7 +97,7 @@ export default function AllFines() {
                                         <TableRow key={fine.id} className="hover:bg-muted/30">
                                             <TableCell className="text-xs font-bold text-muted-foreground">{fine.srNo}</TableCell>
                                             <TableCell>
-                                                <Badge variant="outline" className="text-[9px] font-bold tracking-wider whitespace-nowrap">
+                                                <Badge variant="outline" className="text-xs font-medium whitespace-nowrap">
                                                     {fine.offenseSection}
                                                 </Badge>
                                             </TableCell>
@@ -131,12 +131,12 @@ export default function AllFines() {
 
                         {/* Act Abbreviations */}
                         <div>
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-2">Act Abbreviations</p>
+                            <p className="text-xs font-medium text-muted-foreground mb-2">Act Abbreviations</p>
                             <div className="flex flex-wrap gap-2">
                                 {actAbbreviations.map((a) => (
                                     <div key={a.abbr} className="flex items-center gap-2 px-3 py-1.5 border border-border rounded-md bg-muted/30">
                                         <span className="text-xs font-bold text-primary">{a.abbr}</span>
-                                        <span className="text-[10px] text-muted-foreground">{a.full}</span>
+                                        <span className="text-xs text-muted-foreground">{a.full}</span>
                                     </div>
                                 ))}
                             </div>
@@ -144,7 +144,7 @@ export default function AllFines() {
 
                         {/* Fine Structure Notes */}
                         <div className="space-y-2">
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">Fine Structure</p>
+                            <p className="text-xs font-medium text-muted-foreground">Fine Structure</p>
                             <ul className="space-y-1.5 text-xs text-muted-foreground font-medium list-disc list-inside">
                                 <li>The fine structure distinguishes between the <span className="text-foreground font-bold">first offence</span> and a <span className="text-red-600 font-bold">"Repetitive Fine"</span> for subsequent violations.</li>
                                 <li>Some offenses include additional penalties such as <span className="text-foreground font-bold">license disqualification for 3 months</span> (e.g., helmet and triple seat violations).</li>
@@ -155,7 +155,7 @@ export default function AllFines() {
 
                         {/* Sources */}
                         <div>
-                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-2">Sources</p>
+                            <p className="text-xs font-medium text-muted-foreground mb-2">Sources</p>
                             <ul className="space-y-1 text-xs text-muted-foreground font-medium list-disc list-inside">
                                 <li>Motor Vehicles Act, 1988 (as amended by Motor Vehicles Amendment Act, 2019)</li>
                                 <li>Central Motor Vehicles Rules, 1989 (CMVR)</li>

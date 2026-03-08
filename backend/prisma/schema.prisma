@@ -9,17 +9,19 @@ datasource db {
 }
 
 model User {
-  id           Int      @id @default(autoincrement())
-  email        String   @unique @db.VarChar(255)
-  passwordHash String   @map("password_hash") @db.Text
-  role         String   @default("user") @db.VarChar(20)
-  createdAt    DateTime @default(now()) @map("created_at")
-  issues       Issue[]
-  profile      CitizenProfile?
-  vehicles     UserVehicle[]
-  issueVotes          IssueVote[]
-  comments            IssueComment[]
-  commentVotes        CommentVote[]
+  id              Int      @id @default(autoincrement())
+  email           String   @unique @db.VarChar(255)
+  passwordHash    String   @map("password_hash") @db.Text
+  role            String   @default("user") @db.VarChar(20)
+  reputationScore Int      @default(0) @map("reputation_score")
+  createdAt       DateTime @default(now()) @map("created_at")
+  issues          Issue[]
+  profile         CitizenProfile?
+  vehicles        UserVehicle[]
+  issueVotes             IssueVote[]
+  comments               IssueComment[]
+  commentVotes           CommentVote[]
+  issueHistories  IssueHistory[]
   briberyComplaints   BriberyComplaint[]
   whatsappUser        WhatsappUser?
 
@@ -27,10 +29,10 @@ model User {
 }
 
 model Issue {
-  id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(255)
-  description String   @db.Text
-  latitude    Float?
+  id           Int      @id @default(autoincrement())
+  title        String   @db.VarChar(255)
+  description  String   @db.Text
+  latitude     Float?
   longitude    Float?
   imageUrl     String?     @map("image_url") @db.Text
   videoUrl     String?     @map("video_url") @db.Text
@@ -38,12 +40,15 @@ model Issue {
   departmentId Int?        @map("department_id")
   department   Department? @relation(fields: [departmentId], references: [id])
   incidentType String?     @map("incident_type") @db.VarChar(255)
+  priorityScore Float      @default(0) @map("priority_score")
   userId       Int         @map("user_id")
   user         User        @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now()) @map("created_at")
-  updatedAt   DateTime @updatedAt @map("updated_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
   votes        IssueVote[]
   comments     IssueComment[]
+  history      IssueHistory[]
+  workflows    IssueWorkflow[]
 
   @@map("issues")
 }
@@ -92,17 +97,20 @@ model CommentVote {
 }
 
 model CitizenProfile {
-  id                Int      @id @default(autoincrement())
-  userId            Int      @unique @map("user_id")
-  user              User     @relation(fields: [userId], references: [id])
-  name              String   @db.VarChar(255)
-  age               Int?
-  gender            String?  @db.VarChar(50)
+  id                         Int      @id @default(autoincrement())
+  userId                     Int      @unique @map("user_id")
+  user                       User     @relation(fields: [userId], references: [id])
+  name                       String   @db.VarChar(255)
+  age                        Int?
+  gender                     String?  @db.VarChar(50)
   phone             String?  @unique @db.VarChar(20)
   whatsappVerified  Boolean  @default(false) @map("whatsapp_verified")
-  imageUrl          String?  @map("image_url") @db.Text
-  createdAt         DateTime @default(now()) @map("created_at")
-  updatedAt         DateTime @updatedAt @map("updated_at")
+  imageUrl                   String?  @map("image_url") @db.Text
+  homeLatitude       Float?   @map("home_latitude")
+  homeLongitude      Float?   @map("home_longitude")
+  emailNotifications Boolean  @default(false) @map("email_notifications")
+  createdAt                  DateTime @default(now()) @map("created_at")
+  updatedAt                  DateTime @updatedAt @map("updated_at")
 
   @@map("citizen_profiles")
 }
@@ -130,6 +138,55 @@ model Department {
   updatedAt   DateTime @updatedAt @map("updated_at")
 
   @@map("departments")
+}
+
+// ─── Issue Timeline History ─────────────────────────────────────
+
+model IssueHistory {
+  id        Int      @id @default(autoincrement())
+  issueId   Int      @map("issue_id")
+  issue     Issue    @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  action    String   @db.VarChar(100)
+  actorRole String   @map("actor_role") @db.VarChar(20)
+  actorId   Int      @map("actor_id")
+  actor     User     @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  metadata  Json?    @db.JsonB
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("issue_history")
+}
+
+// ─── Workflow Engine ────────────────────────────────────────────
+
+model IssueWorkflow {
+  id        Int      @id @default(autoincrement())
+  issueId   Int?     @map("issue_id")
+  issue     Issue?   @relation(fields: [issueId], references: [id], onDelete: Cascade)
+  clusterKey String? @map("cluster_key") @db.VarChar(500)
+  flowJson  Json     @map("flow_json") @db.JsonB
+  status    String   @default("active") @db.VarChar(30)
+  createdAt DateTime @default(now()) @map("created_at")
+  steps     WorkflowStep[]
+
+  @@map("issue_workflows")
+}
+
+model WorkflowStep {
+  id          Int       @id @default(autoincrement())
+  workflowId  Int       @map("workflow_id")
+  workflow    IssueWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+  stepId      String    @map("step_id") @db.VarChar(50)
+  title       String    @db.VarChar(255)
+  description String    @db.Text
+  type        String    @db.VarChar(30)
+  status      String    @default("pending") @db.VarChar(30)
+  notes       String?   @db.Text
+  evidenceUrl String?   @map("evidence_url") @db.Text
+  assignedTo  String?   @map("assigned_to") @db.VarChar(255)
+  completedAt DateTime? @map("completed_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@map("workflow_steps")
 }
 
 // ─── Traffic & E-Challan Models ─────────────────────────────────

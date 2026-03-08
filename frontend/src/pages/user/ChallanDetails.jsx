@@ -33,7 +33,7 @@ function DetailRow({ icon: Icon, label, value, valueClass = '' }) {
                 <Icon size={16} className="text-muted-foreground" />
             </div>
             <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
+                <p className="text-xs font-medium text-muted-foreground">{label}</p>
                 <p className={`text-sm font-bold text-foreground mt-0.5 ${valueClass}`}>{value}</p>
             </div>
         </div>
@@ -79,126 +79,143 @@ export default function ChallanDetails() {
     const formatDate = (d) => d.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 
     return (
-        <div className="w-full space-y-6 max-w-3xl">
+        <div className="w-full space-y-6">
 
-            {/* Evidence Image */}
-            {challan.imageUrl && (
-                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.1 }}>
-                    <Card className="overflow-hidden">
-                        <CardHeader className="pb-2">
+            {/* Header */}
+            <motion.div initial="hidden" animate="visible" variants={fadeIn}>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div>
+                        <h1 className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-foreground">Challan Details</h1>
+                        <p className="text-sm text-muted-foreground font-medium mt-1">
+                            <span className="font-mono tracking-widest font-bold text-foreground">{challan.challanNumber}</span>
+                            <span className="mx-2">·</span>
+                            <span className="font-mono tracking-wider">{challan.vehicleNumber}</span>
+                        </p>
+                    </div>
+                    <Badge className={`text-sm font-bold uppercase tracking-wider px-4 py-1.5 self-start sm:self-auto ${sc.class}`}>{sc.label}</Badge>
+                </div>
+            </motion.div>
+
+            {/* 2-column layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                {/* Left: Offense Information */}
+                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.15 }} className="space-y-6">
+                    <Card>
+                        <CardHeader className="pb-0">
                             <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                                <ImageIcon size={16} /> Evidence / Capture
+                                <InfoIcon size={16} /> Offense Information
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="p-0">
-                            <img
-                                src={challan.imageUrl}
-                                alt="Challan evidence"
-                                className="w-full h-48 sm:h-64 object-cover"
-                                onError={(e) => { e.target.style.display = 'none'; }}
+                        <CardContent className="divide-y divide-border">
+                            <DetailRow
+                                icon={InfoIcon}
+                                label="Offense"
+                                value={challan.fine?.offenseName || 'N/A'}
                             />
+                            <DetailRow
+                                icon={InfoIcon}
+                                label="Section"
+                                value={challan.fine?.offenseSection || 'N/A'}
+                            />
+                            <DetailRow
+                                icon={CarIcon}
+                                label="Vehicle Number"
+                                value={challan.vehicleNumber}
+                                valueClass="font-mono tracking-wider"
+                            />
+                            <DetailRow
+                                icon={FineIcon}
+                                label="Fine Amount"
+                                value={`₹${challan.amount.toLocaleString('en-IN')}`}
+                                valueClass="text-chart-5 text-lg"
+                            />
+                            {challan.fine?.repetitiveFine && (
+                                <DetailRow
+                                    icon={FineIcon}
+                                    label="Repetitive Fine (Subsequent Offenses)"
+                                    value={challan.fine.repetitiveFine === 'Same' ? 'Same as first offense' : `₹${challan.fine.repetitiveFine}`}
+                                    valueClass="text-red-600"
+                                />
+                            )}
+                            {challan.location && (
+                                <DetailRow
+                                    icon={LocationIcon}
+                                    label="Location"
+                                    value={challan.location}
+                                />
+                            )}
+                            <DetailRow
+                                icon={CalendarIcon}
+                                label="Issued On"
+                                value={formatDate(issuedDate)}
+                            />
+                            {paidDate && (
+                                <DetailRow
+                                    icon={CalendarIcon}
+                                    label="Paid On"
+                                    value={formatDate(paidDate)}
+                                    valueClass="text-emerald-600"
+                                />
+                            )}
                         </CardContent>
                     </Card>
                 </motion.div>
-            )}
 
-            {/* Challan Info */}
-            <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.2 }}>
-                <Card>
-                    <CardHeader className="pb-0">
-                        <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                            <InfoIcon size={16} /> Offense Information
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="divide-y divide-border">
-                        <DetailRow
-                            icon={InfoIcon}
-                            label="Offense"
-                            value={challan.fine?.offenseName || 'N/A'}
-                        />
-                        <DetailRow
-                            icon={InfoIcon}
-                            label="Section"
-                            value={challan.fine?.offenseSection || 'N/A'}
-                        />
-                        <DetailRow
-                            icon={CarIcon}
-                            label="Vehicle Number"
-                            value={challan.vehicleNumber}
-                            valueClass="font-mono tracking-wider"
-                        />
-                        <DetailRow
-                            icon={FineIcon}
-                            label="Fine Amount"
-                            value={`₹${challan.amount.toLocaleString('en-IN')}`}
-                            valueClass="text-chart-5 text-lg"
-                        />
-                        {challan.fine?.repetitiveFine && (
-                            <DetailRow
-                                icon={FineIcon}
-                                label="Repetitive Fine (Subsequent Offenses)"
-                                value={challan.fine.repetitiveFine === 'Same' ? 'Same as first offense' : `₹${challan.fine.repetitiveFine}`}
-                                valueClass="text-red-600"
-                            />
-                        )}
-                        {challan.location && (
-                            <DetailRow
-                                icon={LocationIcon}
-                                label="Location"
-                                value={challan.location}
-                            />
-                        )}
-                        <DetailRow
-                            icon={CalendarIcon}
-                            label="Issued On"
-                            value={formatDate(issuedDate)}
-                        />
-                        {paidDate && (
-                            <DetailRow
-                                icon={CalendarIcon}
-                                label="Paid On"
-                                value={formatDate(paidDate)}
-                                valueClass="text-emerald-600"
-                            />
-                        )}
-                    </CardContent>
-                </Card>
-            </motion.div>
+                {/* Right: Timeline + Evidence */}
+                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.2 }} className="space-y-6">
+                    {/* Timeline */}
+                    <Card>
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                                <CalendarIcon size={16} /> Timeline
+                            </CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            <div className="relative pl-6 space-y-4">
+                                {/* Issued */}
+                                <div className="relative">
+                                    <div className="absolute -left-6 top-1 w-3 h-3 rounded-full bg-primary border-2 border-background" />
+                                    <div className="absolute -left-[14.5px] top-4 w-0.5 h-full bg-border" />
+                                    <p className="text-xs font-medium text-muted-foreground">Challan Issued</p>
+                                    <p className="text-xs font-medium text-foreground">{formatDate(issuedDate)}</p>
+                                </div>
 
-            {/* Timeline */}
-            <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.3 }}>
-                <Card>
-                    <CardHeader className="pb-2">
-                        <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                            <CalendarIcon size={16} /> Timeline
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                        <div className="relative pl-6 space-y-4">
-                            {/* Issued */}
-                            <div className="relative">
-                                <div className="absolute -left-6 top-1 w-3 h-3 rounded-full bg-primary border-2 border-background" />
-                                <div className="absolute -left-[14.5px] top-4 w-0.5 h-full bg-border" />
-                                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">Challan Issued</p>
-                                <p className="text-xs font-medium text-foreground">{formatDate(issuedDate)}</p>
+                                {/* Status update */}
+                                <div className="relative">
+                                    <div className={`absolute -left-6 top-1 w-3 h-3 rounded-full border-2 border-background ${challan.status === 'paid' ? 'bg-emerald-500' : challan.status === 'contested' ? 'bg-amber-500' : challan.status === 'cancelled' ? 'bg-zinc-400' : 'bg-red-500'}`} />
+                                    <p className="text-xs font-medium text-muted-foreground">Current Status</p>
+                                    <p className="text-xs font-bold text-foreground capitalize">{challan.status}</p>
+                                    {paidDate && <p className="text-xs text-muted-foreground mt-0.5">{formatDate(paidDate)}</p>}
+                                </div>
                             </div>
+                        </CardContent>
+                    </Card>
 
-                            {/* Status update */}
-                            <div className="relative">
-                                <div className={`absolute -left-6 top-1 w-3 h-3 rounded-full border-2 border-background ${challan.status === 'paid' ? 'bg-emerald-500' : challan.status === 'contested' ? 'bg-amber-500' : challan.status === 'cancelled' ? 'bg-zinc-400' : 'bg-red-500'}`} />
-                                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">Current Status</p>
-                                <p className="text-xs font-bold text-foreground capitalize">{challan.status}</p>
-                                {paidDate && <p className="text-[10px] text-muted-foreground mt-0.5">{formatDate(paidDate)}</p>}
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            </motion.div>
+                    {/* Evidence Image */}
+                    {challan.imageUrl && (
+                        <Card className="overflow-hidden">
+                            <CardHeader className="pb-2">
+                                <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                                    <ImageIcon size={16} /> Evidence / Capture
+                                </CardTitle>
+                            </CardHeader>
+                            <CardContent className="p-0">
+                                <img
+                                    src={challan.imageUrl}
+                                    alt="Challan evidence"
+                                    className="w-full h-48 sm:h-64 object-cover"
+                                    onError={(e) => { e.target.style.display = 'none'; }}
+                                />
+                            </CardContent>
+                        </Card>
+                    )}
+                </motion.div>
+            </div>
 
-            {/* Legal Note */}
+            {/* Legal Note — full width */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 }}>
                 <div className="border border-amber-200 bg-amber-50 rounded-lg p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-amber-700 mb-1">Legal Notice</p>
+                    <p className="text-xs font-medium text-amber-700 mb-1">Legal Notice</p>
                     <p className="text-xs text-amber-800 font-medium leading-relaxed">
                         This challan has been issued under the provisions of the Motor Vehicles Act, 1988 (as amended 2019).
                         Failure to pay within the prescribed period may result in additional penalties.

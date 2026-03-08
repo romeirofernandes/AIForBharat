@@ -15,6 +15,9 @@ router.get("/aggregated", requireAuth, requireAdmin, issueController.getAggregat
 router.post("/resolution-flow", requireAuth, requireAdmin, issueController.getResolutionFlow);
 router.patch("/:id/status", requireAuth, requireAdmin, issueController.updateIssueStatus);
 
+// Timeline (authenticated)
+router.get("/:id/timeline", requireAuth, issueController.getIssueTimeline);
+
 // Stats (admin)
 router.get("/stats", requireAuth, requireAdmin, issueController.getStats);
 

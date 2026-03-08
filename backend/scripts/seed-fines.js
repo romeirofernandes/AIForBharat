@@ -5,7 +5,7 @@
  * Usage:  node scripts/seed-fines.js
  */
 
-require("dotenv").config();
+require("dotenv").config({ path: require("path").resolve(__dirname, "../.env") });
 const prisma = require("../config/prisma");
 
 const offenses = [

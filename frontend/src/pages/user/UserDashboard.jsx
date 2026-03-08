@@ -62,7 +62,7 @@ export default function UserDashboard() {
                             <ArrowRight size={16} className="text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-1 transition-all" />
                         </div>
                         <h3 className="text-3xl font-bold text-foreground mb-1">{card.value}</h3>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{card.title}</p>
+                        <p className="text-xs font-medium text-muted-foreground">{card.title}</p>
                         <p className="text-xs text-muted-foreground/70 mt-2 font-medium">{card.desc}</p>
                     </motion.div>
                 ))}
@@ -70,7 +70,7 @@ export default function UserDashboard() {
 
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.3 }}>
                 <div className="border border-border rounded-lg p-6 bg-card">
-                    <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground mb-4">Quick Actions</h3>
+                    <h3 className="text-xs font-medium text-muted-foreground mb-4">Quick Actions</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <button
                             onClick={() => navigate('/user/report')}

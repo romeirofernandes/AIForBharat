@@ -64,8 +64,10 @@ async function sendMessage(to, body) {
             to: to,
             body: body,
         });
+        return true;
     } catch (err) {
         console.error("[WA] Send message failed:", err.message);
+        return false;
     }
 }
 
@@ -179,10 +181,20 @@ exports.handleWebhook = async (req, res) => {
         const mediaType = req.body.MediaContentType0 || null;
 
         if (!from) return twimlReply(res, "Invalid request.");
-        console.log(`[WA] From: ${from} | Body: "${body}" | Media: ${mediaUrl ? mediaType : "none"}`);
+        console.log(`[WA] From: ${from} | Body: "${body}" | NumMedia: ${req.body.NumMedia || 0} | Media: ${mediaUrl ? mediaType : "none"}`);
 
         // ── /login ──
         if (bodyLower === "/login" || bodyLower === "login") {
+            // Check if already logged in
+            const existing = await prisma.whatsappUser.findFirst({ where: { chatId: from, isActive: true }, include: { user: { include: { profile: true } } } });
+            if (existing) {
+                const name = existing.user?.profile?.name || "Citizen";
+                return twimlReply(
+                    res,
+                    `*You are already logged in, ${name}!*\n\n` +
+                    "Commands:\n/report - Report incident\n/myissues - View issues\n/challans - View challans\n/logout - Log out"
+                );
+            }
             sessions.set(from, { step: "awaiting_email", createdAt: Date.now() });
             return twimlReply(res, "*Login to Civic Intel*\n\nPlease enter your registered email address:");
         }
@@ -239,18 +251,18 @@ exports.handleWebhook = async (req, res) => {
             const wu = await prisma.whatsappUser.findFirst({ where: { chatId: from, isActive: true } });
             if (!wu) return twimlReply(res, "You are not logged in.\n\nSend /login first.");
 
-            const vehicles = await prisma.userVehicle.findMany({ where: { userId: wu.userId }, select: { vehicleId: true } });
+            const vehicles = await prisma.userVehicle.findMany({ where: { userId: wu.userId }, select: { id: true, vehicleNumber: true } });
             if (!vehicles.length) return twimlReply(res, "No vehicles linked.");
 
-            const challans = await prisma.challan.findMany({
-                where: { vehicleId: { in: vehicles.map(v => v.vehicleId) }, status: "unpaid" },
-                orderBy: { issuedDate: "desc" }, take: 5, include: { vehicle: true, fine: true },
+            const challans = await prisma.trafficChallan.findMany({
+                where: { vehicleId: { in: vehicles.map(v => v.id) }, status: "unpaid" },
+                orderBy: { issuedAt: "desc" }, take: 5, include: { vehicle: true, fine: true },
             });
             if (!challans.length) return twimlReply(res, "No unpaid challans!");
 
             let msg = `*Unpaid Challans* (${challans.length}):\n`;
             challans.forEach((c, i) => {
-                const d = new Date(c.issuedDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+                const d = new Date(c.issuedAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
                 msg += `\n${i + 1}. #${c.id} | ${c.vehicle?.vehicleNumber || "N/A"}\n   ${c.fine?.offenseName || "N/A"} | Rs.${c.amount} | ${d}\n`;
             });
             return twimlReply(res, msg);
@@ -303,6 +315,16 @@ exports.handleWebhook = async (req, res) => {
         // STEP 2: Description (text or voice note)
         // ════════════════════════════════════════════════════════
         if (session?.step === "awaiting_report_description") {
+            // Guard against messages arriving while async processing is happening
+            if (session.processing) {
+                return twimlReply(res, "Still processing your last message. Please wait a moment...");
+            }
+
+            // Reject "skip"/"no" — description is required
+            if (!mediaUrl && (bodyLower === "skip" || bodyLower === "no")) {
+                return twimlReply(res, "Description is required.\n\nPlease describe the issue in detail or send a voice note:");
+            }
+
             let description = body || "";
 
             // Filter filenames
@@ -312,6 +334,10 @@ exports.handleWebhook = async (req, res) => {
 
             // Voice note → transcribe with Whisper
             if (mediaUrl && mediaType && mediaType.startsWith("audio/")) {
+                // Set processing flag to prevent concurrent messages
+                session.processing = true;
+                sessions.set(from, session);
+
                 // Respond fast, then process async
                 twimlReply(res, "Voice note received! Transcribing...");
 
@@ -322,12 +348,7 @@ exports.handleWebhook = async (req, res) => {
                         const audioBuffer = await downloadTwilioMedia(mediaUrl);
                         console.log("[WA] Voice note downloaded, size:", audioBuffer.length);
 
-                        // Upload audio to S3 in background
-                        uploadToS3(audioBuffer, mediaType)
-                            .then(url => { session.report.audioUrl = url; sessions.set(from, session); console.log("[WA] Audio uploaded to S3:", url); })
-                            .catch(e => console.error("[WA] Audio S3 err:", e.message));
-
-                        // Transcribe with Whisper
+                        // Transcribe with Whisper (audio stored as transcript only, no S3 upload needed)
                         const transcript = await transcribeWithWhisper(audioBuffer, mediaType);
 
                         if (!transcript || transcript.trim().length === 0) {
@@ -359,7 +380,7 @@ exports.handleWebhook = async (req, res) => {
 
                         const locationUrl = `${FRONTEND_URL}/share-location/${token}`;
                         console.log("[WA] Sending Step 3 message...");
-                        await sendMessage(
+                        const sent = await sendMessage(
                             from,
                             `*Transcription:* "${transcript.substring(0, 150)}${transcript.length > 150 ? '...' : ''}"\n\n` +
                             `*Step 3: Share Location*\n\n` +
@@ -367,9 +388,12 @@ exports.handleWebhook = async (req, res) => {
                             `Tap the link to pinpoint location on a map:\n${locationUrl}\n\n` +
                             `Or send *skip* to submit without location.`
                         );
-                        console.log("[WA] Step 3 message sent successfully");
+                        if (sent) console.log("[WA] Step 3 message sent successfully");
+                        else console.error("[WA] Step 3 message FAILED — check TWILIO_WHATSAPP_NUMBER in .env");
                     } catch (err) {
                         console.error("[WA] Voice flow error:", err);
+                        session.processing = false;
+                        sessions.set(from, session);
                         await sendMessage(from, "Something went wrong processing your voice note. Please try again or type your description:").catch(() => {});
                     }
                 })();
@@ -397,6 +421,10 @@ exports.handleWebhook = async (req, res) => {
                 return twimlReply(res, "Please describe the issue.\nType a message or send a voice note:");
             }
 
+            // Set processing flag to prevent concurrent messages
+            session.processing = true;
+            sessions.set(from, session);
+
             // Classify with Groq — respond fast, then process async
             twimlReply(res, "Processing your report...");
 
@@ -422,16 +450,19 @@ exports.handleWebhook = async (req, res) => {
 
                     const locationUrl = `${FRONTEND_URL}/share-location/${token}`;
                     console.log("[WA] Sending Step 3 message...");
-                    await sendMessage(
+                    const sent = await sendMessage(
                         from,
                         `*Step 3: Share Location*\n\n` +
                         `Classified as: *${department} - ${incidentType}*\n\n` +
                         `Tap the link to pinpoint your location on a map:\n${locationUrl}\n\n` +
                         `Or send *skip* to submit without location.`
                     );
-                    console.log("[WA] Step 3 message sent successfully");
+                    if (sent) console.log("[WA] Step 3 message sent successfully");
+                    else console.error("[WA] Step 3 message FAILED — check TWILIO_WHATSAPP_NUMBER in .env");
                 } catch (err) {
                     console.error("[WA] Text flow error:", err);
+                    session.processing = false;
+                    sessions.set(from, session);
                     await sendMessage(from, "Something went wrong processing your report. Please try /report again.").catch(() => {});
                 }
             })();

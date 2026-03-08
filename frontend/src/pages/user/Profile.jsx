@@ -7,6 +7,15 @@ import { toast } from 'sonner';
 import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import ReputationBadge from '../../components/ReputationBadge';
+import { getMyReputation } from '../../api/users';
+import {
+    UserIcon,
+    Camera01Icon,
+    Edit01Icon,
+    Calendar01Icon,
+    ChampionIcon,
+} from 'hugeicons-react';
 
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -77,6 +86,9 @@ export default function Profile() {
     const [otpLoading, setOtpLoading] = useState(false);
     const [expiresAt, setExpiresAt] = useState(null);
     const [timeLeft, setTimeLeft] = useState(null);
+    const [activeTab, setActiveTab] = useState('profile');
+    const [reputation, setReputation] = useState(null);
+    const [repLoading, setRepLoading] = useState(false);
 
     useEffect(() => {
         if (!expiresAt) return;
@@ -87,6 +99,15 @@ export default function Profile() {
         }, 1000);
         return () => clearInterval(interval);
     }, [expiresAt]);
+
+    useEffect(() => {
+        if (activeTab !== 'reputation' || reputation) return;
+        setRepLoading(true);
+        getMyReputation()
+            .then(setReputation)
+            .catch(() => {})
+            .finally(() => setRepLoading(false));
+    }, [activeTab]);
 
     const handleGenerateOtp = async () => {
         // Normalise: strip spaces/dashes, prepend +91 for bare 10-digit Indian numbers
@@ -258,7 +279,6 @@ export default function Profile() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">Gender</label>
@@ -364,9 +384,26 @@ export default function Profile() {
                     )}
                 </div>
             </motion.div>
+            )}
+
+            {/* Reputation Tab */}
+            {activeTab === 'reputation' && (
+                <motion.div
+                    initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.1 }}
+                    className="border border-border/80 rounded-2xl p-6 md:p-10 bg-card shadow-sm"
+                >
+                    {repLoading ? (
+                        <div className="flex items-center justify-center py-20">
+                            <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+                        </div>
+                    ) : (
+                        <ReputationBadge reputation={reputation} compact={false} />
+                    )}
+                </motion.div>
+            )}
 
             {/* WhatsApp Section */}
-            {user?.role === 'user' && (
+            {user?.role === 'user' && activeTab === 'profile' && (
                 <motion.div
                     initial="hidden"
                     animate="visible"

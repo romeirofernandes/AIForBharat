@@ -12,6 +12,7 @@ import {
     Tick02Icon as TickIcon,
     Cancel01Icon as CancelIcon,
     InformationCircleIcon as InfoIcon,
+    SecurityCheckIcon as ShieldIcon,
 } from 'hugeicons-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
 import { Badge } from '../../components/ui/badge';
@@ -19,6 +20,7 @@ import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { Separator } from '../../components/ui/separator';
 import { getVehicles, addVehicle, removeVehicle, getChallans, getFines } from '../../api/traffic';
+import { getMyComplaints } from '../../api/bribery';
 
 const fadeIn = {
     hidden: { opacity: 0, y: 15 },
@@ -42,6 +44,7 @@ export default function TrafficDashboard() {
     const [loading, setLoading] = useState(true);
     const [addingVehicle, setAddingVehicle] = useState(false);
     const [vehicleDropdownOpen, setVehicleDropdownOpen] = useState(false);
+    const [recentReports, setRecentReports] = useState([]);
 
     const fetchAll = async () => {
         try {
@@ -54,6 +57,11 @@ export default function TrafficDashboard() {
             setChallans(cRes.challans || []);
             setSummary(cRes.summary || {});
             setTopFines(fRes.fines || []);
+            // Fetch recent bribery reports (silently)
+            try {
+                const bRes = await getMyComplaints();
+                setRecentReports((bRes.complaints || []).slice(0, 3));
+            } catch {}
         } catch {
             // Silently handle — user may have no vehicles yet
         } finally {
@@ -305,6 +313,78 @@ export default function TrafficDashboard() {
                     </div>
                 )}
             </motion.div>
+
+            <Separator />
+
+            {/* Report Misconduct CTA */}
+            <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.6 }}>
+                <Card className="border-primary/20 bg-gradient-to-r from-primary/5 to-transparent hover:shadow-lg transition-all">
+                    <CardContent className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div className="flex items-start gap-4">
+                            <div className="p-3 rounded-lg bg-red-100 shrink-0">
+                                <ShieldIcon size={24} className="text-red-600" />
+                            </div>
+                            <div>
+                                <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Report Police Misconduct</h3>
+                                <p className="text-xs text-muted-foreground font-medium mt-1 max-w-md">
+                                    Experienced bribery, unfair treatment, or corruption by traffic police? File a confidential report with proof.
+                                    You can even fill the entire form using just your voice.
+                                </p>
+                            </div>
+                        </div>
+                        <Button onClick={() => navigate('/user/traffic/report-bribery')} className="gap-2 cursor-pointer font-bold uppercase tracking-wider text-xs shrink-0">
+                            File Report <ArrowRight size={14} />
+                        </Button>
+                    </CardContent>
+                </Card>
+            </motion.div>
+
+            {/* Recent Reports */}
+            {recentReports.length > 0 && (
+                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.65 }}>
+                    <div className="flex items-center justify-between mb-4">
+                        <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                            <ShieldIcon size={16} /> My Recent Reports
+                        </h2>
+                        <button onClick={() => navigate('/user/traffic/my-reports')} className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary hover:underline underline-offset-4 cursor-pointer">
+                            View All Reports <ArrowRight size={12} />
+                        </button>
+                    </div>
+                    <div className="space-y-2">
+                        {recentReports.map((report) => {
+                            const statusCfg = {
+                                submitted: { label: 'Submitted', class: 'bg-blue-100 text-blue-700' },
+                                under_review: { label: 'Under Review', class: 'bg-amber-100 text-amber-700' },
+                                action_taken: { label: 'Action Taken', class: 'bg-purple-100 text-purple-700' },
+                                resolved: { label: 'Resolved', class: 'bg-emerald-100 text-emerald-700' },
+                                dismissed: { label: 'Dismissed', class: 'bg-red-100 text-red-700' },
+                            };
+                            const rs = statusCfg[report.status] || statusCfg.submitted;
+                            return (
+                                <div
+                                    key={report.id}
+                                    onClick={() => navigate('/user/traffic/my-reports')}
+                                    className="border border-border rounded-lg p-4 bg-card hover:border-primary/20 hover:shadow-sm transition-all cursor-pointer group flex items-center justify-between gap-3"
+                                >
+                                    <div className="flex-1 min-w-0">
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <span className="text-xs font-bold font-mono text-foreground">#{report.id}</span>
+                                            <Badge className={`text-[9px] font-bold uppercase tracking-wider ${rs.class}`}>{rs.label}</Badge>
+                                        </div>
+                                        <p className="text-xs font-bold text-foreground truncate">
+                                            {report.complaintType === 'Other' ? report.otherComplaintType || 'Other' : report.complaintType}
+                                        </p>
+                                        <p className="text-[10px] text-muted-foreground/60 font-bold uppercase tracking-wider mt-0.5">
+                                            Badge: {report.badgeNumber} • {new Date(report.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
+                                        </p>
+                                    </div>
+                                    <ArrowRight size={14} className="text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-1 transition-all" />
+                                </div>
+                            );
+                        })}
+                    </div>
+                </motion.div>
+            )}
         </div>
     );
 }

@@ -18,6 +18,8 @@ import {
     SidebarLeft01Icon as SidebarToggle,
     Car01Icon as TrafficIcon,
     MessageMultiple01Icon as ForumIcon,
+    DatabaseIcon as ClustersIcon,
+    SecurityCheckIcon as BriberyIcon,
 } from 'hugeicons-react';
 
 const userLinks = [
@@ -31,6 +33,8 @@ const userLinks = [
 const adminLinks = [
     { to: '/admin/dashboard', label: 'Dashboard', icon: AdminDash },
     { to: '/admin/issues', label: 'Issue Queue', icon: IssueQueue },
+    { to: '/admin/bribery', label: 'Misconduct', icon: BriberyIcon },
+    { to: '/admin/clusters', label: 'Clusters', icon: ClustersIcon },
     { to: '/admin/users', label: 'Users', icon: UsersIcon },
     { to: '/admin/analytics', label: 'Analytics', icon: Analytics },
 ];

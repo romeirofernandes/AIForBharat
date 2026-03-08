@@ -16,6 +16,16 @@ const getDestinationPath = (req, file) => {
     if (file.fieldname === 'profileImage') {
         return `profile_image/${Date.now().toString()}-${file.originalname}`;
     }
+
+    // Bribery proof uploads
+    if (file.fieldname === 'proof') {
+        return `bribery/proof/${Date.now().toString()}-${file.originalname}`;
+    }
+
+    // Bribery voice recording for transcription
+    if (file.fieldname === 'audio') {
+        return `bribery/audio/${Date.now().toString()}-${file.originalname}`;
+    }
     
     // Default to incident path
     const isVideo = file.mimetype.startsWith('video/');

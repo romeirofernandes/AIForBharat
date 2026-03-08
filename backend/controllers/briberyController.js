@@ -1,7 +1,7 @@
 const prisma = require("../config/prisma");
 const fs = require("fs");
 
-const GROQ_API_KEY = process.env.GROQ_API_KEY || "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";
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
 
 const VALID_STATUSES = ["submitted", "under_review", "action_taken", "resolved", "dismissed"];
 

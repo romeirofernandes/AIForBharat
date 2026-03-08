@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import {
-    ArrowLeft02Icon as BackIcon,
     Car01Icon as CarIcon,
     Location04Icon as LocationIcon,
     Calendar03Icon as CalendarIcon,
@@ -43,7 +42,6 @@ function DetailRow({ icon: Icon, label, value, valueClass = '' }) {
 
 export default function ChallanDetails() {
     const { id } = useParams();
-    const navigate = useNavigate();
     const [challan, setChallan] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -66,9 +64,6 @@ export default function ChallanDetails() {
     if (error || !challan) {
         return (
             <div className="w-full space-y-4">
-                <button onClick={() => navigate('/user/traffic')} className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary hover:underline underline-offset-4 cursor-pointer">
-                    <BackIcon size={14} /> Back to Traffic Dashboard
-                </button>
                 <Card>
                     <CardContent className="py-12 text-center">
                         <p className="text-sm text-red-600 font-medium">{error || 'Challan not found'}</p>

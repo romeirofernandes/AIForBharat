@@ -22,6 +22,10 @@ import TrafficDashboard from './pages/user/TrafficDashboard';
 import AllFines from './pages/user/AllFines';
 import ChallanDetails from './pages/user/ChallanDetails';
 import DiscussionForum from './pages/user/DiscussionForum';
+import ReportBribery from './pages/user/ReportBribery';
+import MyBriberyReports from './pages/user/MyBriberyReports';
+import WhatsAppPage from './pages/user/WhatsAppPage';
+import CityLeaderboard from './pages/user/CityLeaderboard';
 
 // Admin pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -29,12 +33,15 @@ import AdminIssues from './pages/admin/AdminIssues';
 import AdminIssueClusters from './pages/admin/AdminIssueClusters';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminAnalytics from './pages/admin/AdminAnalytics';
+import AdminBribery from './pages/admin/AdminBribery';
 
 import { Toaster } from 'sonner';
+import GoogleTranslate from './components/GoogleTranslate';
 
 export default function App() {
   return (
     <>
+      <GoogleTranslate />
       <Toaster position="top-right" theme="light" richColors />
       <Routes>
         {/* Public routes */}
@@ -53,10 +60,14 @@ export default function App() {
           <Route path="report" element={<ReportIssue />} />
           <Route path="complaints" element={<MyComplaints />} />
           <Route path="forum" element={<DiscussionForum />} />
+          <Route path="leaderboard" element={<CityLeaderboard />} />
           <Route path="traffic" element={<TrafficDashboard />} />
           <Route path="traffic/fines" element={<AllFines />} />
           <Route path="traffic/challan/:id" element={<ChallanDetails />} />
+          <Route path="traffic/report-bribery" element={<ReportBribery />} />
+          <Route path="traffic/my-reports" element={<MyBriberyReports />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="whatsapp" element={<WhatsAppPage />} />
         </Route>
 
         {/* Admin routes */}
@@ -71,6 +82,7 @@ export default function App() {
           <Route path="clusters" element={<AdminIssueClusters />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="analytics" element={<AdminAnalytics />} />
+          <Route path="bribery" element={<AdminBribery />} />
           <Route path="profile" element={<Profile />} />
         </Route>
 

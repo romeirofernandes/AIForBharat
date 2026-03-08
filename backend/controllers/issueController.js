@@ -3,6 +3,7 @@ const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { increaseReputation, REWARDS } = require("../services/reputationService");
 const { logHistory, getIssueTimeline, ACTIONS } = require("../services/timelineService");
 const { recalculateIssuePriority, recalculateAllPriorities } = require("../services/priorityService");
+const { notifyNearbyCitizens } = require("../services/notifier");
 
 const geminiKey = process.env.GEMINI_API_KEY || "dummy_key";
 const genAI = new GoogleGenerativeAI(geminiKey);
@@ -65,6 +66,9 @@ exports.createIssue = async (req, res) => {
         await recalculateIssuePriority(issue.id);
 
         res.status(201).json({ message: "Issue reported successfully", issue });
+
+        // Fire-and-forget: notify nearby citizens
+        notifyNearbyCitizens(issue).catch(() => {});
     } catch (error) {
         console.error("Create issue error:", error);
         res.status(500).json({ error: "Internal server error" });

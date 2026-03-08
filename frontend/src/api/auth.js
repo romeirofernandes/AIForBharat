@@ -25,3 +25,10 @@ export function updateProfile(data) {
         body: isFormData ? data : JSON.stringify(data),
     });
 }
+
+export function generateWhatsappOtp(phone) {
+    return apiFetch('/auth/whatsapp/generate-otp', {
+        method: 'POST',
+        body: JSON.stringify({ phone }),
+    });
+}

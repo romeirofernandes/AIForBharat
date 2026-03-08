@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
 import {
-    ArrowLeft02Icon as BackIcon,
     Search01Icon as SearchIcon,
     InformationCircleIcon as InfoIcon,
 } from 'hugeicons-react';
@@ -33,7 +31,6 @@ const actAbbreviations = [
 ];
 
 export default function AllFines() {
-    const navigate = useNavigate();
     const [fines, setFines] = useState([]);
     const [search, setSearch] = useState('');
     const [loading, setLoading] = useState(true);

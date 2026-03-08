@@ -1,4 +1,5 @@
 import React from 'react';
+import LanguageSwitcher from './LanguageSwitcher';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -18,6 +19,9 @@ import {
     Car01Icon as TrafficIcon,
     MessageMultiple01Icon as ForumIcon,
     DatabaseIcon as ClustersIcon,
+    SecurityCheckIcon as BriberyIcon,
+    SmartPhone01Icon as WhatsAppIcon,
+    RankingIcon as LeaderboardIcon,
 } from 'hugeicons-react';
 
 const userLinks = [
@@ -25,12 +29,15 @@ const userLinks = [
     { to: '/user/report', label: 'Report Issue', icon: Report },
     { to: '/user/complaints', label: 'My Complaints', icon: Complaints },
     { to: '/user/forum', label: 'The Civic Wire', icon: ForumIcon },
+    { to: '/user/leaderboard', label: 'Leaderboard', icon: LeaderboardIcon },
     { to: '/user/traffic', label: 'Traffic', icon: TrafficIcon },
+    { to: '/user/whatsapp', label: 'WhatsApp Bot', icon: WhatsAppIcon },
 ];
 
 const adminLinks = [
     { to: '/admin/dashboard', label: 'Dashboard', icon: AdminDash },
     { to: '/admin/issues', label: 'Issue Queue', icon: IssueQueue },
+    { to: '/admin/bribery', label: 'Misconduct', icon: BriberyIcon },
     { to: '/admin/clusters', label: 'Clusters', icon: ClustersIcon },
     { to: '/admin/users', label: 'Users', icon: UsersIcon },
     { to: '/admin/analytics', label: 'Analytics', icon: Analytics },
@@ -150,6 +157,8 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                         </NavLink>
                     </SidebarItemTooltip>
 
+                    <LanguageSwitcher variant="sidebar" collapsed={collapsed} />
+
                     <SidebarItemTooltip collapsed={collapsed} label="Logout">
                         <button
                             onClick={handleLogout}
@@ -240,6 +249,8 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                                         <span className="text-[9px] uppercase tracking-wider text-sidebar-foreground/50 truncate max-w-[120px]">{user?.email}</span>
                                     </div>
                                 </NavLink>
+
+                                <LanguageSwitcher variant="sidebar" collapsed={false} />
 
                                 <button
                                     onClick={handleLogout}

@@ -29,4 +29,6 @@ skills-lock.json
 .claude
 .env
 .env.local
-.txt
+
+
+package-lock.json

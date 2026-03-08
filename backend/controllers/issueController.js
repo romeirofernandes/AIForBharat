@@ -1,5 +1,6 @@
 const prisma = require("../config/prisma");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { notifyNearbyCitizens } = require("../services/notifier");
 
 const geminiKey = process.env.GEMINI_API_KEY || "dummy_key";
 const genAI = new GoogleGenerativeAI(geminiKey);
@@ -51,6 +52,9 @@ exports.createIssue = async (req, res) => {
         });
 
         res.status(201).json({ message: "Issue reported successfully", issue });
+
+        // Fire-and-forget: notify nearby citizens
+        notifyNearbyCitizens(issue).catch(() => {});
     } catch (error) {
         console.error("Create issue error:", error);
         res.status(500).json({ error: "Internal server error" });

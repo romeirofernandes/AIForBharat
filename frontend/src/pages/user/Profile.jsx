@@ -1,8 +1,47 @@
-import React, { useState } from 'react';
+import React, { useState, useCallback } from 'react';
 import { motion } from 'framer-motion';
 import { useAuth } from '../../context/AuthContext';
 import { updateProfile } from '../../api/auth';
 import { toast } from 'sonner';
+import { MapContainer, TileLayer, Marker, useMapEvents } from 'react-leaflet';
+import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
+
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+function HomeLocationPicker({ lat, lng, onChange }) {
+    function ClickHandler() {
+        useMapEvents({
+            click(e) {
+                onChange(e.latlng.lat, e.latlng.lng);
+            },
+        });
+        return null;
+    }
+
+    const center = lat && lng ? [lat, lng] : [20.5937, 78.9629];
+    const zoom = lat && lng ? 14 : 5;
+
+    return (
+        <div className="h-[220px] rounded-lg overflow-hidden border border-border">
+            <MapContainer
+                center={center}
+                zoom={zoom}
+                scrollWheelZoom={true}
+                style={{ height: '100%', width: '100%', zIndex: 1 }}
+            >
+                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                <ClickHandler />
+                {lat && lng && <Marker position={[lat, lng]} />}
+            </MapContainer>
+        </div>
+    );
+}
 
 const fadeIn = {
     hidden: { opacity: 0, y: 15 },
@@ -20,6 +59,11 @@ export default function Profile() {
         age: profile.age || '',
         gender: profile.gender || '',
     });
+    const [homeCoords, setHomeCoords] = useState({
+        lat: profile.homeLatitude || null,
+        lng: profile.homeLongitude || null,
+    });
+    const [emailNotifications, setEmailNotifications] = useState(profile.emailNotifications || false);
     const [profileImage, setProfileImage] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
     const fileInputRef = React.useRef(null);
@@ -44,12 +88,21 @@ export default function Profile() {
         e.preventDefault();
         setIsLoading(true);
         try {
-            let dataToSend = formData;
+            const payload = {
+                ...formData,
+                homeLatitude: homeCoords.lat,
+                homeLongitude: homeCoords.lng,
+                emailNotifications,
+            };
+            let dataToSend = payload;
             if (profileImage) {
                 const fd = new FormData();
                 fd.append('name', formData.name);
                 fd.append('age', formData.age);
                 fd.append('gender', formData.gender);
+                fd.append('homeLatitude', homeCoords.lat ?? '');
+                fd.append('homeLongitude', homeCoords.lng ?? '');
+                fd.append('emailNotifications', emailNotifications);
                 fd.append('profileImage', profileImage);
                 dataToSend = fd;
             }
@@ -165,6 +218,34 @@ export default function Profile() {
                                 </select>
                             </div>
 
+                            {/* Notification Preferences */}
+                            <div className="space-y-4 pt-4 border-t border-border/50">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">Notification Preferences</p>
+
+                                <label className="flex items-center gap-3 cursor-pointer group" onClick={() => setEmailNotifications(!emailNotifications)}>
+                                    <div className={`w-10 h-5 rounded-full transition-colors relative ${emailNotifications ? 'bg-primary' : 'bg-muted border border-border'}`}>
+                                        <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white shadow transition-transform ${emailNotifications ? 'translate-x-5' : 'translate-x-0.5'}`} />
+                                    </div>
+                                    <span className="text-xs font-medium text-foreground">Email me about issues reported near my home</span>
+                                </label>
+
+                                {emailNotifications && (
+                                    <div className="space-y-2">
+                                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">Home Location (click map to set)</p>
+                                        <HomeLocationPicker
+                                            lat={homeCoords.lat}
+                                            lng={homeCoords.lng}
+                                            onChange={(lat, lng) => setHomeCoords({ lat, lng })}
+                                        />
+                                        {homeCoords.lat && homeCoords.lng && (
+                                            <p className="text-[10px] font-medium text-muted-foreground ml-1">
+                                                {Number(homeCoords.lat).toFixed(5)}, {Number(homeCoords.lng).toFixed(5)}
+                                            </p>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+
                             <div className="flex items-center gap-3 pt-4 border-t border-border/50">
                                 <button
                                     type="submit"
@@ -179,6 +260,8 @@ export default function Profile() {
                                         onClick={() => {
                                             setIsEditing(false);
                                             setFormData({ name: profile.name || '', age: profile.age || '', gender: profile.gender || '' });
+                                            setHomeCoords({ lat: profile.homeLatitude || null, lng: profile.homeLongitude || null });
+                                            setEmailNotifications(profile.emailNotifications || false);
                                             setProfileImage(null);
                                             setImagePreview(null);
                                         }}
@@ -209,6 +292,16 @@ export default function Profile() {
                                     {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'}
                                 </span>
                             </div>
+                            <div className="flex items-center justify-between py-3 border-b border-border/50">
+                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Email Notifications</span>
+                                <span className="text-sm font-medium text-foreground">{profile.emailNotifications ? 'Enabled' : 'Disabled'}</span>
+                            </div>
+                            {profile.homeLatitude && profile.homeLongitude && (
+                                <div className="flex items-center justify-between py-3 border-b border-border/50">
+                                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Home Location</span>
+                                    <span className="text-sm font-medium text-foreground">{Number(profile.homeLatitude).toFixed(4)}, {Number(profile.homeLongitude).toFixed(4)}</span>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

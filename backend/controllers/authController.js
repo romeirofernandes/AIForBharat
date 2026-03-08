@@ -135,7 +135,7 @@ exports.getProfile = async (req, res) => {
 
 exports.updateProfile = async (req, res) => {
     try {
-        const { name, age, gender } = req.body;
+        const { name, age, gender, homeLatitude, homeLongitude, emailNotifications } = req.body;
         
         if (!name) {
              return res.status(400).json({ error: "Name is required" });
@@ -158,6 +158,9 @@ exports.updateProfile = async (req, res) => {
                 age: age ? parseInt(age) : null,
                 gender: gender || null,
                 imageUrl: newAvatarUrl,
+                homeLatitude: homeLatitude != null ? parseFloat(homeLatitude) : null,
+                homeLongitude: homeLongitude != null ? parseFloat(homeLongitude) : null,
+                emailNotifications: emailNotifications === true || emailNotifications === 'true',
             },
             create: {
                 userId: req.user.userId,
@@ -165,6 +168,9 @@ exports.updateProfile = async (req, res) => {
                 age: age ? parseInt(age) : null,
                 gender: gender || null,
                 imageUrl: newAvatarUrl,
+                homeLatitude: homeLatitude != null ? parseFloat(homeLatitude) : null,
+                homeLongitude: homeLongitude != null ? parseFloat(homeLongitude) : null,
+                emailNotifications: emailNotifications === true || emailNotifications === 'true',
             }
         });
 

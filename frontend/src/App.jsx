@@ -22,6 +22,7 @@ import TrafficDashboard from './pages/user/TrafficDashboard';
 import AllFines from './pages/user/AllFines';
 import ChallanDetails from './pages/user/ChallanDetails';
 import DiscussionForum from './pages/user/DiscussionForum';
+import CityLeaderboard from './pages/user/CityLeaderboard';
 
 // Admin pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -53,6 +54,7 @@ export default function App() {
           <Route path="report" element={<ReportIssue />} />
           <Route path="complaints" element={<MyComplaints />} />
           <Route path="forum" element={<DiscussionForum />} />
+          <Route path="leaderboard" element={<CityLeaderboard />} />
           <Route path="traffic" element={<TrafficDashboard />} />
           <Route path="traffic/fines" element={<AllFines />} />
           <Route path="traffic/challan/:id" element={<ChallanDetails />} />

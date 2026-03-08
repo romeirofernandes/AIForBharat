@@ -18,6 +18,7 @@ import {
     Car01Icon as TrafficIcon,
     MessageMultiple01Icon as ForumIcon,
     DatabaseIcon as ClustersIcon,
+    RankingIcon as LeaderboardIcon,
 } from 'hugeicons-react';
 
 const userLinks = [
@@ -25,6 +26,7 @@ const userLinks = [
     { to: '/user/report', label: 'Report Issue', icon: Report },
     { to: '/user/complaints', label: 'My Complaints', icon: Complaints },
     { to: '/user/forum', label: 'The Civic Wire', icon: ForumIcon },
+    { to: '/user/leaderboard', label: 'Leaderboard', icon: LeaderboardIcon },
     { to: '/user/traffic', label: 'Traffic', icon: TrafficIcon },
 ];
 

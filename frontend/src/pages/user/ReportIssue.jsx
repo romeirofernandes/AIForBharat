@@ -583,7 +583,7 @@ const ReportIncident = () => {
                                     </div>
 
                                     <RichButton
-                                        color="default"
+                                        color="primary"
                                         size="sm"
                                         onClick={handleLocation}
                                         disabled={fetchingLocation}
@@ -617,7 +617,7 @@ const ReportIncident = () => {
                 </div>
 
                 <RichButton
-                    color="default"
+                    color="primary"
                     size="default"
                     onClick={nextStep}
                     disabled={loading}

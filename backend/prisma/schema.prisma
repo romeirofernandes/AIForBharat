@@ -90,15 +90,18 @@ model CommentVote {
 }
 
 model CitizenProfile {
-  id        Int      @id @default(autoincrement())
-  userId    Int      @unique @map("user_id")
-  user      User     @relation(fields: [userId], references: [id])
-  name      String   @db.VarChar(255)
-  age       Int?
-  gender    String?  @db.VarChar(50)
-  imageUrl  String?  @map("image_url") @db.Text
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  id                 Int      @id @default(autoincrement())
+  userId             Int      @unique @map("user_id")
+  user               User     @relation(fields: [userId], references: [id])
+  name               String   @db.VarChar(255)
+  age                Int?
+  gender             String?  @db.VarChar(50)
+  imageUrl           String?  @map("image_url") @db.Text
+  homeLatitude       Float?   @map("home_latitude")
+  homeLongitude      Float?   @map("home_longitude")
+  emailNotifications Boolean  @default(false) @map("email_notifications")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
 
   @@map("citizen_profiles")
 }

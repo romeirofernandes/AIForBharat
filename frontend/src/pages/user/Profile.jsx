@@ -339,7 +339,7 @@ export default function Profile() {
                                     )}
                                 </div>
                                 <a
-                                    href="https://wa.me/18599276910"
+                                    href="https://wa.me/14155238886"
                                     target="_blank"
                                     rel="noopener noreferrer"
                                     className="flex items-center gap-2 h-11 px-5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors whitespace-nowrap"

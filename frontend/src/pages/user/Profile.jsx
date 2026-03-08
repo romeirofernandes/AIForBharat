@@ -215,6 +215,7 @@ export default function Profile() {
             </motion.div>
 
             {activeTab === 'profile' && (
+                <>
                 <motion.div
                     initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.1 }}
                     className="border border-border/80 rounded-2xl p-6 md:p-10 bg-card shadow-sm space-y-8"
@@ -276,6 +277,9 @@ export default function Profile() {
                                             <input type="number" name="age" value={formData.age} onChange={handleChange}
                                                 className="w-full h-12 pl-12 pr-4 rounded-xl bg-muted/30 border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none text-sm font-bold transition-all"
                                                 placeholder="e.g., 34" />
+                                        </div>
+                                    </div>
+                                </div>
                                         </div>
                                     </div>
                                 </div>
@@ -490,6 +494,8 @@ export default function Profile() {
                         )}
                     </div>
                 </motion.div>
+            )}
+                </>
             )}
         </div>
     );

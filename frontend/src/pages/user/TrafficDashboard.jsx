@@ -263,7 +263,7 @@ export default function TrafficDashboard() {
                             <p className="text-sm text-muted-foreground font-medium">
                                 {vehicles.length === 0
                                     ? 'Link a vehicle above to see challans.'
-                                    : 'No challans found for your vehicles. Drive safe! 🎉'}
+                                    : 'No challans found for your vehicles. Drive safe!'}
                             </p>
                         </CardContent>
                     </Card>
@@ -289,9 +289,9 @@ export default function TrafficDashboard() {
                                             </div>
                                             <p className="text-sm font-bold text-foreground truncate">{challan.fine?.offenseName}</p>
                                             <div className="flex items-center gap-3 mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
-                                                <span>🚗 {challan.vehicleNumber}</span>
-                                                {challan.location && <span>📍 {challan.location}</span>}
-                                                <span>📅 {new Date(challan.issuedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                                <span>{challan.vehicleNumber}</span>
+                                                {challan.location && <span>{challan.location}</span>}
+                                                <span>{new Date(challan.issuedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">

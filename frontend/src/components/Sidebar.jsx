@@ -6,7 +6,6 @@ import { toast } from 'sonner';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from './ui/tooltip';
 import {
     Home09Icon as Home,
-    FileSearchIcon as Schemes,
     Alert02Icon as Report,
     TaskDone01Icon as Complaints,
     UserCircleIcon as ProfileIcon,
@@ -17,13 +16,14 @@ import {
     ChartHistogramIcon as Analytics,
     SidebarLeft01Icon as SidebarToggle,
     Car01Icon as TrafficIcon,
+    MessageMultiple01Icon as ForumIcon,
 } from 'hugeicons-react';
 
 const userLinks = [
     { to: '/user/dashboard', label: 'Dashboard', icon: Home },
-    { to: '/user/schemes', label: 'My Schemes', icon: Schemes },
     { to: '/user/report', label: 'Report Issue', icon: Report },
     { to: '/user/complaints', label: 'My Complaints', icon: Complaints },
+    { to: '/user/forum', label: 'The Civic Wire', icon: ForumIcon },
     { to: '/user/traffic', label: 'Traffic', icon: TrafficIcon },
 ];
 

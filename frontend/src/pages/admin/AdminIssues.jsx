@@ -112,7 +112,7 @@ export default function AdminIssues() {
                                 </div>
                                 <p className="text-xs text-muted-foreground font-medium line-clamp-2">{issue.description}</p>
                                 {issue.latitude && issue.longitude && (
-                                    <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-wider mt-2">📍 {issue.latitude}, {issue.longitude}</p>
+                                    <p className="text-[10px] font-bold text-muted-foreground/60 uppercase tracking-wider mt-2">{issue.latitude}, {issue.longitude}</p>
                                 )}
                                 {(issue.imageUrl || issue.videoUrl) && (
                                     <div className="flex gap-2 mt-3">

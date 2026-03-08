@@ -20,7 +20,7 @@ export function Framework({ fadeInUp, staggerContainer }) {
                     <motion.div initial="hidden" whileInView="visible" viewport={{ once: true, margin: "-100px" }} variants={staggerContainer}>
                         {[
                             { step: "01", title: "Profile", desc: "Create your lifetime civic identity with secure Aadhaar-based verification." },
-                            { step: "02", title: "Discover", desc: "AI scans the welfare landscape to find schemes you didn't know you qualified for." },
+                            { step: "02", title: "Discuss", desc: "Join the community forum to upvote, comment, and track civic issues across your city." },
                             { step: "03", title: "Report", desc: "Speak or type your grievance. AI categorizes and routes it to the right department." },
                             { step: "04", title: "Resolve", desc: "Track progress and auto-escalate if the resolution misses its SLA deadline.", highlight: true },
                         ].map((item, i) => (

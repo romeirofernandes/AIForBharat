@@ -15,9 +15,9 @@ import {
 function getBreadcrumbs(pathname) {
     const exact = {
         '/user/dashboard':  [{ label: 'Dashboard' }],
-        '/user/schemes':    [{ label: 'Schemes' }],
         '/user/report':     [{ label: 'Report Issue' }],
         '/user/complaints': [{ label: 'My Complaints' }],
+        '/user/forum':      [{ label: 'The Civic Wire' }],
         '/user/traffic':    [{ label: 'Traffic' }],
         '/user/traffic/fines': [
             { label: 'Traffic', to: '/user/traffic' },

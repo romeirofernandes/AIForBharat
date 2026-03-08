@@ -19,7 +19,26 @@ export function AppBreadcrumb() {
   const isDashboard = location.pathname === dashboardPath;
 
   // Get segments after the role, excluding 'dashboard'
-  const segments = pathnames.slice(1).filter((s) => s !== 'dashboard');
+  const rawSegments = pathnames.slice(1).filter((s) => s !== 'dashboard');
+
+  // Merge numeric ID segments into the previous segment label as "Details"
+  const segments = [];
+  for (let i = 0; i < rawSegments.length; i++) {
+    const seg = rawSegments[i];
+    const isNumericId = /^\d+$/.test(seg);
+    if (isNumericId && segments.length > 0) {
+      const prev = segments[segments.length - 1];
+      segments[segments.length - 1] = {
+        key: prev.key + '/' + seg,
+        path: `/${role}/${rawSegments.slice(0, i + 1).join('/')}`,
+        displayName: prev.displayName.replace(/ Details$/, '') + ' Details',
+      };
+    } else {
+      const displayName = seg.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
+      const path = `/${role}/${rawSegments.slice(0, i + 1).join('/')}`;
+      segments.push({ key: seg, path, displayName });
+    }
+  }
 
   return (
     <Breadcrumb>
@@ -38,13 +57,11 @@ export function AppBreadcrumb() {
           )}
         </BreadcrumbItem>
 
-        {segments.map((segment, index) => {
+        {segments.map(({ key, path, displayName }, index) => {
           const isLast = index === segments.length - 1;
-          const path = `/${role}/${segments.slice(0, index + 1).join('/')}`;
-          const displayName = segment.replace(/-/g, ' ').replace(/\b\w/g, (l) => l.toUpperCase());
 
           return (
-            <React.Fragment key={path}>
+            <React.Fragment key={key}>
               <BreadcrumbSeparator />
               <BreadcrumbItem>
                 {isLast ? (

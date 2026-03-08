@@ -198,7 +198,7 @@ export default function ReportBribery() {
     };
 
     return (
-        <div className="w-full space-y-6 max-w-3xl">
+        <div className="w-full space-y-6">
 
             {/* Header */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.05 }}>
@@ -208,13 +208,13 @@ export default function ReportBribery() {
                 </p>
             </motion.div>
 
-            {/* Voice Fill Card */}
+            {/* Voice Fill Card — full width */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.1 }}>
                 <Card className={`border-2 transition-all ${isRecording ? 'border-red-400 bg-red-50/30' : isTranscribing ? 'border-primary bg-primary/5' : voiceFilled ? 'border-emerald-400 bg-emerald-50/30' : 'border-dashed border-primary/30 hover:border-primary/60'}`}>
-                    <CardContent className="p-6 flex flex-col items-center text-center gap-4">
+                    <CardContent className="p-6 flex flex-col sm:flex-row items-center gap-6">
                         {isTranscribing ? (
                             <>
-                                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center">
+                                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                                     <LoadingIcon size={28} className="text-primary animate-spin" />
                                 </div>
                                 <div>
@@ -224,19 +224,14 @@ export default function ReportBribery() {
                             </>
                         ) : voiceFilled ? (
                             <>
-                                <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center">
+                                <div className="w-16 h-16 rounded-full bg-emerald-100 flex items-center justify-center shrink-0">
                                     <TickIcon size={28} className="text-emerald-600" />
                                 </div>
-                                <div>
+                                <div className="flex-1">
                                     <p className="text-sm font-bold text-emerald-700">Form auto-filled from voice!</p>
                                     <p className="text-xs text-muted-foreground mt-1">Review the fields below and make any corrections</p>
                                 </div>
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    onClick={() => { setVoiceFilled(false); }}
-                                    className="text-xs cursor-pointer"
-                                >
+                                <Button variant="outline" size="sm" onClick={() => { setVoiceFilled(false); }} className="text-xs cursor-pointer shrink-0">
                                     Record Again
                                 </Button>
                             </>
@@ -244,26 +239,17 @@ export default function ReportBribery() {
                             <>
                                 <button
                                     onClick={isRecording ? stopRecording : startRecording}
-                                    className={`w-20 h-20 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-lg ${isRecording
-                                            ? 'bg-red-500 hover:bg-red-600 animate-pulse shadow-red-200'
-                                            : 'bg-primary hover:bg-primary/90 shadow-primary/20'
-                                        }`}
+                                    className={`w-16 h-16 rounded-full flex items-center justify-center transition-all cursor-pointer shadow-lg shrink-0 ${isRecording ? 'bg-red-500 hover:bg-red-600 animate-pulse shadow-red-200' : 'bg-primary hover:bg-primary/90 shadow-primary/20'}`}
                                 >
-                                    {isRecording ? (
-                                        <StopIcon size={32} className="text-white" />
-                                    ) : (
-                                        <MicIcon size={32} className="text-white" />
-                                    )}
+                                    {isRecording ? <StopIcon size={26} className="text-white" /> : <MicIcon size={26} className="text-white" />}
                                 </button>
-                                <div>
-                                    <p className="text-sm font-bold text-foreground flex items-center gap-1.5 justify-center">
+                                <div className="flex-1">
+                                    <p className="text-sm font-bold text-foreground flex items-center gap-1.5">
                                         <SparklesIcon size={16} className="text-primary" />
                                         {isRecording ? 'Recording… Click to stop' : 'Voice Fill — Speak Your Complaint'}
                                     </p>
-                                    <p className="text-xs text-muted-foreground mt-1 max-w-sm">
-                                        {isRecording
-                                            ? 'Describe everything: badge number, what happened, where, when, amount demanded…'
-                                            : 'Just talk naturally — AI will transcribe and auto-fill all the fields below. No typing needed!'}
+                                    <p className="text-xs text-muted-foreground mt-1">
+                                        {isRecording ? 'Describe everything: badge number, what happened, where, when, amount demanded…' : 'Just talk naturally — AI will transcribe and auto-fill all the fields below. No typing needed!'}
                                     </p>
                                 </div>
                             </>
@@ -274,239 +260,234 @@ export default function ReportBribery() {
 
             <Separator />
 
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-                {/* Complaint Type */}
-                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.15 }}>
-                    <Card>
-                        <CardHeader className="pb-3">
-                            <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                                Complaint Type *
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                                {COMPLAINT_TYPES.map((type) => (
-                                    <button
-                                        key={type}
-                                        type="button"
-                                        onClick={() => setComplaintType(type)}
-                                        className={`px-4 py-3 rounded-lg border text-left text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${complaintType === type
-                                                ? 'border-primary bg-primary/10 text-primary shadow-sm'
-                                                : 'border-border hover:border-primary/30 text-foreground/70 hover:text-foreground'
-                                            }`}
-                                    >
-                                        {type}
-                                    </button>
-                                ))}
-                            </div>
-                            <AnimatePresence>
-                                {complaintType === 'Other' && (
-                                    <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
-                                        <Input
-                                            placeholder="Specify what happened…"
-                                            value={otherComplaintType}
-                                            onChange={(e) => setOtherComplaintType(e.target.value)}
-                                            className="mt-2"
-                                        />
-                                    </motion.div>
-                                )}
-                            </AnimatePresence>
-                        </CardContent>
-                    </Card>
-                </motion.div>
+            {/* 2-column form layout */}
+            <form onSubmit={handleSubmit}>
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-start">
 
-                {/* Badge + Incident Date */}
-                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.2 }}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                                    <BadgeIcon size={14} /> Badge Number *
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <Input
-                                    placeholder="e.g. TPC-1234"
-                                    value={badgeNumber}
-                                    onChange={(e) => setBadgeNumber(e.target.value)}
-                                    className="font-mono tracking-wider"
-                                />
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                                    <CalendarIcon size={14} /> Incident Date & Time *
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <Input
-                                    type="datetime-local"
-                                    value={incidentAt}
-                                    onChange={(e) => setIncidentAt(e.target.value)}
-                                />
-                            </CardContent>
-                        </Card>
-                    </div>
-                </motion.div>
-
-                {/* Location + Challan */}
-                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.25 }}>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                                    <LocationIcon size={14} /> Location / Police Post
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <Input
-                                    placeholder="e.g. Andheri Signal, Mumbai"
-                                    value={location}
-                                    onChange={(e) => setLocation(e.target.value)}
-                                />
-                            </CardContent>
-                        </Card>
-
-                        <Card>
-                            <CardHeader className="pb-2">
-                                <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                                    <FileIcon size={14} /> Related Challan Number
-                                </CardTitle>
-                            </CardHeader>
-                            <CardContent>
-                                <Input
-                                    placeholder="e.g. MH01-2026-123456"
-                                    value={challanNumber}
-                                    onChange={(e) => setChallanNumber(e.target.value)}
-                                    className="font-mono tracking-wider"
-                                />
-                            </CardContent>
-                        </Card>
-                    </div>
-                </motion.div>
-
-                {/* Amount Demanded */}
-                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.3 }}>
-                    <Card>
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                                <MoneyIcon size={14} /> Amount Demanded (₹)
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <Input
-                                type="number"
-                                placeholder="e.g. 500"
-                                value={amountDemanded}
-                                onChange={(e) => setAmountDemanded(e.target.value)}
-                                min="0"
-                            />
-                            <p className="text-[10px] text-muted-foreground mt-1.5">
-                                If the officer demanded or took money, enter the amount here
-                            </p>
-                        </CardContent>
-                    </Card>
-                </motion.div>
-
-                {/* Description */}
-                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.35 }}>
-                    <Card>
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
-                                Description *
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                            <textarea
-                                rows={5}
-                                placeholder="Describe what happened in detail…"
-                                value={description}
-                                onChange={(e) => setDescription(e.target.value)}
-                                className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
-                            />
-                        </CardContent>
-                    </Card>
-                </motion.div>
-
-                {/* Proof Upload */}
-                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 }}>
-                    <Card>
-                        <CardHeader className="pb-2">
-                            <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
-                                <UploadIcon size={14} /> Proof / Evidence (Photos, Videos)
-                            </CardTitle>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                            <div
-                                onClick={() => fileInputRef.current?.click()}
-                                className="border-2 border-dashed border-border rounded-lg p-6 text-center cursor-pointer hover:border-primary/40 hover:bg-muted/20 transition-all"
-                            >
-                                <UploadIcon size={24} className="mx-auto text-muted-foreground mb-2" />
-                                <p className="text-xs font-bold text-foreground">Click to upload or drag files here</p>
-                                <p className="text-[10px] text-muted-foreground mt-1">
-                                    Images, videos — up to 5 files, 50MB each
-                                </p>
-                                <input
-                                    ref={fileInputRef}
-                                    type="file"
-                                    accept="image/*,video/*"
-                                    multiple
-                                    onChange={handleFileChange}
-                                    className="hidden"
-                                />
-                            </div>
-
-                            {proofFiles.length > 0 && (
-                                <div className="space-y-2">
-                                    {proofFiles.map((file, i) => (
-                                        <div key={i} className="flex items-center gap-3 p-2.5 border border-border rounded-lg bg-muted/20">
-                                            <span className="text-lg">{getFileIcon(file)}</span>
-                                            <div className="flex-1 min-w-0">
-                                                <p className="text-xs font-medium text-foreground truncate">{file.name}</p>
-                                                <p className="text-[10px] text-muted-foreground">{(file.size / 1024 / 1024).toFixed(1)} MB</p>
-                                            </div>
-                                            <button type="button" onClick={() => removeFile(i)} className="cursor-pointer p-1 hover:bg-red-100 rounded">
-                                                <DeleteIcon size={14} className="text-red-500" />
+                    {/* ── Left Column ── */}
+                    <div className="space-y-5">
+                        {/* Complaint Type */}
+                        <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.15 }}>
+                            <Card>
+                                <CardHeader className="pb-3">
+                                    <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                                        Complaint Type *
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-3">
+                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                                        {COMPLAINT_TYPES.map((type) => (
+                                            <button
+                                                key={type}
+                                                type="button"
+                                                onClick={() => setComplaintType(type)}
+                                                className={`px-4 py-3 rounded-lg border text-left text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${complaintType === type ? 'border-primary bg-primary/10 text-primary shadow-sm' : 'border-border hover:border-primary/30 text-foreground/70 hover:text-foreground'}`}
+                                            >
+                                                {type}
                                             </button>
+                                        ))}
+                                    </div>
+                                    <AnimatePresence>
+                                        {complaintType === 'Other' && (
+                                            <motion.div initial={{ height: 0, opacity: 0 }} animate={{ height: 'auto', opacity: 1 }} exit={{ height: 0, opacity: 0 }}>
+                                                <Input
+                                                    placeholder="Specify what happened…"
+                                                    value={otherComplaintType}
+                                                    onChange={(e) => setOtherComplaintType(e.target.value)}
+                                                    className="mt-2"
+                                                />
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+
+                        {/* Badge + Incident Date */}
+                        <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.2 }}>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <Card>
+                                    <CardHeader className="pb-2">
+                                        <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                                            <BadgeIcon size={14} /> Badge Number *
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <Input
+                                            placeholder="e.g. TPC-1234"
+                                            value={badgeNumber}
+                                            onChange={(e) => setBadgeNumber(e.target.value)}
+                                            className="font-mono tracking-wider"
+                                        />
+                                    </CardContent>
+                                </Card>
+                                <Card>
+                                    <CardHeader className="pb-2">
+                                        <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                                            <CalendarIcon size={14} /> Date & Time *
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <Input
+                                            type="datetime-local"
+                                            value={incidentAt}
+                                            onChange={(e) => setIncidentAt(e.target.value)}
+                                        />
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </motion.div>
+
+                        {/* Location + Challan */}
+                        <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.25 }}>
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <Card>
+                                    <CardHeader className="pb-2">
+                                        <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                                            <LocationIcon size={14} /> Location
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <Input
+                                            placeholder="e.g. Andheri Signal, Mumbai"
+                                            value={location}
+                                            onChange={(e) => setLocation(e.target.value)}
+                                        />
+                                    </CardContent>
+                                </Card>
+                                <Card>
+                                    <CardHeader className="pb-2">
+                                        <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                                            <FileIcon size={14} /> Challan No.
+                                        </CardTitle>
+                                    </CardHeader>
+                                    <CardContent>
+                                        <Input
+                                            placeholder="e.g. MH01-2026-123456"
+                                            value={challanNumber}
+                                            onChange={(e) => setChallanNumber(e.target.value)}
+                                            className="font-mono tracking-wider"
+                                        />
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </motion.div>
+
+                        {/* Amount Demanded */}
+                        <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.3 }}>
+                            <Card>
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                                        <MoneyIcon size={14} /> Amount Demanded (₹)
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <Input
+                                        type="number"
+                                        placeholder="e.g. 500"
+                                        value={amountDemanded}
+                                        onChange={(e) => setAmountDemanded(e.target.value)}
+                                        min="0"
+                                    />
+                                    <p className="text-[10px] text-muted-foreground mt-1.5">
+                                        If the officer demanded or took money, enter the amount here
+                                    </p>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+                    </div>
+
+                    {/* ── Right Column ── */}
+                    <div className="space-y-5">
+                        {/* Description */}
+                        <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.2 }}>
+                            <Card>
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">
+                                        Description *
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent>
+                                    <textarea
+                                        rows={6}
+                                        placeholder="Describe what happened in detail…"
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
+                                    />
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+
+                        {/* Proof Upload */}
+                        <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.25 }}>
+                            <Card>
+                                <CardHeader className="pb-2">
+                                    <CardTitle className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
+                                        <UploadIcon size={14} /> Proof / Evidence
+                                    </CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-3">
+                                    <div
+                                        onClick={() => fileInputRef.current?.click()}
+                                        className="border-2 border-dashed border-border rounded-lg p-5 text-center cursor-pointer hover:border-primary/40 hover:bg-muted/20 transition-all"
+                                    >
+                                        <UploadIcon size={22} className="mx-auto text-muted-foreground mb-2" />
+                                        <p className="text-xs font-bold text-foreground">Click to upload / drag files here</p>
+                                        <p className="text-[10px] text-muted-foreground mt-1">Images, videos · up to 5 files, 50MB each</p>
+                                        <input ref={fileInputRef} type="file" accept="image/*,video/*" multiple onChange={handleFileChange} className="hidden" />
+                                    </div>
+                                    {proofFiles.length > 0 && (
+                                        <div className="space-y-2">
+                                            {proofFiles.map((file, i) => (
+                                                <div key={i} className="flex items-center gap-3 p-2.5 border border-border rounded-lg bg-muted/20">
+                                                    <span className="text-lg">{getFileIcon(file)}</span>
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-xs font-medium text-foreground truncate">{file.name}</p>
+                                                        <p className="text-[10px] text-muted-foreground">{(file.size / 1024 / 1024).toFixed(1)} MB</p>
+                                                    </div>
+                                                    <button type="button" onClick={() => removeFile(i)} className="cursor-pointer p-1 hover:bg-red-100 rounded">
+                                                        <DeleteIcon size={14} className="text-red-500" />
+                                                    </button>
+                                                </div>
+                                            ))}
                                         </div>
-                                    ))}
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
-                </motion.div>
+                                    )}
+                                </CardContent>
+                            </Card>
+                        </motion.div>
 
-                {/* Submit */}
-                <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.45 }}>
-                    <Button
-                        type="submit"
-                        disabled={submitting}
-                        className="w-full py-6 text-sm font-bold uppercase tracking-widest cursor-pointer"
-                    >
-                        {submitting ? (
-                            <span className="flex items-center gap-2">
-                                <LoadingIcon size={16} className="animate-spin" /> Filing Complaint…
-                            </span>
-                        ) : (
-                            'File Complaint'
-                        )}
-                    </Button>
-                </motion.div>
-            </form>
+                        {/* Submit */}
+                        <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.35 }}>
+                            <Button
+                                type="submit"
+                                disabled={submitting}
+                                className="w-full py-6 text-sm font-bold uppercase tracking-widest cursor-pointer"
+                            >
+                                {submitting ? (
+                                    <span className="flex items-center gap-2">
+                                        <LoadingIcon size={16} className="animate-spin" /> Filing Complaint…
+                                    </span>
+                                ) : (
+                                    'File Complaint'
+                                )}
+                            </Button>
+                        </motion.div>
 
-            {/* Legal Note */}
-            <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.5 }}>
-                <div className="border border-amber-200 bg-amber-50 rounded-lg p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-amber-700 mb-1">Important Notice</p>
-                    <p className="text-xs text-amber-800 font-medium leading-relaxed">
-                        Filing a false complaint is a punishable offense. Ensure all information provided is accurate and truthful.
-                        Your complaint will be reviewed by our team. Attach as much evidence as possible for faster resolution.
-                    </p>
+                        {/* Legal Note */}
+                        <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 }}>
+                            <div className="border border-amber-200 bg-amber-50 rounded-lg p-4">
+                                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-amber-700 mb-1">Important Notice</p>
+                                <p className="text-xs text-amber-800 font-medium leading-relaxed">
+                                    Filing a false complaint is a punishable offense. Ensure all information provided is accurate and truthful.
+                                    Your complaint will be reviewed by our team. Attach as much evidence as possible for faster resolution.
+                                </p>
+                            </div>
+                        </motion.div>
+                    </div>
+
                 </div>
-            </motion.div>
+            </form>
         </div>
     );
 }

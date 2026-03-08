@@ -1,5 +1,8 @@
 const prisma = require("../config/prisma");
 const { GoogleGenerativeAI } = require("@google/generative-ai");
+const { increaseReputation, REWARDS } = require("../services/reputationService");
+const { logHistory, getIssueTimeline, ACTIONS } = require("../services/timelineService");
+const { recalculateIssuePriority, recalculateAllPriorities } = require("../services/priorityService");
 
 const geminiKey = process.env.GEMINI_API_KEY || "dummy_key";
 const genAI = new GoogleGenerativeAI(geminiKey);
@@ -50,6 +53,17 @@ exports.createIssue = async (req, res) => {
             },
         });
 
+        // ── Reputation: reward for reporting ──
+        await increaseReputation(req.user.userId, REWARDS.REPORT_ISSUE);
+
+        // ── Timeline: log creation ──
+        await logHistory(issue.id, ACTIONS.ISSUE_CREATED, req.user.userId, req.user.role, {
+            title, department, incidentType: incident_type,
+        });
+
+        // ── Priority: initial calculation ──
+        await recalculateIssuePriority(issue.id);
+
         res.status(201).json({ message: "Issue reported successfully", issue });
     } catch (error) {
         console.error("Create issue error:", error);
@@ -72,11 +86,16 @@ exports.getMyIssues = async (req, res) => {
     }
 };
 
-// Get ALL issues (admin)
+// Get ALL issues (admin) — now supports ?sort=priority|newest|mostVotes
 exports.getAllIssues = async (req, res) => {
     try {
-        const { status } = req.query;
+        const { status, sort } = req.query;
         const where = status ? { status } : {};
+
+        let orderBy = { createdAt: "desc" };
+        if (sort === "priority") {
+            orderBy = { priorityScore: "desc" };
+        }
 
         const issues = await prisma.issue.findMany({
             where,
@@ -86,12 +105,42 @@ exports.getAllIssues = async (req, res) => {
                 },
                 department: {
                     select: { name: true }
-                }
+                },
+                votes: { select: { value: true } },
+                _count: { select: { comments: true } },
             },
-            orderBy: { createdAt: "desc" },
+            orderBy,
         });
 
-        res.json({ issues });
+        // Enrich with computed fields
+        const enriched = issues.map((issue) => {
+            const voteScore = issue.votes.reduce((sum, v) => sum + v.value, 0);
+            return {
+                id: issue.id,
+                title: issue.title,
+                description: issue.description,
+                latitude: issue.latitude,
+                longitude: issue.longitude,
+                imageUrl: issue.imageUrl,
+                videoUrl: issue.videoUrl,
+                status: issue.status,
+                incidentType: issue.incidentType,
+                priorityScore: issue.priorityScore,
+                voteScore,
+                commentCount: issue._count.comments,
+                user: issue.user,
+                department: issue.department,
+                createdAt: issue.createdAt,
+                updatedAt: issue.updatedAt,
+            };
+        });
+
+        // Sort by votes if requested (post-query since it's computed)
+        if (sort === "mostVotes") {
+            enriched.sort((a, b) => b.voteScore - a.voteScore);
+        }
+
+        res.json({ issues: enriched });
     } catch (error) {
         console.error("Get all issues error:", error);
         res.status(500).json({ error: "Internal server error" });
@@ -114,6 +163,16 @@ exports.updateIssueStatus = async (req, res) => {
             data: { status },
         });
 
+        // ── Timeline: log status change ──
+        await logHistory(issue.id, ACTIONS.STATUS_UPDATED, req.user.userId, req.user.role, {
+            newStatus: status,
+        });
+
+        // ── Reputation: reward if resolved ──
+        if (status === "resolved") {
+            await increaseReputation(issue.userId, REWARDS.ISSUE_RESOLVED);
+        }
+
         res.json({ message: "Issue status updated", issue });
     } catch (error) {
         console.error("Update issue error:", error);
@@ -121,9 +180,12 @@ exports.updateIssueStatus = async (req, res) => {
     }
 };
 
-// Get dashboard stats (admin)
+// Get dashboard stats (admin) — now recalculates priorities
 exports.getStats = async (req, res) => {
     try {
+        // Recalculate priorities on dashboard load
+        await recalculateAllPriorities();
+
         const [totalIssues, pendingIssues, resolvedIssues, totalUsers] = await Promise.all([
             prisma.issue.count(),
             prisma.issue.count({ where: { status: "pending" } }),
@@ -145,6 +207,18 @@ exports.getStats = async (req, res) => {
     }
 };
 
+// Get issue timeline
+exports.getIssueTimeline = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const timeline = await getIssueTimeline(parseInt(id));
+        res.json({ timeline });
+    } catch (error) {
+        console.error("Timeline error:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
 // ─── Aggregated / Clustered Issues (admin) ───────────────────────
 exports.getAggregatedIssues = async (req, res) => {
     try {
@@ -152,6 +226,7 @@ exports.getAggregatedIssues = async (req, res) => {
             include: {
                 user: { select: { id: true, email: true } },
                 department: { select: { name: true } },
+                votes: { select: { value: true } },
             },
             orderBy: { createdAt: "desc" },
         });
@@ -169,16 +244,20 @@ exports.getAggregatedIssues = async (req, res) => {
 
             if (!buckets[key]) {
                 buckets[key] = {
+                    clusterKey: key,
                     incidentType: issue.incidentType || "Unknown",
                     department: issue.department?.name || "Unassigned",
                     latitude: issue.latitude,
                     longitude: issue.longitude,
                     count: 0,
+                    totalVotes: 0,
                     statuses: { pending: 0, in_progress: 0, resolved: 0, rejected: 0 },
                     issues: [],
                 };
             }
+            const voteSum = issue.votes.reduce((sum, v) => sum + v.value, 0);
             buckets[key].count += 1;
+            buckets[key].totalVotes += voteSum;
             buckets[key].statuses[issue.status] = (buckets[key].statuses[issue.status] || 0) + 1;
             buckets[key].issues.push({
                 id: issue.id,
@@ -186,6 +265,8 @@ exports.getAggregatedIssues = async (req, res) => {
                 description: issue.description,
                 status: issue.status,
                 imageUrl: issue.imageUrl,
+                priorityScore: issue.priorityScore,
+                voteScore: voteSum,
                 createdAt: issue.createdAt,
                 user: issue.user,
             });
@@ -204,7 +285,7 @@ exports.getAggregatedIssues = async (req, res) => {
 // ─── AI Resolution Flow (admin) ──────────────────────────────────
 exports.getResolutionFlow = async (req, res) => {
     try {
-        const { incidentType, department, count, sampleDescriptions } = req.body;
+        const { incidentType, department, count, sampleDescriptions, issueIds, clusterKey } = req.body;
 
         if (!incidentType) {
             return res.status(400).json({ error: "incidentType is required" });
@@ -258,7 +339,36 @@ Rules:
             return res.status(500).json({ error: "AI returned invalid JSON. Please try again." });
         }
 
-        res.json({ flow: flowData });
+        // ── Persist workflow to DB ──
+        const workflow = await prisma.issueWorkflow.create({
+            data: {
+                clusterKey: clusterKey || null,
+                issueId: issueIds && issueIds.length === 1 ? issueIds[0] : null,
+                flowJson: flowData,
+                status: "active",
+                steps: {
+                    create: (flowData.steps || []).map((step, index) => ({
+                        stepId: step.id,
+                        title: step.title,
+                        description: step.description || "",
+                        type: step.type || "action",
+                        status: index === 0 ? "active" : "pending",
+                    })),
+                },
+            },
+            include: { steps: true },
+        });
+
+        // ── Timeline: log workflow creation for all associated issues ──
+        if (issueIds && issueIds.length > 0) {
+            for (const iid of issueIds) {
+                await logHistory(iid, ACTIONS.WORKFLOW_CREATED, req.user.userId, req.user.role, {
+                    workflowId: workflow.id,
+                });
+            }
+        }
+
+        res.json({ flow: flowData, workflow });
     } catch (error) {
         console.error("Resolution flow error:", error);
         res.status(500).json({ error: "Failed to generate resolution flow" });

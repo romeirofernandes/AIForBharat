@@ -1,4 +1,7 @@
 const prisma = require("../config/prisma");
+const { increaseReputation, REWARDS } = require("../services/reputationService");
+const { logHistory, ACTIONS } = require("../services/timelineService");
+const { recalculateIssuePriority } = require("../services/priorityService");
 
 // ─── Get all issues for forum feed (public to authenticated users) ──
 exports.getFeed = async (req, res) => {
@@ -108,6 +111,24 @@ exports.voteIssue = async (req, res) => {
             _sum: { value: true },
         });
 
+        // ── Reputation: reward issue author on upvote ──
+        if (vote && value === 1) {
+            const issue = await prisma.issue.findUnique({ where: { id: issueId }, select: { userId: true } });
+            if (issue && issue.userId !== userId) {
+                await increaseReputation(issue.userId, REWARDS.ISSUE_UPVOTE_RECEIVED);
+            }
+        }
+
+        // ── Timeline: log vote ──
+        if (vote) {
+            await logHistory(issueId, ACTIONS.VOTE_ADDED, userId, req.user.role, { value });
+        } else {
+            await logHistory(issueId, ACTIONS.VOTE_REMOVED, userId, req.user.role);
+        }
+
+        // ── Priority: recalculate ──
+        await recalculateIssuePriority(issueId);
+
         res.json({ score: agg._sum.value || 0, userVote: vote ? vote.value : 0 });
     } catch (error) {
         console.error("Vote issue error:", error);
@@ -205,6 +226,11 @@ exports.addComment = async (req, res) => {
             },
         });
 
+        // ── Timeline: log comment ──
+        await logHistory(issueId, ACTIONS.COMMENT_ADDED, userId, req.user.role, {
+            commentId: comment.id, parentId: parentId || null,
+        });
+
         res.status(201).json({
             comment: {
                 id: comment.id,
@@ -248,6 +274,14 @@ exports.voteComment = async (req, res) => {
             }
         } else {
             vote = await prisma.commentVote.create({ data: { commentId, userId, value } });
+        }
+
+        // ── Reputation: reward comment author on upvote ──
+        if (vote && value === 1) {
+            const comment = await prisma.issueComment.findUnique({ where: { id: commentId }, select: { userId: true } });
+            if (comment && comment.userId !== userId) {
+                await increaseReputation(comment.userId, REWARDS.COMMENT_UPVOTE_RECEIVED);
+            }
         }
 
         const agg = await prisma.commentVote.aggregate({

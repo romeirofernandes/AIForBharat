@@ -9,6 +9,7 @@ export default defineConfig({
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      'hugeicons-react': path.resolve(__dirname, './src/lib/hugeicons-react.jsx'),
     },
   },
 })

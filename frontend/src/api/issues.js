@@ -11,9 +11,12 @@ export function getMyIssues() {
     return apiFetch('/issues/my');
 }
 
-export function getAllIssues(status) {
-    const query = status ? `?status=${status}` : '';
-    return apiFetch(`/issues/all${query}`);
+export function getAllIssues(status, sort) {
+    const params = new URLSearchParams();
+    if (status) params.set('status', status);
+    if (sort) params.set('sort', sort);
+    const query = params.toString();
+    return apiFetch(`/issues/all${query ? `?${query}` : ''}`);
 }
 
 export function updateIssueStatus(id, status) {
@@ -31,10 +34,13 @@ export function getAggregatedIssues() {
     return apiFetch('/issues/aggregated');
 }
 
-export function getResolutionFlow({ incidentType, department, count, sampleDescriptions }) {
+export function getResolutionFlow({ incidentType, department, count, sampleDescriptions, issueIds, clusterKey }) {
     return apiFetch('/issues/resolution-flow', {
         method: 'POST',
-        body: JSON.stringify({ incidentType, department, count, sampleDescriptions }),
+        body: JSON.stringify({ incidentType, department, count, sampleDescriptions, issueIds, clusterKey }),
     });
 }
 
+export function getIssueTimeline(issueId) {
+    return apiFetch(`/issues/${issueId}/timeline`);
+}

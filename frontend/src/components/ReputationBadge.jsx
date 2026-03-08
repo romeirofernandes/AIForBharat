@@ -61,7 +61,7 @@ function AchievementBadge({ achievement }) {
             <div className="p-2 rounded-lg bg-card border border-border group-hover:border-primary/20 group-hover:scale-110 transition-all">
                 <HugeiconsIcon icon={Icon} size={24} color="currentColor" strokeWidth={1.5} />
             </div>
-            <span className="text-[9px] font-bold uppercase tracking-wider text-muted-foreground text-center leading-tight">{achievement.label}</span>
+            <span className="text-xs font-medium text-muted-foreground text-center leading-tight">{achievement.label}</span>
         </motion.div>
     );
 }
@@ -86,7 +86,7 @@ export default function ReputationBadge({ reputation, compact = false }) {
                 </div>
                 <div>
                     <p className="text-xs font-bold text-foreground">{score} pts</p>
-                    <p className="text-[10px] text-muted-foreground font-medium">{trustLevel}</p>
+                    <p className="text-xs text-muted-foreground font-medium">{trustLevel}</p>
                 </div>
             </div>
         );
@@ -98,7 +98,7 @@ export default function ReputationBadge({ reputation, compact = false }) {
             <div className={`rounded-xl border p-6 ${cfg.bg} ${cfg.border}`}>
                 <div className="flex items-start justify-between gap-4">
                     <div>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground mb-1">Civic Reputation</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Civic Reputation</p>
                         <div className="flex items-baseline gap-2">
                             <span className={`text-5xl font-black ${cfg.color}`}>{score}</span>
                             <span className="text-sm font-bold text-muted-foreground">pts</span>
@@ -116,10 +116,10 @@ export default function ReputationBadge({ reputation, compact = false }) {
                 {nextThreshold && (
                     <div className="mt-6 pt-6 border-t border-current/10">
                         <div className="flex justify-between items-center mb-2">
-                            <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
+                            <span className="text-xs font-medium text-muted-foreground flex items-center gap-1.5">
                                 <HugeiconsIcon icon={Medal01Icon} size={12} color="currentColor" strokeWidth={1.5} /> Progress to {TRUST_CONFIG[trustTier + 1]?.label}
                             </span>
-                            <span className="text-[10px] font-bold text-muted-foreground">
+                            <span className="text-xs font-medium text-muted-foreground">
                                 {score} / {nextThreshold}
                             </span>
                         </div>
@@ -145,7 +145,7 @@ export default function ReputationBadge({ reputation, compact = false }) {
                     <div key={stat.label} className="border border-border rounded-lg p-4 bg-card text-center group">
                         <stat.icon size={16} className="mx-auto mb-1 text-muted-foreground group-hover:text-primary transition-colors" />
                         <p className="text-2xl font-black text-foreground">{stat.value}</p>
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mt-0.5">{stat.label}</p>
+                        <p className="text-xs font-medium text-muted-foreground mt-0.5">{stat.label}</p>
                     </div>
                 ))}
             </div>
@@ -153,7 +153,7 @@ export default function ReputationBadge({ reputation, compact = false }) {
             {/* Achievements */}
             {achievements && achievements.length > 0 && (
                 <div>
-                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground mb-3 flex items-center gap-2">
+                    <p className="text-xs font-medium text-muted-foreground mb-3 flex items-center gap-2">
                         <ChampionIcon size={12} /> Achievements
                     </p>
                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">

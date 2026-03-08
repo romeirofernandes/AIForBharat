@@ -38,7 +38,10 @@ function StatusIndicator({ status }) {
 }
 
 export default function WorkflowStepPanel({ workflow, onWorkflowUpdate }) {
-    const { steps, totalSteps, completedCount, progress } = workflow;
+    const steps = workflow?.steps || [];
+    const totalSteps = steps.length;
+    const completedCount = steps.filter(s => s.status === 'completed').length;
+    const progress = totalSteps > 0 ? (completedCount / totalSteps) * 100 : 0;
     const [selectedStep, setSelectedStep] = useState(null);
     const [isUpdating, setIsUpdating] = useState(false);
     const [notes, setNotes] = useState('');
@@ -96,14 +99,14 @@ export default function WorkflowStepPanel({ workflow, onWorkflowUpdate }) {
             <div className="bg-muted/10 border border-border/50 rounded-2xl p-5 shadow-inner">
                 <div className="flex items-center justify-between mb-4">
                     <div>
-                        <p className="text-[10px] font-black uppercase tracking-[0.25em] text-muted-foreground mb-1">Workflow Progress</p>
-                        <p className="text-lg font-black text-foreground flex items-center gap-2">
+                        <p className="text-xs font-medium text-muted-foreground mb-1">Workflow Progress</p>
+                        <p className="text-lg font-bold text-foreground flex items-center gap-2">
                             {completedCount} / {totalSteps} <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">Steps Completed</span>
                         </p>
                     </div>
                     <div className="text-right">
-                        <p className="text-2xl font-black text-primary">{Math.round(progress)}%</p>
-                        <p className="text-[9px] font-bold text-muted-foreground uppercase tracking-widest">Overall Completion</p>
+                        <p className="text-2xl font-bold text-primary">{Math.round(progress)}%</p>
+                        <p className="text-xs font-medium text-muted-foreground">Overall Completion</p>
                     </div>
                 </div>
                 <div className="w-full h-2.5 rounded-full bg-black/10 dark:bg-white/10 overflow-hidden shadow-inner">
@@ -119,7 +122,7 @@ export default function WorkflowStepPanel({ workflow, onWorkflowUpdate }) {
             {/* Step List */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                 {steps.map((step, idx) => {
-                    const StepIcon = stepTypeIcons[step.stepType] || FlashIcon;
+                    const StepIcon = stepTypeIcons[step.type] || FlashIcon;
                     return (
                         <motion.button
                             key={step.id}
@@ -134,22 +137,22 @@ export default function WorkflowStepPanel({ workflow, onWorkflowUpdate }) {
                                 }`}
                         >
                             <div className="flex items-center justify-between mb-2">
-                                <span className={`flex items-center gap-1.5 text-[9px] font-black uppercase tracking-widest ${step.status === 'completed' ? 'text-emerald-700 dark:text-emerald-400' :
+                                <span className={`flex items-center gap-1.5 text-xs font-medium ${step.status === 'completed' ? 'text-emerald-700 dark:text-emerald-400' :
                                     step.status === 'active' ? 'text-blue-700 dark:text-blue-400' : 'text-muted-foreground'
                                     }`}>
-                                    <StepIcon size={12} variant="solid" /> {stepTypeLabels[step.stepType] || step.stepType}
+                                    <StepIcon size={12} variant="solid" /> {stepTypeLabels[step.type] || step.type}
                                 </span>
                                 <StatusIndicator status={step.status} />
                             </div>
-                            <p className="text-xs font-black text-foreground mb-1 line-clamp-1 group-hover:text-primary transition-colors">{step.title}</p>
+                            <p className="text-xs font-semibold text-foreground mb-1 line-clamp-1 group-hover:text-primary transition-colors">{step.title}</p>
                             <div className="flex items-center gap-2 mt-2">
                                 {step.assignedTo && (
-                                    <span className="inline-flex items-center gap-1 text-[9px] font-bold text-muted-foreground">
+                                    <span className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
                                         <UserIcon size={10} /> {step.assignedTo}
                                     </span>
                                 )}
                                 {step.notes && (
-                                    <span className="inline-flex items-center gap-1 text-[9px] font-bold text-muted-foreground">
+                                    <span className="inline-flex items-center gap-1 text-xs font-medium text-muted-foreground">
                                         <Note01Icon size={10} /> Notes
                                     </span>
                                 )}
@@ -171,10 +174,10 @@ export default function WorkflowStepPanel({ workflow, onWorkflowUpdate }) {
                         <div className="p-6 space-y-5">
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-2 flex items-center gap-2">
+                                    <p className="text-sm font-medium text-primary mb-2 flex items-center gap-2">
                                         <Settings01Icon size={12} variant="solid" /> Step Management
                                     </p>
-                                    <h3 className="text-xl font-black text-foreground leading-tight">{selectedStep.title}</h3>
+                                    <h3 className="text-xl font-bold text-foreground leading-tight">{selectedStep.title}</h3>
                                 </div>
                                 <button onClick={() => setSelectedStep(null)} className="p-2 rounded-full hover:bg-muted text-muted-foreground transition-colors">✕</button>
                             </div>
@@ -186,7 +189,7 @@ export default function WorkflowStepPanel({ workflow, onWorkflowUpdate }) {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div className="space-y-4">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2 px-1">
+                                        <label className="text-xs font-medium text-muted-foreground flex items-center gap-2 px-1">
                                             <UserIcon size={12} /> Assign Officer
                                         </label>
                                         <input
@@ -198,7 +201,7 @@ export default function WorkflowStepPanel({ workflow, onWorkflowUpdate }) {
                                         />
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground flex items-center gap-2 px-1">
+                                        <label className="text-xs font-medium text-muted-foreground flex items-center gap-2 px-1">
                                             <Note01Icon size={12} /> Internal Notes
                                         </label>
                                         <textarea
@@ -215,14 +218,14 @@ export default function WorkflowStepPanel({ workflow, onWorkflowUpdate }) {
                                     <button
                                         onClick={handleSaveDetails}
                                         disabled={isUpdating}
-                                        className="h-11 inline-flex items-center justify-center gap-2 bg-muted/80 text-foreground rounded-xl text-[10px] font-black uppercase tracking-widest hover:bg-muted transition-all disabled:opacity-50"
+                                        className="h-11 inline-flex items-center justify-center gap-2 bg-muted/80 text-foreground rounded-xl text-sm font-medium hover:bg-muted transition-all disabled:opacity-50"
                                     >
                                         <Settings01Icon size={14} /> Save Details
                                     </button>
                                     <button
                                         onClick={handleComplete}
                                         disabled={isUpdating || selectedStep.status === 'completed'}
-                                        className={`h-14 inline-flex items-center justify-center gap-2 rounded-xl text-[11px] font-black uppercase tracking-[0.2em] shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 ${selectedStep.status === 'completed'
+                                        className={`h-14 inline-flex items-center justify-center gap-2 rounded-xl text-sm font-semibold shadow-lg transition-all active:scale-[0.98] disabled:opacity-50 ${selectedStep.status === 'completed'
                                             ? 'bg-emerald-500 text-white shadow-emerald-500/20'
                                             : 'bg-primary text-primary-foreground shadow-primary/20 hover:opacity-95'
                                             }`}

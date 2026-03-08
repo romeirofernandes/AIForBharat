@@ -167,11 +167,11 @@ export default function Profile() {
     return (
         <div className="w-full space-y-6">
             <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-                <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
+                <h1 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight text-foreground flex items-center gap-3">
                     <UserIcon size={28} className="text-primary" />
                     Profile
                 </h1>
-                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.25em] mt-1.5 ml-1">Your civic identity</p>
+                <p className="text-sm text-muted-foreground font-medium mt-1 ml-1">Your civic identity</p>
             </motion.div>
 
             {/* Tab switcher */}
@@ -184,7 +184,7 @@ export default function Profile() {
                         <button
                             key={tab.id}
                             onClick={() => setActiveTab(tab.id)}
-                            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all cursor-pointer ${activeTab === tab.id ? 'bg-card shadow-sm text-foreground border border-border' : 'text-muted-foreground hover:text-foreground'}`}
+                            className={`flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-medium transition-all cursor-pointer ${activeTab === tab.id ? 'bg-card shadow-sm text-foreground border border-border' : 'text-muted-foreground hover:text-foreground'}`}
                         >
                             <tab.icon size={14} variant={activeTab === tab.id ? 'solid' : 'linear'} className={activeTab === tab.id ? 'text-primary' : ''} />
                             {tab.label}
@@ -220,8 +220,8 @@ export default function Profile() {
                                 </div>
                             </div>
                             <div>
-                                <h3 className="text-2xl font-black text-foreground mb-0.5">{profile.name || 'Citizen Identity'}</h3>
-                                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary">{user?.email}</p>
+                                <h3 className="text-2xl font-bold text-foreground mb-0.5">{profile.name || 'Citizen Identity'}</h3>
+                                <p className="text-sm font-medium text-primary">{user?.email}</p>
                                 {reputation && !repLoading && (
                                     <div className="mt-4">
                                         <ReputationBadge reputation={reputation} compact />
@@ -230,7 +230,7 @@ export default function Profile() {
                             </div>
                         </div>
                         {!isEditing && (
-                            <button onClick={() => setIsEditing(true)} className="h-11 inline-flex items-center gap-2 px-6 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground font-black text-[10px] uppercase tracking-[0.2em] rounded-xl transition-all border border-primary/20 shadow-lg shadow-primary/5 active:scale-[0.98] cursor-pointer">
+                            <button onClick={() => setIsEditing(true)} className="h-11 inline-flex items-center gap-2 px-6 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground font-medium text-sm rounded-xl transition-all border border-primary/20 shadow-lg shadow-primary/5 active:scale-[0.98] cursor-pointer">
                                 <Edit01Icon size={14} /> Edit Profile
                             </button>
                         )}
@@ -241,7 +241,7 @@ export default function Profile() {
                             <form onSubmit={handleSave} className="space-y-6">
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Full Name</label>
+                                        <label className="text-xs font-medium text-muted-foreground ml-1">Full Name</label>
                                         <div className="relative group">
                                             <UserIcon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
                                             <input type="text" name="name" value={formData.name} onChange={handleChange} required
@@ -250,7 +250,7 @@ export default function Profile() {
                                         </div>
                                     </div>
                                     <div className="space-y-2">
-                                        <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground ml-1">Age</label>
+                                        <label className="text-xs font-medium text-muted-foreground ml-1">Age</label>
                                         <div className="relative group">
                                             <Calendar01Icon size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground group-focus-within:text-primary transition-colors" />
                                             <input type="number" name="age" value={formData.age} onChange={handleChange}
@@ -261,7 +261,7 @@ export default function Profile() {
                                 </div>
 
                             <div className="flex flex-col gap-2">
-                                <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">Gender</label>
+                                <label className="text-xs font-medium text-muted-foreground ml-1">Gender</label>
                                 <select
                                     name="gender"
                                     value={formData.gender}
@@ -278,7 +278,7 @@ export default function Profile() {
 
                             {/* Notification Preferences */}
                             <div className="space-y-4 pt-4 border-t border-border/50">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">Notification Preferences</p>
+                                <p className="text-xs font-medium text-muted-foreground ml-1">Notification Preferences</p>
 
                                 <label className="flex items-center gap-3 cursor-pointer group" onClick={() => setEmailNotifications(!emailNotifications)}>
                                     <div className={`w-10 h-5 rounded-full transition-colors relative ${emailNotifications ? 'bg-primary' : 'bg-muted border border-border'}`}>
@@ -289,14 +289,14 @@ export default function Profile() {
 
                                 {emailNotifications && (
                                     <div className="space-y-2">
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">Home Location (click map to set)</p>
+                                        <p className="text-xs font-medium text-muted-foreground ml-1">Home Location (click map to set)</p>
                                         <HomeLocationPicker
                                             lat={homeCoords.lat}
                                             lng={homeCoords.lng}
                                             onChange={(lat, lng) => setHomeCoords({ lat, lng })}
                                         />
                                         {homeCoords.lat && homeCoords.lng && (
-                                            <p className="text-[10px] font-medium text-muted-foreground ml-1">
+                                            <p className="text-xs font-medium text-muted-foreground ml-1">
                                                 {Number(homeCoords.lat).toFixed(5)}, {Number(homeCoords.lng).toFixed(5)}
                                             </p>
                                         )}
@@ -308,7 +308,7 @@ export default function Profile() {
                                 <button
                                     type="submit"
                                     disabled={isLoading}
-                                    className="h-10 px-6 bg-primary text-primary-foreground rounded-lg font-bold text-[10px] uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
+                                    className="h-10 px-6 bg-primary text-primary-foreground rounded-lg font-medium text-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
                                 >
                                     {isLoading ? 'Saving...' : 'Save Changes'}
                                 </button>
@@ -323,7 +323,7 @@ export default function Profile() {
                                             setProfileImage(null);
                                             setImagePreview(null);
                                         }}
-                                        className="h-10 px-6 bg-muted/50 text-muted-foreground hover:text-foreground rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors cursor-pointer"
+                                        className="h-10 px-6 bg-muted/50 text-muted-foreground hover:text-foreground rounded-lg font-medium text-sm transition-colors cursor-pointer"
                                     >
                                         Cancel
                                     </button>
@@ -333,30 +333,30 @@ export default function Profile() {
                     ) : (
                         <div className="space-y-4">
                             <div className="flex items-center justify-between py-3 border-b border-border/50">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Full Name</span>
+                                <span className="text-xs font-medium text-muted-foreground">Full Name</span>
                                 <span className="text-sm font-medium text-foreground">{profile.name || '—'}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-b border-border/50">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Age</span>
+                                <span className="text-xs font-medium text-muted-foreground">Age</span>
                                 <span className="text-sm font-medium text-foreground">{profile.age || '—'}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-b border-border/50">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Gender</span>
+                                <span className="text-xs font-medium text-muted-foreground">Gender</span>
                                 <span className="text-sm font-medium text-foreground capitalize">{profile.gender ? profile.gender.replace(/_/g, ' ') : '—'}</span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-b border-border/50">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Member Since</span>
+                                <span className="text-xs font-medium text-muted-foreground">Member Since</span>
                                 <span className="text-sm font-medium text-foreground">
                                     {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' }) : '—'}
                                 </span>
                             </div>
                             <div className="flex items-center justify-between py-3 border-b border-border/50">
-                                <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Email Notifications</span>
+                                <span className="text-xs font-medium text-muted-foreground">Email Notifications</span>
                                 <span className="text-sm font-medium text-foreground">{profile.emailNotifications ? 'Enabled' : 'Disabled'}</span>
                             </div>
                             {profile.homeLatitude && profile.homeLongitude && (
                                 <div className="flex items-center justify-between py-3 border-b border-border/50">
-                                    <span className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">Home Location</span>
+                                    <span className="text-xs font-medium text-muted-foreground">Home Location</span>
                                     <span className="text-sm font-medium text-foreground">{Number(profile.homeLatitude).toFixed(4)}, {Number(profile.homeLongitude).toFixed(4)}</span>
                                 </div>
                             )}
@@ -395,7 +395,7 @@ export default function Profile() {
                             </div>
                             <button
                                 onClick={() => navigate('/user/whatsapp')}
-                                className="px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground font-bold text-[10px] uppercase tracking-wider rounded-md transition-all cursor-pointer"
+                                className="px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground font-medium text-sm rounded-md transition-all cursor-pointer"
                             >
                                 Docs
                             </button>
@@ -405,7 +405,7 @@ export default function Profile() {
                     {/* Phone + OTP */}
                     <div className="border-t border-border pt-5 space-y-4">
                         <div className="flex flex-col gap-2">
-                            <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">Mobile Number (E.164)</label>
+                            <label className="text-xs font-medium text-muted-foreground ml-1">Mobile Number (E.164)</label>
                             <div className="flex gap-2">
                                 <input
                                     type="tel"
@@ -417,12 +417,12 @@ export default function Profile() {
                                 <button
                                     onClick={handleGenerateOtp}
                                     disabled={otpLoading}
-                                    className="h-11 px-5 bg-primary text-primary-foreground rounded-lg font-bold text-[10px] uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer whitespace-nowrap"
+                                    className="h-11 px-5 bg-primary text-primary-foreground rounded-lg font-medium text-sm hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer whitespace-nowrap"
                                 >
                                     {otpLoading ? 'Generating...' : 'Generate OTP'}
                                 </button>
                             </div>
-                            <p className="text-[10px] text-muted-foreground ml-1">10-digit number · +91 added automatically for India</p>
+                            <p className="text-xs text-muted-foreground ml-1">10-digit number · +91 added automatically for India</p>
                         </div>
 
                         {otp && (
@@ -432,10 +432,10 @@ export default function Profile() {
                                 className="bg-primary/10 border border-primary/20 rounded-lg p-4 flex items-center justify-between gap-4"
                             >
                                 <div>
-                                    <p className="text-[10px] font-bold uppercase tracking-wider text-primary mb-1">Your OTP</p>
+                                    <p className="text-xs font-medium text-primary mb-1">Your OTP</p>
                                     <p className="text-2xl font-mono font-bold text-foreground tracking-[0.3em]">{otp}</p>
                                     {timeLeft !== null && (
-                                        <p className="text-[10px] text-muted-foreground mt-1">
+                                        <p className="text-xs text-muted-foreground mt-1">
                                             Expires in <span className="font-mono font-bold text-foreground">{formatTime(timeLeft)}</span>
                                         </p>
                                     )}
@@ -444,7 +444,7 @@ export default function Profile() {
                                     href="https://wa.me/18599276910"
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="flex items-center gap-2 h-11 px-5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors whitespace-nowrap"
+                                    className="flex items-center gap-2 h-11 px-5 bg-green-500 hover:bg-green-600 text-white rounded-lg font-medium text-sm transition-colors whitespace-nowrap"
                                 >
                                     <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/></svg>
                                     Open Bot

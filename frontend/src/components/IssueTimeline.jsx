@@ -78,7 +78,7 @@ function TimelineEntry({ entry, index, isLast }) {
                             </span>
                         </p>
                     </div>
-                    <span className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-widest whitespace-nowrap shrink-0 mt-0.5">
+                    <span className="text-xs text-muted-foreground/40 whitespace-nowrap shrink-0 mt-0.5">
                         {formatTime(entry.createdAt)}
                     </span>
                 </div>
@@ -95,13 +95,13 @@ function TimelineEntry({ entry, index, isLast }) {
                             </div>
                         )}
                         {entry.action === 'vote_added' && (
-                            <div className={`flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider ${entry.metadata.value === 1 ? 'text-emerald-600' : 'text-red-500'}`}>
+                            <div className={`flex items-center gap-1.5 text-xs font-medium ${entry.metadata.value === 1 ? 'text-emerald-600' : 'text-red-500'}`}>
                                 <Agreement01Icon size={12} />
                                 {entry.metadata.value === 1 ? '+1 Upvote' : '-1 Downvote'}
                             </div>
                         )}
                         {entry.action === 'comment_added' && (
-                            <div className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-violet-600 dark:text-violet-400">
+                            <div className="flex items-center gap-1.5 text-xs font-medium text-violet-600 dark:text-violet-400">
                                 <Comment01Icon size={12} /> New Comment Added
                             </div>
                         )}

@@ -191,7 +191,7 @@ export default function TrafficDashboard() {
                                                                 {v.vehicleNumber}
                                                             </p>
                                                             {challanCount > 0 && (
-                                                                <p className="text-[9px] font-bold text-red-500 uppercase">
+                                                                <p className="text-xs font-medium text-red-500">
                                                                     {challanCount} challan{challanCount !== 1 ? 's' : ''}
                                                                 </p>
                                                             )}
@@ -221,7 +221,7 @@ export default function TrafficDashboard() {
                     <motion.div key={card.title} initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: i * 0.08 }}>
                         <Card className="border-border hover:border-primary/20 transition-all">
                             <CardContent className="p-5">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{card.title}</p>
+                                <p className="text-xs font-medium text-muted-foreground">{card.title}</p>
                                 <p className={`text-2xl font-bold mt-1 ${card.color}`}>{card.value}</p>
                             </CardContent>
                         </Card>
@@ -264,7 +264,7 @@ export default function TrafficDashboard() {
                         <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
                             <ShieldIcon size={16} /> My Recent Reports
                         </h2>
-                        <button onClick={() => navigate('/user/traffic/my-reports')} className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary hover:underline underline-offset-4 cursor-pointer">
+                        <button onClick={() => navigate('/user/traffic/my-reports')} className="flex items-center gap-1 text-xs font-medium text-primary hover:underline underline-offset-4 cursor-pointer">
                             View All <ArrowRight size={12} />
                         </button>
                     </div>
@@ -292,7 +292,7 @@ export default function TrafficDashboard() {
                                         <p className="text-xs font-bold text-foreground truncate">
                                             {report.complaintType === 'Other' ? report.otherComplaintType || 'Other' : report.complaintType}
                                         </p>
-                                        <p className="text-[10px] text-muted-foreground/60 font-bold uppercase tracking-wider mt-0.5">
+                                        <p className="text-xs text-muted-foreground/60 mt-0.5">
                                             Badge: {report.badgeNumber} · {new Date(report.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' })}
                                         </p>
                                     </div>
@@ -312,7 +312,7 @@ export default function TrafficDashboard() {
                     <h2 className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground flex items-center gap-2">
                         <FineIcon size={16} /> Common Traffic Fines
                     </h2>
-                    <button onClick={() => navigate('/user/traffic/fines')} className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary hover:underline underline-offset-4 cursor-pointer">
+                    <button onClick={() => navigate('/user/traffic/fines')} className="flex items-center gap-1 text-xs font-medium text-primary hover:underline underline-offset-4 cursor-pointer">
                         View All Fines <ArrowRight size={12} />
                     </button>
                 </div>
@@ -321,7 +321,7 @@ export default function TrafficDashboard() {
                         <motion.div key={fine.id} initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 + i * 0.06 }}>
                             <Card className="border-border hover:border-primary/20 hover:shadow-md transition-all cursor-pointer h-full" onClick={() => navigate('/user/traffic/fines')}>
                                 <CardContent className="p-4 flex flex-col h-full">
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-1">{fine.offenseSection}</p>
+                                    <p className="text-xs font-medium text-muted-foreground mb-1">{fine.offenseSection}</p>
                                     <p className="text-xs font-bold text-foreground mb-3 line-clamp-2 flex-1">{fine.offenseName}</p>
                                     <div className="flex items-center justify-between">
                                         <span className="text-lg font-bold text-chart-5">₹{fine.fineAmount.toLocaleString('en-IN')}</span>
@@ -373,7 +373,7 @@ export default function TrafficDashboard() {
                                                 <Badge className={`text-[9px] font-bold uppercase tracking-wider ${sc.class}`}>{sc.label}</Badge>
                                             </div>
                                             <p className="text-sm font-bold text-foreground truncate">{challan.fine?.offenseName}</p>
-                                            <div className="flex items-center gap-3 mt-2 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
+                                            <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground/60">
                                                 <span>{challan.vehicleNumber}</span>
                                                 {challan.location && <span>{challan.location}</span>}
                                                 <span>{new Date(challan.issuedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>

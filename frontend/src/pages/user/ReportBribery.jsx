@@ -389,7 +389,7 @@ export default function ReportBribery() {
                                         onChange={(e) => setAmountDemanded(e.target.value)}
                                         min="0"
                                     />
-                                    <p className="text-[10px] text-muted-foreground mt-1.5">
+                                    <p className="text-xs text-muted-foreground mt-1.5">
                                         If the officer demanded or took money, enter the amount here
                                     </p>
                                 </CardContent>
@@ -434,7 +434,7 @@ export default function ReportBribery() {
                                     >
                                         <UploadIcon size={22} className="mx-auto text-muted-foreground mb-2" />
                                         <p className="text-xs font-bold text-foreground">Click to upload / drag files here</p>
-                                        <p className="text-[10px] text-muted-foreground mt-1">Images, videos · up to 5 files, 50MB each</p>
+                                        <p className="text-xs text-muted-foreground mt-1">Images, videos · up to 5 files, 50MB each</p>
                                         <input ref={fileInputRef} type="file" accept="image/*,video/*" multiple onChange={handleFileChange} className="hidden" />
                                     </div>
                                     {proofFiles.length > 0 && (
@@ -444,7 +444,7 @@ export default function ReportBribery() {
                                                     <span className="text-lg">{getFileIcon(file)}</span>
                                                     <div className="flex-1 min-w-0">
                                                         <p className="text-xs font-medium text-foreground truncate">{file.name}</p>
-                                                        <p className="text-[10px] text-muted-foreground">{(file.size / 1024 / 1024).toFixed(1)} MB</p>
+                                                        <p className="text-xs text-muted-foreground">{(file.size / 1024 / 1024).toFixed(1)} MB</p>
                                                     </div>
                                                     <button type="button" onClick={() => removeFile(i)} className="cursor-pointer p-1 hover:bg-red-100 rounded">
                                                         <DeleteIcon size={14} className="text-red-500" />
@@ -477,7 +477,7 @@ export default function ReportBribery() {
                         {/* Legal Note */}
                         <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 }}>
                             <div className="border border-amber-200 bg-amber-50 rounded-lg p-4">
-                                <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-amber-700 mb-1">Important Notice</p>
+                                <p className="text-xs font-medium text-amber-700 mb-1">Important Notice</p>
                                 <p className="text-xs text-amber-800 font-medium leading-relaxed">
                                     Filing a false complaint is a punishable offense. Ensure all information provided is accurate and truthful.
                                     Your complaint will be reviewed by our team. Attach as much evidence as possible for faster resolution.

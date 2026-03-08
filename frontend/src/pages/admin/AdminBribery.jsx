@@ -105,7 +105,7 @@ export default function AdminBribery() {
                     ].map((s) => (
                         <div key={s.label} className={`border border-border rounded-lg p-3 text-center ${s.bg}`}>
                             <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
-                            <p className="text-[8px] font-bold uppercase tracking-widest text-muted-foreground">{s.label}</p>
+                            <p className="text-xs font-medium text-muted-foreground">{s.label}</p>
                         </div>
                     ))}
                 </div>
@@ -118,7 +118,7 @@ export default function AdminBribery() {
                         <button
                             key={f}
                             onClick={() => setFilter(f)}
-                            className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer ${filter === f
+                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer ${filter === f
                                     ? 'bg-primary text-primary-foreground'
                                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
                                 }`}
@@ -165,11 +165,11 @@ export default function AdminBribery() {
                                             <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">
                                                 {c.complaintType === 'Other' ? c.otherComplaintType || 'Other' : c.complaintType}
                                             </h3>
-                                            <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/60 mt-0.5 flex items-center gap-1">
+                                            <p className="text-xs text-muted-foreground/60 mt-0.5 flex items-center gap-1">
                                                 <UserIcon size={11} /> {userName} • {new Date(c.createdAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}
                                             </p>
                                         </div>
-                                        <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground/60">
+                                        <div className="flex items-center gap-3 text-xs text-muted-foreground/60">
                                             <span className="flex items-center gap-1"><BadgeIcon size={12} /> {c.badgeNumber}</span>
                                             {c.amountDemanded && <span className="flex items-center gap-1 text-red-600"><MoneyIcon size={12} /> ₹{c.amountDemanded.toLocaleString('en-IN')}</span>}
                                         </div>
@@ -189,31 +189,31 @@ export default function AdminBribery() {
                                             <div className="p-5 space-y-4">
                                                 {/* Full Description */}
                                                 <div>
-                                                    <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-1">Full Description</p>
+                                                    <p className="text-xs font-medium text-muted-foreground mb-1">Full Description</p>
                                                     <p className="text-xs text-foreground font-medium leading-relaxed">{c.description}</p>
                                                 </div>
 
                                                 {/* Details */}
                                                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                                                     <div>
-                                                        <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Badge #</p>
+                                                        <p className="text-xs font-medium text-muted-foreground">Badge #</p>
                                                         <p className="text-xs font-mono font-bold text-foreground">{c.badgeNumber}</p>
                                                     </div>
                                                     <div>
-                                                        <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Incident</p>
+                                                        <p className="text-xs font-medium text-muted-foreground">Incident</p>
                                                         <p className="text-xs font-medium text-foreground">
                                                             {new Date(c.incidentAt).toLocaleString('en-IN', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' })}
                                                         </p>
                                                     </div>
                                                     {c.location && (
                                                         <div>
-                                                            <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Location</p>
+                                                            <p className="text-xs font-medium text-muted-foreground">Location</p>
                                                             <p className="text-xs font-medium text-foreground">{c.location}</p>
                                                         </div>
                                                     )}
                                                     {c.challanNumber && (
                                                         <div>
-                                                            <p className="text-[9px] font-bold uppercase tracking-widest text-muted-foreground">Challan #</p>
+                                                            <p className="text-xs font-medium text-muted-foreground">Challan #</p>
                                                             <p className="text-xs font-mono font-medium text-foreground">{c.challanNumber}</p>
                                                         </div>
                                                     )}
@@ -222,7 +222,7 @@ export default function AdminBribery() {
                                                 {/* Media */}
                                                 {c.mediaUrls && c.mediaUrls.length > 0 && (
                                                     <div>
-                                                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground mb-2">Evidence</p>
+                                                        <p className="text-xs font-medium text-muted-foreground mb-2">Evidence</p>
                                                         <div className="flex flex-wrap gap-2">
                                                             {c.mediaUrls.map((url, j) => {
                                                                 const isVideo = url.match(/\.(mp4|webm|mov|avi)/i);
@@ -233,7 +233,7 @@ export default function AdminBribery() {
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         onClick={(e) => e.stopPropagation()}
-                                                                        className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-md bg-muted/30 hover:bg-muted/60 transition-colors text-[10px] font-bold uppercase tracking-wider text-primary"
+                                                                        className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-md bg-muted/30 hover:bg-muted/60 transition-colors text-xs font-medium text-primary"
                                                                     >
                                                                         {isVideo ? <VideoIcon size={12} /> : <ImageIcon size={12} />}
                                                                         {isVideo ? 'Video' : 'Photo'} {j + 1}
@@ -247,14 +247,14 @@ export default function AdminBribery() {
                                                 {/* Current Admin Note */}
                                                 {c.adminNote && (
                                                     <div className="border border-amber-200 bg-amber-50 rounded-lg p-3">
-                                                        <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-amber-700 mb-1">Current Admin Note</p>
+                                                        <p className="text-xs font-medium text-amber-700 mb-1">Current Admin Note</p>
                                                         <p className="text-xs text-amber-800 font-medium">{c.adminNote}</p>
                                                     </div>
                                                 )}
 
                                                 {/* Status Update Panel */}
                                                 <div className="border-t border-border/50 pt-4 space-y-3">
-                                                    <p className="text-xs font-bold uppercase tracking-[0.2em] text-muted-foreground">Update Status</p>
+                                                    <p className="text-xs text-muted-foreground font-medium">Update Status</p>
                                                     <div className="flex flex-wrap gap-2">
                                                         {allStatuses.map((s) => (
                                                             <button
@@ -264,7 +264,7 @@ export default function AdminBribery() {
                                                                     setSelectedStatuses((prev) => ({ ...prev, [c.id]: s }));
                                                                 }}
                                                                 disabled={c.status === s}
-                                                                className={`px-3 py-1.5 rounded-md text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${selectedStatuses[c.id] === s
+                                                                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${selectedStatuses[c.id] === s
                                                                         ? 'ring-2 ring-primary ring-offset-1'
                                                                         : ''
                                                                     } ${statusConfig[s]?.class || ''}`}

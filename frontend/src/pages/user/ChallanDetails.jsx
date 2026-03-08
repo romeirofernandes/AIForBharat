@@ -33,7 +33,7 @@ function DetailRow({ icon: Icon, label, value, valueClass = '' }) {
                 <Icon size={16} className="text-muted-foreground" />
             </div>
             <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{label}</p>
+                <p className="text-xs font-medium text-muted-foreground">{label}</p>
                 <p className={`text-sm font-bold text-foreground mt-0.5 ${valueClass}`}>{value}</p>
             </div>
         </div>
@@ -176,16 +176,16 @@ export default function ChallanDetails() {
                                 <div className="relative">
                                     <div className="absolute -left-6 top-1 w-3 h-3 rounded-full bg-primary border-2 border-background" />
                                     <div className="absolute -left-[14.5px] top-4 w-0.5 h-full bg-border" />
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">Challan Issued</p>
+                                    <p className="text-xs font-medium text-muted-foreground">Challan Issued</p>
                                     <p className="text-xs font-medium text-foreground">{formatDate(issuedDate)}</p>
                                 </div>
 
                                 {/* Status update */}
                                 <div className="relative">
                                     <div className={`absolute -left-6 top-1 w-3 h-3 rounded-full border-2 border-background ${challan.status === 'paid' ? 'bg-emerald-500' : challan.status === 'contested' ? 'bg-amber-500' : challan.status === 'cancelled' ? 'bg-zinc-400' : 'bg-red-500'}`} />
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground">Current Status</p>
+                                    <p className="text-xs font-medium text-muted-foreground">Current Status</p>
                                     <p className="text-xs font-bold text-foreground capitalize">{challan.status}</p>
-                                    {paidDate && <p className="text-[10px] text-muted-foreground mt-0.5">{formatDate(paidDate)}</p>}
+                                    {paidDate && <p className="text-xs text-muted-foreground mt-0.5">{formatDate(paidDate)}</p>}
                                 </div>
                             </div>
                         </CardContent>
@@ -215,7 +215,7 @@ export default function ChallanDetails() {
             {/* Legal Note — full width */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 }}>
                 <div className="border border-amber-200 bg-amber-50 rounded-lg p-4">
-                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-amber-700 mb-1">Legal Notice</p>
+                    <p className="text-xs font-medium text-amber-700 mb-1">Legal Notice</p>
                     <p className="text-xs text-amber-800 font-medium leading-relaxed">
                         This challan has been issued under the provisions of the Motor Vehicles Act, 1988 (as amended 2019).
                         Failure to pay within the prescribed period may result in additional penalties.

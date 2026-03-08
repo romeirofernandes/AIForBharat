@@ -59,7 +59,7 @@ export default function WhatsAppPage() {
 
                     {/* Sandbox notice */}
                     <div className="bg-amber-500/10 border border-amber-500/20 rounded-lg p-4 space-y-2">
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-amber-600">⚠️ Sandbox — First-time setup required</p>
+                        <p className="text-xs font-medium text-amber-600">⚠️ Sandbox — First-time setup required</p>
                         <p className="text-[11px] text-muted-foreground leading-relaxed">
                             Twilio Sandbox numbers need a one-time opt-in. Open WhatsApp, chat with <span className="font-mono font-bold text-foreground">{BOT_NUMBER}</span>, and send the join code shown in your
                             {' '}<a href="https://console.twilio.com/us1/develop/sms/try-it-out/whatsapp-learn" target="_blank" rel="noopener noreferrer" className="text-primary underline underline-offset-2">Twilio Sandbox console</a>{' '}
@@ -68,7 +68,7 @@ export default function WhatsAppPage() {
                     </div>
 
                     <div className="mt-auto border-t border-border pt-5 space-y-2">
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-3">Your Status</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-3">Your Status</p>
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <div className={`w-2.5 h-2.5 rounded-full ${whatsappUser?.isActive ? 'bg-green-500' : 'bg-zinc-400'}`} />
@@ -80,7 +80,7 @@ export default function WhatsAppPage() {
                             </div>
                             <button
                                 onClick={handleRefreshStatus}
-                                className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                                className="text-xs font-medium text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                             >
                                 Refresh
                             </button>
@@ -103,7 +103,7 @@ export default function WhatsAppPage() {
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-600"><path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21"/><path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1"/></svg>
                         </div>
                         <div>
-                            <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Bot Number</p>
+                            <p className="text-xs font-medium text-muted-foreground">Bot Number</p>
                             <p className="text-sm font-mono font-bold text-foreground">{BOT_NUMBER}</p>
                         </div>
                     </div>
@@ -151,7 +151,7 @@ export default function WhatsAppPage() {
 
                     {/* Commands */}
                     <div className="border-t border-border pt-4">
-                        <p className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground mb-3">Available Commands</p>
+                        <p className="text-xs font-medium text-muted-foreground mb-3">Available Commands</p>
                         <div className="space-y-2">
                             {[
                                 { cmd: '/login', desc: 'Start the login flow (email → OTP)' },

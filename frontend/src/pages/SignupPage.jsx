@@ -73,7 +73,7 @@ export default function SignupPage() {
 
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5">
                     <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">Email Address</label>
+                        <label className="text-xs font-medium text-muted-foreground ml-1">Email Address</label>
                         <input
                             type="email"
                             name="email"
@@ -86,7 +86,7 @@ export default function SignupPage() {
                     </div>
 
                     <div className="flex flex-col gap-2 relative">
-                        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">Password</label>
+                        <label className="text-xs font-medium text-muted-foreground ml-1">Password</label>
                         <div className="relative">
                             <input
                                 type={showPassword ? "text" : "password"}
@@ -108,7 +108,7 @@ export default function SignupPage() {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">Confirm Password</label>
+                        <label className="text-xs font-medium text-muted-foreground ml-1">Confirm Password</label>
                         <input
                             type={showPassword ? "text" : "password"}
                             name="confirmPassword"

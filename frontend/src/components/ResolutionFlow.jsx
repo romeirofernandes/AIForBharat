@@ -3,6 +3,7 @@ import {
     ReactFlow,
     Background,
     Controls,
+    MiniMap,
     Handle,
     Position,
     useNodesState,
@@ -293,6 +294,9 @@ export default function ResolutionFlow({ steps, loading, workflowSteps, onNodeCl
         onNodeClick?.(node);
     }, [onNodeClick]);
 
+    const completedCount = (workflowSteps || []).filter(s => s.status === 'completed').length;
+    const totalCount = steps?.length || 0;
+
     if (loading) {
         return (
             <div className="flex flex-col items-center justify-center h-[500px] gap-4">
@@ -314,26 +318,78 @@ export default function ResolutionFlow({ steps, loading, workflowSteps, onNodeCl
     }
 
     return (
-        <div className="h-[580px] w-full rounded-xl border border-border bg-card overflow-hidden">
-            <ReactFlow
-                nodes={nodes}
-                edges={edges}
-                onNodesChange={onNodesChange}
-                onEdgesChange={onEdgesChange}
-                onNodeClick={handleNodeClick}
-                nodeTypes={nodeTypes}
-                fitView
-                fitViewOptions={{ padding: 0.3 }}
-                minZoom={0.3}
-                maxZoom={1.5}
-                proOptions={{ hideAttribution: true }}
-            >
-                <Background color="var(--border)" gap={20} size={1} />
-                <Controls
-                    showInteractive={false}
-                    className="!bg-card !border-border !shadow-lg !rounded-lg"
-                />
-            </ReactFlow>
+        <div className="w-full rounded-xl border border-border bg-card overflow-hidden shadow-sm">
+            {/* Header bar */}
+            <div className="flex items-center justify-between px-4 py-2.5 border-b border-border bg-muted/30">
+                <div className="flex items-center gap-2">
+                    <span className="text-xs font-medium text-muted-foreground">Resolution Flow</span>
+                    <span className="text-xs text-muted-foreground/40">·</span>
+                    <span className="text-xs font-medium text-muted-foreground">{totalCount} steps</span>
+                    {totalCount > 0 && (
+                        <>
+                            <span className="text-[9px] font-bold text-muted-foreground/60">·</span>
+                            <span className="text-[9px] font-bold text-emerald-600 dark:text-emerald-400">{completedCount} completed</span>
+                        </>
+                    )}
+                </div>
+                {/* Legend */}
+                <div className="hidden sm:flex items-center gap-3">
+                    {[
+                        { color: 'bg-emerald-500', label: 'Start' },
+                        { color: 'bg-primary', label: 'Action' },
+                        { color: 'bg-amber-500', label: 'Decision' },
+                        { color: 'bg-blue-500', label: 'Review' },
+                        { color: 'bg-red-400', label: 'End' },
+                    ].map(({ color, label }) => (
+                        <span key={label} className="flex items-center gap-1">
+                            <span className={`w-1.5 h-1.5 rounded-full ${color}`} />
+                            <span className="text-[9px] font-bold text-muted-foreground">{label}</span>
+                        </span>
+                    ))}
+                </div>
+            </div>
+
+            {/* Flow canvas */}
+            <div className="h-[540px] w-full">
+                <ReactFlow
+                    nodes={nodes}
+                    edges={edges}
+                    onNodesChange={onNodesChange}
+                    onEdgesChange={onEdgesChange}
+                    onNodeClick={handleNodeClick}
+                    nodeTypes={nodeTypes}
+                    fitView
+                    fitViewOptions={{ padding: 0.25 }}
+                    minZoom={0.2}
+                    maxZoom={1.8}
+                    proOptions={{ hideAttribution: true }}
+                    style={{ background: 'var(--background)' }}
+                >
+                    <Background
+                        color="var(--border)"
+                        gap={24}
+                        size={1}
+                        variant="dots"
+                    />
+                    <Controls
+                        showInteractive={false}
+                        className="!bg-card !border-border !border !shadow-lg !rounded-lg overflow-hidden"
+                    />
+                    <MiniMap
+                        nodeColor={(node) => {
+                            if (node.data?.isCompleted) return '#22c55e';
+                            if (node.data?.isActive) return '#3b82f6';
+                            const colors = { start: '#22c55e', action: 'var(--primary)', decision: '#f59e0b', review: '#3b82f6', end: '#f87171' };
+                            return colors[node.type] || '#94a3b8';
+                        }}
+                        maskColor="color-mix(in srgb, var(--background) 80%, transparent)"
+                        className="!bg-card !border !border-border !rounded-lg !overflow-hidden"
+                        style={{ bottom: 12, right: 12 }}
+                        pannable
+                        zoomable
+                    />
+                </ReactFlow>
+            </div>
         </div>
     );
 }

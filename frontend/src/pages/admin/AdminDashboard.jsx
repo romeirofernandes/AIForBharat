@@ -50,7 +50,7 @@ export default function AdminDashboard() {
                             <card.icon size={22} className={card.color} />
                         </div>
                         <h3 className="text-3xl font-bold text-foreground mb-1">{card.value}</h3>
-                        <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">{card.title}</p>
+                        <p className="text-xs font-medium text-muted-foreground">{card.title}</p>
                     </motion.div>
                 ))}
             </div>

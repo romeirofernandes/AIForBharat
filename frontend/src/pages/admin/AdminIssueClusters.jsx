@@ -138,27 +138,27 @@ export default function AdminIssueClusters() {
     return (
         <div className="w-full space-y-6">
             <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-                <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
+                <h1 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight text-foreground flex items-center gap-3">
                     <Grid01Icon size={28} className="text-primary" />
                     Issue Clusters
                 </h1>
-                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.25em] mt-1.5 ml-1 flex items-center gap-2">
+                <p className="text-sm text-muted-foreground font-medium mt-1 flex items-center gap-2">
                     <Alert01Icon size={12} /> Similar reports aggregated by location
                 </p>
             </motion.div>
 
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.05 }} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="border border-border/60 rounded-2xl p-6 bg-card shadow-sm">
-                    <p className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground mb-1">Total Issues</p>
-                    <p className="text-3xl font-black text-foreground">{totalIssues}</p>
+                    <p className="text-xs text-muted-foreground font-medium mb-1">Total Issues</p>
+                    <p className="text-3xl font-bold text-foreground">{totalIssues}</p>
                 </div>
                 <div className="border border-border/60 rounded-2xl p-6 bg-card shadow-sm">
-                    <p className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground mb-1">Clusters Found</p>
-                    <p className="text-3xl font-black text-foreground">{clusters.length}</p>
+                    <p className="text-xs text-muted-foreground font-medium mb-1">Clusters Found</p>
+                    <p className="text-3xl font-bold text-foreground">{clusters.length}</p>
                 </div>
                 <div className="border border-border/60 rounded-2xl p-6 bg-card shadow-sm">
-                    <p className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground mb-1">Hotspot Type</p>
-                    <p className="text-lg font-black text-primary truncate">
+                    <p className="text-xs text-muted-foreground font-medium mb-1">Hotspot Type</p>
+                    <p className="text-lg font-semibold text-primary truncate">
                         {clusters.length > 0 ? clusters[0].incidentType : '—'}
                     </p>
                 </div>
@@ -170,7 +170,7 @@ export default function AdminIssueClusters() {
                 </div>
             ) : clusters.length === 0 ? (
                 <div className="border border-dashed border-border rounded-2xl p-32 bg-card text-center">
-                    <p className="text-xs font-black uppercase tracking-[0.2em] text-muted-foreground">Queue clear - no clusters found</p>
+                    <p className="text-sm text-muted-foreground font-medium">Queue clear — no clusters found</p>
                 </div>
             ) : (
                 <div className="space-y-4">
@@ -193,22 +193,22 @@ export default function AdminIssueClusters() {
                                     <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-3 flex-wrap">
-                                                <h3 className="text-sm font-black text-foreground uppercase tracking-wider">{cluster.incidentType}</h3>
+                                                <h3 className="text-sm font-bold text-foreground uppercase tracking-wider">{cluster.incidentType}</h3>
                                                 <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest border border-primary/20">
                                                     <Folder01Icon size={12} variant="solid" /> {cluster.count} {cluster.count === 1 ? 'report' : 'reports'}
                                                 </span>
                                                 {cluster.totalVotes > 0 && (
-                                                    <span className="inline-flex items-center gap-1.5 px-2 py-1 text-[10px] font-black text-muted-foreground uppercase tracking-widest">
+                                                    <span className="inline-flex items-center gap-1.5 px-2 py-1 text-xs text-muted-foreground font-medium">
                                                         <ThumbsUpIcon size={12} variant="solid" className="text-primary" /> {cluster.totalVotes}
                                                     </span>
                                                 )}
                                             </div>
                                             <div className="flex items-center gap-3 mt-2">
-                                                <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/60 flex items-center gap-1.5">
+                                                <p className="text-xs text-muted-foreground/60 flex items-center gap-1.5">
                                                     {cluster.department}
                                                 </p>
                                                 {cluster.latitude != null && (
-                                                    <p className="text-[9px] font-black uppercase tracking-[0.2em] text-muted-foreground/40 flex items-center gap-1.5">
+                                                    <p className="text-xs text-muted-foreground/40 flex items-center gap-1.5">
                                                         <Location01Icon size={10} /> {cluster.latitude.toFixed(4)}, {cluster.longitude.toFixed(4)}
                                                     </p>
                                                 )}
@@ -239,7 +239,7 @@ export default function AdminIssueClusters() {
                                         >
                                             <div className="px-6 pb-8 pt-2 border-t border-border/50 space-y-6 bg-muted/5">
                                                 <div>
-                                                    <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground mb-4 px-1 flex items-center gap-2">
+                                                    <p className="text-xs text-muted-foreground font-medium mb-4 px-1 flex items-center gap-2">
                                                         <Folder01Icon size={12} /> Individual Reports
                                                     </p>
                                                     <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
@@ -250,15 +250,15 @@ export default function AdminIssueClusters() {
                                                                         <span className={`px-2 py-0.5 text-[8px] font-black uppercase tracking-widest rounded-md border border-current/10 ${statusColors[issue.status]}`}>
                                                                             {statusLabels[issue.status]}
                                                                         </span>
-                                                                        <span className="text-[9px] text-muted-foreground/50 font-black uppercase tracking-widest">#{issue.id}</span>
+                                                                        <span className="text-xs text-muted-foreground/50 font-medium">#{issue.id}</span>
                                                                         {issue.priorityScore > 0 && (
-                                                                            <span className="inline-flex items-center gap-1 text-[9px] font-black text-amber-600 uppercase tracking-widest">
+                                                                            <span className="inline-flex items-center gap-1 text-xs font-medium text-amber-600">
                                                                                 <FlashIcon size={10} variant="solid" /> {Math.round(issue.priorityScore)}
                                                                             </span>
                                                                         )}
                                                                     </div>
                                                                     <p className="text-sm text-foreground/80 font-medium leading-relaxed">{issue.description}</p>
-                                                                    <div className="flex items-center gap-3 mt-2 text-[9px] font-black uppercase tracking-widest text-muted-foreground/50">
+                                                                    <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground/50">
                                                                         <span className="flex items-center gap-1"><UserIcon size={10} /> {issue.user?.email}</span>
                                                                         <span>• {new Date(issue.createdAt).toLocaleDateString('en-IN')}</span>
                                                                     </div>
@@ -288,7 +288,7 @@ export default function AdminIssueClusters() {
                                                         )}
                                                     </button>
                                                     {flow && !isFlowLoading && (
-                                                        <span className="flex items-center gap-2 text-[10px] text-emerald-600 font-black uppercase tracking-widest">
+                                                        <span className="flex items-center gap-2 text-xs text-emerald-600 font-medium">
                                                             <Tick01Icon size={14} variant="solid" /> Workflow Active
                                                         </span>
                                                     )}
@@ -298,7 +298,7 @@ export default function AdminIssueClusters() {
                                                     <div className="space-y-8 mt-4">
                                                         <div className="bg-card border border-border/80 rounded-2xl overflow-hidden shadow-sm">
                                                             <div className="px-6 py-4 bg-muted/30 border-b border-border/50 flex items-center justify-between">
-                                                                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
+                                                                <p className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                                                                     <Route01Icon size={14} variant="solid" className="text-primary" /> Visual Logic
                                                                 </p>
                                                             </div>
@@ -312,7 +312,7 @@ export default function AdminIssueClusters() {
 
                                                         {isWorkflowActive && flow?.workflow && (
                                                             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-                                                                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary mb-4 px-1 flex items-center gap-2">
+                                                                <p className="text-sm font-medium text-primary mb-4 px-1 flex items-center gap-2">
                                                                     <Tick01Icon size={14} variant="solid" /> Execution Engine
                                                                 </p>
                                                                 <WorkflowStepPanel

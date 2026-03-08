@@ -133,11 +133,11 @@ export default function AdminIssues() {
     return (
         <div className="w-full space-y-6">
             <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-                <h2 className="text-2xl md:text-3xl font-black uppercase tracking-[0.05em] text-foreground flex items-center gap-3">
+                <h2 className="text-2xl md:text-3xl font-extrabold uppercase tracking-[0.05em] text-foreground flex items-center gap-3">
                     <FilterIcon size={28} className="text-primary" />
                     Issue Queue
                 </h2>
-                <p className="text-[10px] text-muted-foreground font-black uppercase tracking-[0.25em] mt-1.5 ml-1 flex items-center gap-2">
+                <p className="text-sm text-muted-foreground font-medium mt-1 flex items-center gap-2">
                     <AlertCircleIcon size={12} /> Manage citizen grievances
                 </p>
             </motion.div>
@@ -145,22 +145,22 @@ export default function AdminIssues() {
             {/* Controls */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.05 }} className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                 <div className="flex flex-wrap items-center gap-2">
-                    <span className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground mr-1">Status:</span>
-                    <button onClick={() => setFilter('')} className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border ${!filter ? 'bg-primary text-primary-foreground border-primary' : 'bg-card text-muted-foreground border-border hover:border-primary/50'}`}>All</button>
+                    <span className="text-xs text-muted-foreground font-medium mr-1">Status:</span>
+                    <button onClick={() => setFilter('')} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all border ${!filter ? 'bg-primary text-primary-foreground border-primary' : 'bg-card text-muted-foreground border-border hover:border-primary/50'}`}>All</button>
                     {allStatuses.map((s) => (
-                        <button key={s} onClick={() => setFilter(s)} className={`px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all border ${filter === s ? 'bg-primary text-primary-foreground border-primary' : 'bg-card text-muted-foreground border-border hover:border-primary/50'}`}>
+                        <button key={s} onClick={() => setFilter(s)} className={`px-4 py-2 rounded-lg text-sm font-medium transition-all border ${filter === s ? 'bg-primary text-primary-foreground border-primary' : 'bg-card text-muted-foreground border-border hover:border-primary/50'}`}>
                             {statusLabels[s]}
                         </button>
                     ))}
                 </div>
 
                 <div className="flex items-center bg-muted/30 border border-border/50 rounded-xl p-1.5 gap-1.5 overflow-x-auto scrollbar-hide">
-                    <span className="text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground px-2">Sort:</span>
+                    <span className="text-xs text-muted-foreground font-medium px-2">Sort:</span>
                     {SORT_OPTIONS.map((o) => (
                         <button
                             key={o.value}
                             onClick={() => setSort(o.value)}
-                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-[10px] font-black uppercase tracking-wider transition-all whitespace-nowrap ${sort === o.value ? 'bg-card shadow-sm text-foreground border border-border' : 'text-muted-foreground hover:text-foreground'}`}
+                            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${sort === o.value ? 'bg-card shadow-sm text-foreground border border-border' : 'text-muted-foreground hover:text-foreground'}`}
                         >
                             <o.icon size={12} variant={sort === o.value ? 'solid' : 'linear'} className={sort === o.value ? 'text-primary' : ''} />
                             {o.label}
@@ -180,7 +180,7 @@ export default function AdminIssues() {
                     >
                         <div className="border border-border/60 bg-muted/10 rounded-2xl p-6 mb-4">
                             <div className="flex items-center justify-between mb-6">
-                                <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary flex items-center gap-2">
+                                <p className="text-sm font-medium text-primary flex items-center gap-2">
                                     <Clock01Icon size={14} variant="solid" />
                                     Issue Timeline — #{timelineIssueId}
                                 </p>
@@ -205,7 +205,7 @@ export default function AdminIssues() {
             ) : issues.length === 0 ? (
                 <div className="border border-dashed border-border rounded-2xl p-32 bg-card text-center flex flex-col items-center justify-center">
                     <AlertCircleIcon size={48} className="text-muted-foreground/20 mb-4" />
-                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">Queue clear - no issues found</p>
+                    <p className="text-sm text-muted-foreground font-medium">Queue clear — no issues found</p>
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -257,7 +257,7 @@ export default function AdminIssues() {
                                 <div className="flex items-start justify-between gap-2">
                                     <div className="flex-1 min-w-0">
                                         <h3 className="text-sm font-bold text-foreground leading-snug">{issue.title}</h3>
-                                        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/60 mt-0.5">
+                                        <p className="text-xs text-muted-foreground/60 mt-0.5">
                                             by {issue.user?.email} 
                                         </p>
                                     </div>
@@ -266,7 +266,7 @@ export default function AdminIssues() {
                                     </span>
                                 </div>
                                 <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2 flex-1">{issue.description}</p>
-                                <div className="flex items-center justify-between pt-2 border-t border-border text-[10px] font-bold uppercase tracking-[0.12em] text-muted-foreground/60 mt-auto">
+                                <div className="flex items-center justify-between pt-2 border-t border-border text-xs text-muted-foreground/60 mt-auto">
                                     {issue.latitude && issue.longitude ? (
                                         <span className="flex items-center gap-1">
                                             <MapPin className="w-3 h-3" />
@@ -288,13 +288,13 @@ export default function AdminIssues() {
                                         <div className="px-6 pb-6 pt-2 border-t border-border/50 space-y-6 bg-muted/5">
                                             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                                                 <div>
-                                                    <p className="text-[9px] font-black uppercase tracking-[0.3em] text-muted-foreground mb-3 flex items-center gap-2">
+                                                    <p className="text-xs text-muted-foreground font-medium mb-3 flex items-center gap-2">
                                                         <Clock01Icon size={12} /> Change Status
                                                     </p>
                                                     <div className="flex flex-wrap gap-2">
                                                         {allStatuses.map((s) => (
                                                             <button key={s} onClick={() => handleStatusChange(issue.id, s)} disabled={issue.status === s}
-                                                                className={`px-4 py-2 rounded-lg text-[9px] font-black uppercase tracking-widest transition-all border disabled:opacity-30 disabled:grayscale ${statusColors[s]} hover:scale-[1.02] active:scale-[0.98]`}>
+                                                                className={`px-4 py-2 rounded-lg text-xs font-medium transition-all border disabled:opacity-30 disabled:grayscale ${statusColors[s]} hover:scale-[1.02] active:scale-[0.98]`}>
                                                                 {statusLabels[s]}
                                                             </button>
                                                         ))}
@@ -303,7 +303,7 @@ export default function AdminIssues() {
                                                 <div className="flex flex-col justify-end">
                                                     <button
                                                         onClick={(e) => { e.stopPropagation(); openTimeline(issue.id); }}
-                                                        className="h-10 inline-flex items-center justify-center gap-2 px-6 rounded-lg bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-90 transition-all shadow-lg shadow-primary/10 active:scale-[0.98]"
+                                                        className="h-10 inline-flex items-center justify-center gap-2 px-6 rounded-lg bg-primary text-primary-foreground border border-primary text-sm font-medium hover:opacity-90 transition-all shadow-lg shadow-primary/10 active:scale-[0.98]"
                                                     >
                                                         <Clock01Icon size={14} variant="solid" />
                                                         Launch Timeline
@@ -317,14 +317,14 @@ export default function AdminIssues() {
                             {/* Expanded: status controls */}
                             {expandedId === issue.id && (
                                 <div className="px-4 pb-4 pt-2 border-t border-border/50">
-                                    <p className="text-[10px] font-bold uppercase tracking-[0.15em] text-muted-foreground mb-2">Update Status</p>
+                                    <p className="text-xs text-muted-foreground font-medium mb-2">Update Status</p>
                                     <div className="flex flex-wrap gap-2">
                                         {allStatuses.map((s) => (
                                             <button
                                                 key={s}
                                                 onClick={() => handleStatusChange(issue.id, s)}
                                                 disabled={issue.status === s}
-                                                className={`px-3 py-1.5 rounded-full text-[10px] font-bold uppercase tracking-wider transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${statusColors[s]}`}
+                                                className={`px-3 py-1.5 rounded-full text-xs font-medium transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${statusColors[s]}`}
                                             >
                                                 {statusLabels[s]}
                                             </button>

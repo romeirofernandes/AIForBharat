@@ -1,4 +1,5 @@
 import React from 'react';
+import LanguageSwitcher from './LanguageSwitcher';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -148,6 +149,8 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                         </NavLink>
                     </SidebarItemTooltip>
 
+                    <LanguageSwitcher variant="sidebar" collapsed={collapsed} />
+
                     <SidebarItemTooltip collapsed={collapsed} label="Logout">
                         <button
                             onClick={handleLogout}
@@ -238,6 +241,8 @@ export default function Sidebar({ collapsed, setCollapsed, role }) {
                                         <span className="text-[9px] uppercase tracking-wider text-sidebar-foreground/50 truncate max-w-[120px]">{user?.email}</span>
                                     </div>
                                 </NavLink>
+
+                                <LanguageSwitcher variant="sidebar" collapsed={false} />
 
                                 <button
                                     onClick={handleLogout}

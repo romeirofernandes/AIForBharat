@@ -30,10 +30,12 @@ import AdminUsers from './pages/admin/AdminUsers';
 import AdminAnalytics from './pages/admin/AdminAnalytics';
 
 import { Toaster } from 'sonner';
+import GoogleTranslate from './components/GoogleTranslate';
 
 export default function App() {
   return (
     <>
+      <GoogleTranslate />
       <Toaster position="top-right" theme="light" richColors />
       <Routes>
         {/* Public routes */}

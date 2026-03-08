@@ -67,6 +67,14 @@ import {
     ViewIcon as ViewIconSvg,
     ViewOffIcon as ViewOffIconSvg,
     WasteIcon as WasteIconSvg,
+    LanguageSkillIcon as LanguageSkillIconSvg,
+    Mic01Icon as Mic01IconSvg,
+    RankingIcon as RankingIconSvg,
+    SecurityCheckIcon as SecurityCheckIconSvg,
+    SparklesIcon as SparklesIconSvg,
+    SmartPhone01Icon as SmartPhone01IconSvg,
+    Upload04Icon as Upload04IconSvg,
+    Video01Icon as Video01IconSvg,
 } from '@hugeicons/core-free-icons';
 
 function createCompatIcon(icon, displayName) {
@@ -143,19 +151,27 @@ export const PlayIcon = createCompatIcon(PlayIconSvg, 'PlayIcon');
 export const RefreshIcon = createCompatIcon(RefreshIconSvg, 'RefreshIcon');
 export const Route01Icon = createCompatIcon(Route01IconSvg, 'Route01Icon');
 export const Search01Icon = createCompatIcon(Search01IconSvg, 'Search01Icon');
+export const LanguageSkillIcon = createCompatIcon(LanguageSkillIconSvg, 'LanguageSkillIcon');
+export const Mic01Icon = createCompatIcon(Mic01IconSvg, 'Mic01Icon');
+export const RankingIcon = createCompatIcon(RankingIconSvg, 'RankingIcon');
 export const SearchIcon = createCompatIcon(SearchIconSvg, 'SearchIcon');
+export const SecurityCheckIcon = createCompatIcon(SecurityCheckIconSvg, 'SecurityCheckIcon');
 export const Settings01Icon = createCompatIcon(Settings01IconSvg, 'Settings01Icon');
 export const SidebarLeft01Icon = createCompatIcon(SidebarLeft01IconSvg, 'SidebarLeft01Icon');
 export const Sorting01Icon = createCompatIcon(Sorting01IconSvg, 'Sorting01Icon');
+export const SparklesIcon = createCompatIcon(SparklesIconSvg, 'SparklesIcon');
+export const SmartPhone01Icon = createCompatIcon(SmartPhone01IconSvg, 'SmartPhone01Icon');
 export const StopIcon = createCompatIcon(StopIconSvg, 'StopIcon');
 export const TaskDone01Icon = createCompatIcon(TaskDone01IconSvg, 'TaskDone01Icon');
 export const TaskEdit01Icon = createCompatIcon(TaskEdit01IconSvg, 'TaskEdit01Icon');
 export const ThumbsUpIcon = createCompatIcon(ThumbsUpIconSvg, 'ThumbsUpIcon');
 export const Tick01Icon = createCompatIcon(Tick01IconSvg, 'Tick01Icon');
 export const Tick02Icon = createCompatIcon(Tick02IconSvg, 'Tick02Icon');
+export const Upload04Icon = createCompatIcon(Upload04IconSvg, 'Upload04Icon');
 export const UserCircleIcon = createCompatIcon(UserCircleIconSvg, 'UserCircleIcon');
 export const UserIcon = createCompatIcon(UserIconSvg, 'UserIcon');
 export const UserMultiple02Icon = createCompatIcon(UserMultiple02IconSvg, 'UserMultiple02Icon');
+export const Video01Icon = createCompatIcon(Video01IconSvg, 'Video01Icon');
 export const ViewIcon = createCompatIcon(ViewIconSvg, 'ViewIcon');
 export const ViewOffIcon = createCompatIcon(ViewOffIconSvg, 'ViewOffIcon');
 export const WasteIcon = createCompatIcon(WasteIconSvg, 'WasteIcon');

@@ -194,6 +194,7 @@ export default function Profile() {
             </motion.div>
 
             {activeTab === 'profile' && (
+                <>
                 <motion.div
                     initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.1 }}
                     className="border border-border/80 rounded-2xl p-6 md:p-10 bg-card shadow-sm space-y-8"
@@ -258,7 +259,6 @@ export default function Profile() {
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
                             <div className="flex flex-col gap-2">
                                 <label className="text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground ml-1">Gender</label>
@@ -363,10 +363,10 @@ export default function Profile() {
                         </div>
                     )}
                 </div>
-            </motion.div>
+                </motion.div>
 
-            {/* WhatsApp Section */}
-            {user?.role === 'user' && (
+                {/* WhatsApp Section */}
+                {user?.role === 'user' && (
                 <motion.div
                     initial="hidden"
                     animate="visible"
@@ -453,6 +453,8 @@ export default function Profile() {
                         )}
                     </div>
                 </motion.div>
+            )}
+                </>
             )}
         </div>
     );

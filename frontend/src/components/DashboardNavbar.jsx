@@ -32,10 +32,13 @@ function getBreadcrumbs(pathname) {
             { label: 'My Reports' },
         ],
         '/user/profile':      [{ label: 'Profile' }],
+        '/user/whatsapp':     [{ label: 'WhatsApp Bot' }],
         '/admin/dashboard':   [{ label: 'Dashboard' }],
         '/admin/issues':      [{ label: 'Issue Queue' }],
+        '/admin/clusters':    [{ label: 'Issue Clusters' }],
         '/admin/users':       [{ label: 'Users' }],
         '/admin/analytics':   [{ label: 'Analytics' }],
+        '/admin/bribery':     [{ label: 'Misconduct Reports' }],
         '/admin/profile':     [{ label: 'Profile' }],
     };
 

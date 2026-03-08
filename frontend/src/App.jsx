@@ -5,6 +5,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import LandingPage from './pages/LandingPage';
 import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
+import ShareLocation from './pages/ShareLocation';
 
 // Layouts
 import UserLayout from './layouts/UserLayout';
@@ -48,6 +49,7 @@ export default function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/signup" element={<SignupPage />} />
+        <Route path="/share-location/:token" element={<ShareLocation />} />
 
         {/* User routes */}
         <Route path="/user" element={

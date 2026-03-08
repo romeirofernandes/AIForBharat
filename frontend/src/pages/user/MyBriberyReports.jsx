@@ -3,7 +3,6 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'sonner';
 import {
-    ArrowLeft02Icon as BackIcon,
     ArrowRight01Icon as ArrowRight,
     Add01Icon as AddIcon,
     SecurityCheckIcon as BadgeIcon,
@@ -104,15 +103,6 @@ export default function MyBriberyReports() {
 
     return (
         <div className="w-full space-y-6">
-            {/* Back */}
-            <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-                <button
-                    onClick={() => navigate('/user/traffic')}
-                    className="flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider text-primary hover:underline underline-offset-4 cursor-pointer"
-                >
-                    <BackIcon size={14} /> Back to Traffic Dashboard
-                </button>
-            </motion.div>
 
             {/* Header */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">

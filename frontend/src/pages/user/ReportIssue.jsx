@@ -322,25 +322,11 @@ const ReportIncident = () => {
     };
 
     return (
-        <div className="max-w-5xl mx-auto py-8 lg:py-12 px-4 sm:px-6 relative">
-            {/* Ambient Background Effects */}
-            <div className="absolute top-0 inset-x-0 h-[500px] bg-gradient-to-b from-primary/5 to-transparent pointer-events-none -z-10 rounded-3xl" />
-            
-            <div className="flex items-center justify-between mb-8">
-                <button
-                    onClick={() => navigate('/user/dashboard')}
-                    className="flex items-center text-sm font-semibold text-muted-foreground hover:text-foreground transition-all duration-300 group"
-                >
-                    <div className="w-9 h-9 rounded-full bg-card border border-border flex items-center justify-center mr-3 group-hover:border-primary group-hover:text-primary shadow-sm hover:shadow-md transition-all">
-                        <ArrowLeft className="w-4 h-4 transition-transform group-hover:-translate-x-1" />
-                    </div>
-                    Dashboard
-                </button>
-            </div>
+        <div className="max-w-5xl mx-auto py-4 lg:py-6 px-4 sm:px-6 relative">
 
-            <div className="text-center space-y-4 mb-14">
+            <div className="text-center space-y-4 mb-8">
                 <h1 className="text-4xl md:text-5xl font-black tracking-tighter text-foreground">
-                    Report an <span className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-indigo-500">Incident</span>
+                    Report an <span className="text-primary">Incident</span>
                 </h1>
                 <p className="text-muted-foreground text-lg max-w-2xl mx-auto font-medium">
                     Help us build a better city. Provide clear details to ensure rapid response from civic workers.
@@ -351,7 +337,7 @@ const ReportIncident = () => {
             <div className="relative mb-16 max-w-3xl mx-auto">
                 <div className="absolute top-1/2 left-0 w-full h-1.5 bg-muted -translate-y-1/2 rounded-full overflow-hidden">
                     <motion.div 
-                        className="h-full bg-gradient-to-r from-primary to-indigo-500"
+                        className="h-full bg-primary"
                         initial={{ width: '0%' }}
                         animate={{ width: `${(currentStep / (steps.length - 1)) * 100}%` }}
                         transition={{ duration: 0.5, ease: "easeInOut" }}
@@ -385,9 +371,6 @@ const ReportIncident = () => {
 
             {/* Wizard Form Container */}
             <div className="bg-card rounded-[2rem] border border-border/50 shadow-2xl shadow-black/5 p-6 md:p-10 min-h-[500px] relative overflow-hidden backdrop-blur-xl">
-                {/* Decorative blob inside card */}
-                <div className="absolute -top-64 -right-64 w-[500px] h-[500px] bg-primary/10 rounded-full blur-[100px] pointer-events-none opacity-50" />
-                <div className="absolute -bottom-64 -left-64 w-[500px] h-[500px] bg-indigo-500/10 rounded-full blur-[100px] pointer-events-none opacity-50" />
 
                 <AnimatePresence mode="wait">
                     {/* STEP 1: CLASSIFICATION */}
@@ -415,7 +398,7 @@ const ReportIncident = () => {
                                                 }
                                             `}
                                         >
-                                            {isSelected && <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-transparent pointer-events-none" />}
+                                            {isSelected && <div className="absolute inset-0 bg-primary/5 pointer-events-none" />}
                                             <div className={`p-4 rounded-xl transition-colors duration-300 ${isSelected ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' : 'bg-muted text-muted-foreground group-hover:text-foreground'}`}>
                                                 <Icon className="w-6 h-6" />
                                             </div>
@@ -541,7 +524,7 @@ const ReportIncident = () => {
                                                     type="button"
                                                     onClick={handleGenerateDescription}
                                                     disabled={isGeneratingAI || (!formData.description && !image)}
-                                                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold cursor-pointer bg-gradient-to-r from-primary to-indigo-500 text-white hover:opacity-90 transition-opacity border-none shadow-[0_0_15px_-3px_rgba(var(--primary),0.5)] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
+                                                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-bold cursor-pointer bg-primary text-white hover:opacity-90 transition-opacity border-none shadow-[0_0_15px_-3px_rgba(var(--primary),0.5)] disabled:opacity-50 disabled:cursor-not-allowed disabled:shadow-none"
                                                 >
                                                     {isGeneratingAI ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
                                                     {isGeneratingAI ? 'Writing...' : 'AI Enhance'}
@@ -660,7 +643,7 @@ const ReportIncident = () => {
                 <Button
                     onClick={nextStep}
                     disabled={loading}
-                    className="h-14 px-10 rounded-2xl bg-gradient-to-r from-primary to-indigo-500 font-extrabold text-white text-base shadow-[0_10px_30px_-10px_rgba(var(--primary),0.6)] hover:shadow-[0_15px_40px_-10px_rgba(var(--primary),0.8)] transition-all cursor-pointer border-none overflow-hidden group"
+                    className="h-14 px-10 rounded-2xl bg-primary font-extrabold text-white text-base shadow-[0_10px_30px_-10px_rgba(var(--primary),0.6)] hover:shadow-[0_15px_40px_-10px_rgba(var(--primary),0.8)] transition-all cursor-pointer border-none overflow-hidden group"
                 >
                     <span className="relative z-10 flex items-center justify-center gap-2">
                         {loading && currentStep === 2 ? (

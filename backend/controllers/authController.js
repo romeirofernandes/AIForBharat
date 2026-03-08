@@ -1,6 +1,7 @@
 const prisma = require("../config/prisma");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 
 const JWT_SECRET = process.env.JWT_SECRET || "fallback_super_secret";
 
@@ -119,6 +120,13 @@ exports.getProfile = async (req, res) => {
                 role: true,
                 createdAt: true,
                 profile: true,
+                whatsappUser: {
+                    select: {
+                        isActive: true,
+                        chatId: true,
+                        createdAt: true,
+                    },
+                },
             },
         });
 
@@ -188,6 +196,66 @@ exports.updateProfile = async (req, res) => {
         res.json({ message: "Profile updated successfully", user });
     } catch (error) {
         console.error("Update profile error:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};
+
+// ─── POST /api/auth/whatsapp/generate-otp ──────────────────────
+exports.generateWhatsappOtp = async (req, res) => {
+    try {
+        const { phone } = req.body;
+
+        if (!phone || !/^\+\d{10,15}$/.test(phone)) {
+            return res.status(400).json({
+                error: "Valid phone number required (E.164 format, e.g. +919876543210)",
+            });
+        }
+
+        // Generate 6-digit OTP
+        const otpPlain = crypto.randomInt(100000, 999999).toString();
+        const otpHash = await bcrypt.hash(otpPlain, 10);
+        const otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes
+
+        // Upsert WhatsappUser row
+        await prisma.whatsappUser.upsert({
+            where: { userId: req.user.userId },
+            update: {
+                otp: otpHash,
+                otpExpiresAt,
+                isActive: false, // reset until they verify via WhatsApp
+            },
+            create: {
+                userId: req.user.userId,
+                otp: otpHash,
+                otpExpiresAt,
+            },
+        });
+
+        // Save phone to CitizenProfile
+        await prisma.citizenProfile.upsert({
+            where: { userId: req.user.userId },
+            update: { phone },
+            create: {
+                userId: req.user.userId,
+                name: req.user.email.split("@")[0], // fallback name
+                phone,
+            },
+        });
+
+        // Get updated whatsapp status
+        const whatsappUser = await prisma.whatsappUser.findUnique({
+            where: { userId: req.user.userId },
+            select: { isActive: true, chatId: true, createdAt: true },
+        });
+
+        res.json({
+            message: "OTP generated successfully",
+            otp: otpPlain, // shown to user once — never stored in plaintext
+            expiresInMinutes: 10,
+            whatsappUser,
+        });
+    } catch (error) {
+        console.error("Generate WhatsApp OTP error:", error);
         res.status(500).json({ error: "Internal server error" });
     }
 };

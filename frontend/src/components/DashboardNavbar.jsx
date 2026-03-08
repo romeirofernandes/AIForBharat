@@ -23,6 +23,14 @@ function getBreadcrumbs(pathname) {
             { label: 'Traffic', to: '/user/traffic' },
             { label: 'All Fines' },
         ],
+        '/user/traffic/report-bribery': [
+            { label: 'Traffic', to: '/user/traffic' },
+            { label: 'Report Misconduct' },
+        ],
+        '/user/traffic/my-reports': [
+            { label: 'Traffic', to: '/user/traffic' },
+            { label: 'My Reports' },
+        ],
         '/user/profile':      [{ label: 'Profile' }],
         '/admin/dashboard':   [{ label: 'Dashboard' }],
         '/admin/issues':      [{ label: 'Issue Queue' }],

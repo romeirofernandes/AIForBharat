@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import { Menu01Icon as Menu, Cancel01Icon as X, ArrowRight01Icon as ChevronRight } from 'hugeicons-react';
 import { RichButton } from '../ui/rich-button';
+import LanguageSwitcher from '../LanguageSwitcher';
 
 export function Navbar({ scrolled, isMobileMenuOpen, setIsMobileMenuOpen, scrollToSection }) {
     const navigate = useNavigate();
@@ -24,6 +25,7 @@ export function Navbar({ scrolled, isMobileMenuOpen, setIsMobileMenuOpen, scroll
                                 </button>
                             ))}
                         </nav>
+                        <LanguageSwitcher variant="navbar" />
                         <RichButton onClick={() => navigate('/login')} color="primary" size="default">
                             Login <ChevronRight size={16} />
                         </RichButton>
@@ -48,6 +50,7 @@ export function Navbar({ scrolled, isMobileMenuOpen, setIsMobileMenuOpen, scroll
                                 {item}
                             </button>
                         ))}
+                        <LanguageSwitcher variant="navbar" />
                         <RichButton onClick={() => navigate('/login')} color="default" size="lg" className="mt-8 w-full">
                             Login <ChevronRight size={18} />
                         </RichButton>

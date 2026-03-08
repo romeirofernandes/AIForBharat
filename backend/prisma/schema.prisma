@@ -17,9 +17,11 @@ model User {
   issues       Issue[]
   profile      CitizenProfile?
   vehicles     UserVehicle[]
-  issueVotes   IssueVote[]
-  comments     IssueComment[]
-  commentVotes CommentVote[]
+  issueVotes          IssueVote[]
+  comments            IssueComment[]
+  commentVotes        CommentVote[]
+  briberyComplaints   BriberyComplaint[]
+  whatsappUser        WhatsappUser?
 
   @@map("users")
 }
@@ -90,20 +92,36 @@ model CommentVote {
 }
 
 model CitizenProfile {
-  id                 Int      @id @default(autoincrement())
-  userId             Int      @unique @map("user_id")
-  user               User     @relation(fields: [userId], references: [id])
-  name               String   @db.VarChar(255)
-  age                Int?
-  gender             String?  @db.VarChar(50)
-  imageUrl           String?  @map("image_url") @db.Text
+  id                         Int      @id @default(autoincrement())
+  userId                     Int      @unique @map("user_id")
+  user                       User     @relation(fields: [userId], references: [id])
+  name                       String   @db.VarChar(255)
+  age                        Int?
+  gender                     String?  @db.VarChar(50)
+  phone             String?  @unique @db.VarChar(20)
+  whatsappVerified  Boolean  @default(false) @map("whatsapp_verified")
+  imageUrl                   String?  @map("image_url") @db.Text
   homeLatitude       Float?   @map("home_latitude")
   homeLongitude      Float?   @map("home_longitude")
   emailNotifications Boolean  @default(false) @map("email_notifications")
-  createdAt          DateTime @default(now()) @map("created_at")
-  updatedAt          DateTime @updatedAt @map("updated_at")
+  createdAt                  DateTime @default(now()) @map("created_at")
+  updatedAt                  DateTime @updatedAt @map("updated_at")
 
   @@map("citizen_profiles")
+}
+
+model WhatsappUser {
+  id           String    @id @default(cuid())
+  userId       Int       @unique @map("user_id")
+  user         User      @relation(fields: [userId], references: [id])
+  chatId       String?   @map("chat_id") @db.VarChar(50)
+  isActive     Boolean   @default(false) @map("is_active")
+  otp          String?   @db.VarChar(255)
+  otpExpiresAt DateTime? @map("otp_expires_at")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
+
+  @@map("whatsapp_users")
 }
 
 model Department {
@@ -162,4 +180,27 @@ model TrafficChallan {
   updatedAt       DateTime    @updatedAt @map("updated_at")
 
   @@map("traffic_challans")
+}
+
+// ─── Bribery / Police Misconduct Reports ────────────────────────
+
+model BriberyComplaint {
+  id                 Int      @id @default(autoincrement())
+  userId             Int      @map("user_id")
+  user               User     @relation(fields: [userId], references: [id])
+  badgeNumber        String   @map("badge_number") @db.VarChar(50)
+  complaintType      String   @map("complaint_type") @db.VarChar(100)
+  otherComplaintType String?  @map("other_complaint_type") @db.VarChar(255)
+  description        String   @db.Text
+  incidentAt         DateTime @map("incident_at")
+  location           String?  @db.VarChar(255)
+  challanNumber      String?  @map("challan_number") @db.VarChar(30)
+  amountDemanded     Int?     @map("amount_demanded")
+  mediaUrls          String[] @map("media_urls")
+  status             String   @default("submitted") @db.VarChar(30) // submitted, under_review, action_taken, resolved, dismissed
+  adminNote          String?  @map("admin_note") @db.Text
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+
+  @@map("bribery_complaints")
 }

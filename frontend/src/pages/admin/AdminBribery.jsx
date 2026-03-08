@@ -12,9 +12,7 @@ import {
     InformationCircleIcon as InfoIcon,
     UserCircleIcon as UserIcon,
 } from 'hugeicons-react';
-import { Card, CardContent } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Button } from '../../components/ui/button';
+import { RichButton } from '../../components/ui/rich-button';
 import { getAllBriberyComplaints, updateBriberyStatus } from '../../api/bribery';
 
 const fadeIn = {
@@ -88,8 +86,8 @@ export default function AdminBribery() {
         <div className="w-full space-y-6">
             {/* Header */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-                <h1 className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-foreground">Misconduct Reports</h1>
-                <p className="text-sm text-muted-foreground font-medium mt-1">Review and manage bribery / police misconduct complaints</p>
+                <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground">Misconduct Reports</h1>
+                <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-medium mt-1">Review and manage bribery / police misconduct complaints</p>
             </motion.div>
 
             {/* Summary Stats */}
@@ -103,9 +101,9 @@ export default function AdminBribery() {
                         { label: 'Resolved', value: summary.resolved || 0, color: 'text-emerald-600', bg: 'bg-emerald-50' },
                         { label: 'Dismissed', value: summary.dismissed || 0, color: 'text-red-600', bg: 'bg-red-50' },
                     ].map((s) => (
-                        <div key={s.label} className={`border border-border rounded-lg p-3 text-center ${s.bg}`}>
-                            <p className={`text-xl font-bold ${s.color}`}>{s.value}</p>
-                            <p className="text-xs font-medium text-muted-foreground">{s.label}</p>
+                        <div key={s.label} className={`border border-border rounded-xl p-3 text-center ${s.bg}`}>
+                            <p className={`text-xl font-black ${s.color}`}>{s.value}</p>
+                            <p className="text-[10px] uppercase tracking-[0.2em] font-medium text-muted-foreground">{s.label}</p>
                         </div>
                     ))}
                 </div>
@@ -118,7 +116,7 @@ export default function AdminBribery() {
                         <button
                             key={f}
                             onClick={() => setFilter(f)}
-                            className={`px-3 py-1.5 rounded-md text-sm font-medium transition-all cursor-pointer ${filter === f
+                            className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${filter === f
                                     ? 'bg-primary text-primary-foreground'
                                     : 'bg-muted text-muted-foreground hover:bg-muted/80'
                                 }`}
@@ -135,7 +133,7 @@ export default function AdminBribery() {
                     <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
                 </div>
             ) : complaints.length === 0 ? (
-                <div className="border border-border rounded-lg p-12 bg-card text-center">
+                <div className="border border-border rounded-xl p-12 bg-card text-center">
                     <p className="text-sm text-muted-foreground font-medium">No misconduct reports found</p>
                 </div>
             ) : (
@@ -152,7 +150,7 @@ export default function AdminBribery() {
                                 animate="visible"
                                 variants={fadeIn}
                                 transition={{ delay: i * 0.03 }}
-                                className="border border-border rounded-lg bg-card hover:border-primary/20 transition-all overflow-hidden"
+                                className="border border-border rounded-xl bg-card hover:border-primary/20 transition-all overflow-hidden"
                             >
                                 {/* Card Header */}
                                 <div className="p-5 cursor-pointer" onClick={() => setExpandedId(isExpanded ? null : c.id)}>
@@ -160,7 +158,7 @@ export default function AdminBribery() {
                                         <div>
                                             <div className="flex items-center gap-2 mb-1">
                                                 <span className="text-xs font-bold font-mono tracking-wider text-foreground">#{c.id}</span>
-                                                <Badge className={`text-[9px] font-bold uppercase tracking-wider ${sc.class}`}>{sc.label}</Badge>
+                                                <span className={`inline-flex items-center px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-md border ${sc.class}`}>{sc.label}</span>
                                             </div>
                                             <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">
                                                 {c.complaintType === 'Other' ? c.otherComplaintType || 'Other' : c.complaintType}
@@ -233,7 +231,7 @@ export default function AdminBribery() {
                                                                         target="_blank"
                                                                         rel="noopener noreferrer"
                                                                         onClick={(e) => e.stopPropagation()}
-                                                                        className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-md bg-muted/30 hover:bg-muted/60 transition-colors text-xs font-medium text-primary"
+                                                                    className="flex items-center gap-1.5 px-3 py-1.5 border border-border rounded-lg bg-muted/30 hover:bg-muted/60 transition-colors text-xs font-medium text-primary\"
                                                                     >
                                                                         {isVideo ? <VideoIcon size={12} /> : <ImageIcon size={12} />}
                                                                         {isVideo ? 'Video' : 'Photo'} {j + 1}
@@ -264,7 +262,7 @@ export default function AdminBribery() {
                                                                     setSelectedStatuses((prev) => ({ ...prev, [c.id]: s }));
                                                                 }}
                                                                 disabled={c.status === s}
-                                                                className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${selectedStatuses[c.id] === s
+                                                                className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed ${selectedStatuses[c.id] === s
                                                                         ? 'ring-2 ring-primary ring-offset-1'
                                                                         : ''
                                                                     } ${statusConfig[s]?.class || ''}`}
@@ -283,10 +281,12 @@ export default function AdminBribery() {
                                                             setAdminNotes((prev) => ({ ...prev, [c.id]: e.target.value }));
                                                         }}
                                                         onClick={(e) => e.stopPropagation()}
-                                                        className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm font-medium text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
+                                                        className="w-full rounded-lg border border-input bg-background px-3 py-2 text-sm font-medium text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring resize-none"
                                                     />
 
-                                                    <Button
+                                                    <RichButton
+                                                        color="primary"
+                                                        size="sm"
                                                         onClick={(e) => {
                                                             e.stopPropagation();
                                                             handleStatusChange(c.id);
@@ -297,11 +297,10 @@ export default function AdminBribery() {
                                                             !adminNotes[c.id]?.trim() ||
                                                             c.status === selectedStatuses[c.id]
                                                         }
-                                                        className="cursor-pointer font-bold uppercase tracking-wider text-xs"
-                                                        size="sm"
+                                                        className="font-bold uppercase tracking-wider text-xs"
                                                     >
                                                         {updating === c.id ? 'Updating…' : 'Update Status'}
-                                                    </Button>
+                                                    </RichButton>
                                                 </div>
                                             </div>
                                         </motion.div>

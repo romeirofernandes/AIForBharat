@@ -16,4 +16,7 @@ router.post("/issues/:id/comments", requireAuth, forumController.addComment);
 // Comment votes
 router.post("/comments/:commentId/vote", requireAuth, forumController.voteComment);
 
+// Issue workflow (read-only for public viewing)
+router.get("/issues/:id/workflow", requireAuth, forumController.getIssueWorkflow);
+
 module.exports = router;

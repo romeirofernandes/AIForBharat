@@ -1,6 +1,7 @@
 import { forwardRef } from 'react';
 import { HugeiconsIcon } from '@hugeicons/react';
 import {
+    Home01Icon as Home01IconSvg,
     Add01Icon as Add01IconSvg,
     Agreement01Icon as Agreement01IconSvg,
     Alert01Icon as Alert01IconSvg,
@@ -175,6 +176,7 @@ export const Video01Icon = createCompatIcon(Video01IconSvg, 'Video01Icon');
 export const ViewIcon = createCompatIcon(ViewIconSvg, 'ViewIcon');
 export const ViewOffIcon = createCompatIcon(ViewOffIconSvg, 'ViewOffIcon');
 export const WasteIcon = createCompatIcon(WasteIconSvg, 'WasteIcon');
+export const Home01Icon = createCompatIcon(Home01IconSvg, 'Home01Icon');
 
 export const CalendarAverageIcon = Calendar01Icon;
 export const MedalFirstIcon = ChampionIcon;

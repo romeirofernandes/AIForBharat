@@ -347,7 +347,7 @@ Rules:
         const workflow = await prisma.issueWorkflow.create({
             data: {
                 clusterKey: clusterKey || null,
-                issueId: issueIds && issueIds.length === 1 ? issueIds[0] : null,
+                issueId: issueIds?.[0] || null,
                 flowJson: flowData,
                 status: "active",
                 steps: {
@@ -363,11 +363,20 @@ Rules:
             include: { steps: true },
         });
 
-        // ── Timeline: log workflow creation for all associated issues ──
+        // ── Auto-update all linked issues to in_progress ──
         if (issueIds && issueIds.length > 0) {
+            await prisma.issue.updateMany({
+                where: { id: { in: issueIds }, status: "pending" },
+                data: { status: "in_progress" },
+            });
+
+            // ── Timeline: log workflow creation + status change ──
             for (const iid of issueIds) {
                 await logHistory(iid, ACTIONS.WORKFLOW_CREATED, req.user.userId, req.user.role, {
                     workflowId: workflow.id,
+                });
+                await logHistory(iid, ACTIONS.STATUS_UPDATED, req.user.userId, req.user.role, {
+                    from: "pending", to: "in_progress", reason: "Resolution workflow generated",
                 });
             }
         }

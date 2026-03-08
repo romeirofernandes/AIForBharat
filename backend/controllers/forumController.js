@@ -295,3 +295,51 @@ exports.voteComment = async (req, res) => {
         res.status(500).json({ error: "Internal server error" });
     }
 };
+
+// ─── Get workflow for an issue (read-only public view) ──────────
+exports.getIssueWorkflow = async (req, res) => {
+    try {
+        const issueId = parseInt(req.params.id);
+        if (isNaN(issueId)) {
+            return res.status(400).json({ error: "Invalid issue ID" });
+        }
+
+        const stepSelect = {
+            id: true, stepId: true, title: true, description: true,
+            type: true, status: true, completedAt: true, createdAt: true,
+        };
+
+        // Try direct issue link first
+        let workflow = await prisma.issueWorkflow.findFirst({
+            where: { issueId },
+            include: { steps: { orderBy: { createdAt: "asc" }, select: stepSelect } },
+            orderBy: { createdAt: "desc" },
+        });
+
+        // Fallback: compute clusterKey from issue data and search by it
+        if (!workflow) {
+            const issue = await prisma.issue.findUnique({
+                where: { id: issueId },
+                select: { incidentType: true, latitude: true, longitude: true },
+            });
+            if (issue?.incidentType) {
+                const GRID = 100;
+                const type = issue.incidentType.toLowerCase().trim();
+                const latKey = issue.latitude != null ? Math.round(issue.latitude * GRID) : "none";
+                const lngKey = issue.longitude != null ? Math.round(issue.longitude * GRID) : "none";
+                const clusterKey = `${type}__${latKey}__${lngKey}`;
+
+                workflow = await prisma.issueWorkflow.findFirst({
+                    where: { clusterKey },
+                    include: { steps: { orderBy: { createdAt: "asc" }, select: stepSelect } },
+                    orderBy: { createdAt: "desc" },
+                });
+            }
+        }
+
+        res.json({ workflow: workflow || null });
+    } catch (error) {
+        console.error("Get issue workflow error:", error);
+        res.status(500).json({ error: "Internal server error" });
+    }
+};

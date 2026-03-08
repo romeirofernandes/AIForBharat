@@ -34,3 +34,7 @@ export function voteComment(commentId, value) {
         body: JSON.stringify({ value }),
     });
 }
+
+export function getIssueWorkflow(issueId) {
+    return apiFetch(`/forum/issues/${issueId}/workflow`);
+}

@@ -101,11 +101,15 @@ export default function DashboardNavbar({ collapsed, setCollapsed }) {
             {/* ── Right: user info ── */}
             <div className="flex items-center gap-3">
                 <div className="text-right hidden sm:block">
-                    <p className="text-xs font-semibold text-foreground">{user?.email}</p>
-                    <p className="text-xs font-medium text-primary">{user?.role}</p>
+                    <p className="text-xs font-semibold text-foreground">{user?.profile?.name || user?.email}</p>
+                    <p className="text-[10px] font-bold uppercase tracking-wider text-primary">{user?.role}</p>
                 </div>
-                <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center text-primary text-xs font-bold uppercase shrink-0">
-                    {user?.email?.[0]}
+                <div className="w-8 h-8 rounded-md bg-primary/10 flex items-center justify-center text-primary text-xs font-bold uppercase shrink-0 overflow-hidden">
+                    {user?.profile?.imageUrl ? (
+                        <img src={user.profile.imageUrl} alt="Avatar" className="w-full h-full object-cover" onError={(e) => { e.target.style.display = 'none'; }} />
+                    ) : (
+                        user?.profile?.name?.[0]?.toUpperCase() || user?.email?.[0]?.toUpperCase() || 'U'
+                    )}
                 </div>
             </div>
         </header>

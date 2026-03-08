@@ -14,11 +14,7 @@ import {
     InformationCircleIcon as InfoIcon,
     SecurityCheckIcon as ShieldIcon,
 } from 'hugeicons-react';
-import { Card, CardContent, CardHeader, CardTitle } from '../../components/ui/card';
-import { Badge } from '../../components/ui/badge';
-import { Input } from '../../components/ui/input';
-import { Button } from '../../components/ui/button';
-import { Separator } from '../../components/ui/separator';
+import { RichButton } from '../../components/ui/rich-button';
 import { getVehicles, addVehicle, removeVehicle, getChallans, getFines } from '../../api/traffic';
 import { getMyComplaints } from '../../api/bribery';
 
@@ -120,8 +116,8 @@ export default function TrafficDashboard() {
             {/* Header with My Vehicles Dropdown */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn} className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                 <div>
-                    <h1 className="text-2xl md:text-3xl font-bold uppercase tracking-tight text-foreground">Traffic Dashboard</h1>
-                    <p className="text-sm text-muted-foreground font-medium mt-1">View e-challans and manage your vehicles</p>
+                    <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground">Traffic Dashboard</h1>
+                    <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-medium mt-1">View e-challans and manage your vehicles</p>
                 </div>
 
                 {/* My Vehicles Dropdown */}
@@ -152,21 +148,22 @@ export default function TrafficDashboard() {
                                 <div className="p-4 space-y-3 max-h-96 overflow-y-auto">
                                     {/* Add Vehicle Input */}
                                     <div className="flex gap-2">
-                                        <Input
+                                        <input
                                             placeholder="e.g. MH01CP6748"
                                             value={vehicleInput}
                                             onChange={(e) => setVehicleInput(e.target.value.toUpperCase())}
                                             onKeyDown={(e) => e.key === 'Enter' && handleAddVehicle()}
-                                            className="font-mono text-sm tracking-widest"
+                                            className="flex h-9 w-full rounded-lg border border-input bg-background px-3 py-1 font-mono text-sm tracking-widest text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                                         />
-                                        <Button
+                                        <RichButton
+                                            color="primary"
+                                            size="sm"
                                             onClick={handleAddVehicle}
                                             disabled={addingVehicle}
-                                            size="sm"
-                                            className="shrink-0 gap-1 cursor-pointer"
+                                            className="shrink-0"
                                         >
                                             <AddIcon size={14} />
-                                        </Button>
+                                        </RichButton>
                                     </div>
 
                                     {/* Vehicles List */}
@@ -219,42 +216,38 @@ export default function TrafficDashboard() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                 {summaryCards.map((card, i) => (
                     <motion.div key={card.title} initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: i * 0.08 }}>
-                        <Card className="border-border hover:border-primary/20 transition-all">
-                            <CardContent className="p-5">
-                                <p className="text-xs font-medium text-muted-foreground">{card.title}</p>
-                                <p className={`text-2xl font-bold mt-1 ${card.color}`}>{card.value}</p>
-                            </CardContent>
-                        </Card>
+                        <div className="border border-border rounded-xl hover:border-primary/20 transition-all p-5">
+                            <p className="text-[10px] uppercase tracking-[0.25em] font-medium text-muted-foreground">{card.title}</p>
+                            <p className={`text-2xl font-black mt-1 ${card.color}`}>{card.value}</p>
+                        </div>
                     </motion.div>
                 ))}
             </div>
 
-            {/* Report Misconduct CTA — moved to top */}
+            {/* Report Misconduct CTA */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.35 }}>
-                <Card className="border-primary/20 bg-gradient-to-r from-red-50 to-transparent hover:shadow-lg transition-all">
-                    <CardContent className="p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-                        <div className="flex items-start gap-4">
-                            <div className="p-3 rounded-lg bg-red-100 shrink-0">
-                                <ShieldIcon size={24} className="text-red-600" />
-                            </div>
-                            <div>
-                                <h3 className="text-sm font-bold text-foreground uppercase tracking-wide">Report Police Misconduct</h3>
-                                <p className="text-xs text-muted-foreground font-medium mt-1 max-w-md">
-                                    Experienced bribery, unfair treatment, or corruption by traffic police? File a confidential report with proof.
-                                    You can even fill the entire form using just your voice.
-                                </p>
-                            </div>
+                <div className="border border-red-200 rounded-xl bg-red-50/50 hover:shadow-lg transition-all p-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div className="flex items-start gap-4">
+                        <div className="p-3 rounded-xl bg-red-100 shrink-0">
+                            <ShieldIcon size={24} className="text-red-600" />
                         </div>
-                        <div className="flex gap-2 shrink-0">
-                            <Button variant="outline" onClick={() => navigate('/user/traffic/my-reports')} className="gap-2 cursor-pointer font-bold uppercase tracking-wider text-xs">
-                                My Reports
-                            </Button>
-                            <Button onClick={() => navigate('/user/traffic/report-bribery')} className="gap-2 cursor-pointer font-bold uppercase tracking-wider text-xs">
-                                File Report <ArrowRight size={14} />
-                            </Button>
+                        <div>
+                            <h3 className="text-sm font-black text-foreground uppercase tracking-wide">Report Police Misconduct</h3>
+                            <p className="text-xs text-muted-foreground font-medium mt-1 max-w-md">
+                                Experienced bribery, unfair treatment, or corruption by traffic police? File a confidential report with proof.
+                                You can even fill the entire form using just your voice.
+                            </p>
                         </div>
-                    </CardContent>
-                </Card>
+                    </div>
+                    <div className="flex gap-2 shrink-0">
+                        <RichButton color="zinc" size="sm" onClick={() => navigate('/user/traffic/my-reports')} className="font-bold uppercase tracking-wider text-xs">
+                            My Reports
+                        </RichButton>
+                        <RichButton color="red" size="sm" onClick={() => navigate('/user/traffic/report-bribery')} className="font-bold uppercase tracking-wider text-xs">
+                            File Report <ArrowRight size={14} />
+                        </RichButton>
+                    </div>
+                </div>
             </motion.div>
 
             {/* Recent Reports — moved here */}
@@ -282,12 +275,12 @@ export default function TrafficDashboard() {
                                 <div
                                     key={report.id}
                                     onClick={() => navigate('/user/traffic/my-reports')}
-                                    className="border border-border rounded-lg p-4 bg-card hover:border-primary/20 hover:shadow-sm transition-all cursor-pointer group flex items-center justify-between gap-3"
+                                    className="border border-border rounded-xl p-4 bg-card hover:border-primary/20 hover:shadow-sm transition-all cursor-pointer group flex items-center justify-between gap-3"
                                 >
                                     <div className="flex-1 min-w-0">
                                         <div className="flex items-center gap-2 mb-1">
                                             <span className="text-xs font-bold font-mono text-foreground">#{report.id}</span>
-                                            <Badge className={`text-[9px] font-bold uppercase tracking-wider ${rs.class}`}>{rs.label}</Badge>
+                                            <span className={`inline-flex items-center px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-md border ${rs.class}`}>{rs.label}</span>
                                         </div>
                                         <p className="text-xs font-bold text-foreground truncate">
                                             {report.complaintType === 'Other' ? report.otherComplaintType || 'Other' : report.complaintType}
@@ -304,7 +297,7 @@ export default function TrafficDashboard() {
                 </motion.div>
             )}
 
-            <Separator />
+            <div className="border-t border-border" />
 
             {/* Common Traffic Fines */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.45 }}>
@@ -319,22 +312,20 @@ export default function TrafficDashboard() {
                 <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
                     {topFines.map((fine, i) => (
                         <motion.div key={fine.id} initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.4 + i * 0.06 }}>
-                            <Card className="border-border hover:border-primary/20 hover:shadow-md transition-all cursor-pointer h-full" onClick={() => navigate('/user/traffic/fines')}>
-                                <CardContent className="p-4 flex flex-col h-full">
-                                    <p className="text-xs font-medium text-muted-foreground mb-1">{fine.offenseSection}</p>
-                                    <p className="text-xs font-bold text-foreground mb-3 line-clamp-2 flex-1">{fine.offenseName}</p>
-                                    <div className="flex items-center justify-between">
-                                        <span className="text-lg font-bold text-chart-5">₹{fine.fineAmount.toLocaleString('en-IN')}</span>
-                                        <span className="text-[9px] font-medium text-muted-foreground">Repeat: {fine.repetitiveFine === 'Same' ? 'Same' : `₹${fine.repetitiveFine}`}</span>
-                                    </div>
-                                </CardContent>
-                            </Card>
+                            <div className="border border-border rounded-xl hover:border-primary/20 hover:shadow-md transition-all cursor-pointer h-full p-4 flex flex-col" onClick={() => navigate('/user/traffic/fines')}>
+                                <p className="text-[10px] font-medium text-muted-foreground mb-1">{fine.offenseSection}</p>
+                                <p className="text-xs font-black text-foreground mb-3 line-clamp-2 flex-1">{fine.offenseName}</p>
+                                <div className="flex items-center justify-between">
+                                    <span className="text-lg font-black text-chart-5">₹{fine.fineAmount.toLocaleString('en-IN')}</span>
+                                    <span className="text-[9px] font-medium text-muted-foreground">Repeat: {fine.repetitiveFine === 'Same' ? 'Same' : `₹${fine.repetitiveFine}`}</span>
+                                </div>
+                            </div>
                         </motion.div>
                     ))}
                 </div>
             </motion.div>
 
-            <Separator />
+            <div className="border-t border-border" />
 
             {/* E-Challans Section */}
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.5 }}>
@@ -343,15 +334,13 @@ export default function TrafficDashboard() {
                 </h2>
 
                 {challans.length === 0 ? (
-                    <Card>
-                        <CardContent className="py-12 text-center">
-                            <p className="text-sm text-muted-foreground font-medium">
-                                {vehicles.length === 0
-                                    ? 'Link a vehicle above to see challans.'
-                                    : 'No challans found for your vehicles. Drive safe!'}
-                            </p>
-                        </CardContent>
-                    </Card>
+                    <div className="border border-border rounded-xl py-12 text-center bg-card">
+                        <p className="text-sm text-muted-foreground font-medium">
+                            {vehicles.length === 0
+                                ? 'Link a vehicle above to see challans.'
+                                : 'No challans found for your vehicles. Drive safe!'}
+                        </p>
+                    </div>
                 ) : (
                     <div className="space-y-3">
                         {challans.map((challan, i) => {
@@ -364,15 +353,15 @@ export default function TrafficDashboard() {
                                     variants={fadeIn}
                                     transition={{ delay: 0.5 + i * 0.04 }}
                                     onClick={() => navigate(`/user/traffic/challan/${challan.id}`)}
-                                    className="border border-border rounded-lg p-5 bg-card hover:border-primary/20 hover:shadow-md transition-all cursor-pointer group"
+                                    className="border border-border rounded-xl p-5 bg-card hover:border-primary/20 hover:shadow-md transition-all cursor-pointer group"
                                 >
                                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-1.5">
-                                                <span className="text-xs font-bold font-mono tracking-wider text-foreground">{challan.challanNumber}</span>
-                                                <Badge className={`text-[9px] font-bold uppercase tracking-wider ${sc.class}`}>{sc.label}</Badge>
+                                                <span className="text-xs font-black font-mono tracking-wider text-foreground">{challan.challanNumber}</span>
+                                                <span className={`inline-flex items-center px-2 py-0.5 text-[9px] font-bold uppercase tracking-wider rounded-md border ${sc.class}`}>{sc.label}</span>
                                             </div>
-                                            <p className="text-sm font-bold text-foreground truncate">{challan.fine?.offenseName}</p>
+                                            <p className="text-sm font-black text-foreground truncate">{challan.fine?.offenseName}</p>
                                             <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground/60">
                                                 <span>{challan.vehicleNumber}</span>
                                                 {challan.location && <span>{challan.location}</span>}
@@ -380,7 +369,7 @@ export default function TrafficDashboard() {
                                             </div>
                                         </div>
                                         <div className="flex items-center gap-3">
-                                            <span className="text-xl font-bold text-chart-5">₹{challan.amount.toLocaleString('en-IN')}</span>
+                                            <span className="text-xl font-black text-chart-5">₹{challan.amount.toLocaleString('en-IN')}</span>
                                             <ArrowRight size={16} className="text-muted-foreground/40 group-hover:text-primary group-hover:translate-x-1 transition-all" />
                                         </div>
                                     </div>

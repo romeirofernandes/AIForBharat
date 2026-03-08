@@ -4,6 +4,7 @@ import { getAggregatedIssues, getResolutionFlow } from '../../api/issues';
 import { getClusterWorkflows } from '../../api/workflows';
 import ResolutionFlow from '../../components/ResolutionFlow';
 import WorkflowStepPanel from '../../components/WorkflowStepPanel';
+import { RichButton } from '../../components/ui/rich-button';
 import { toast } from 'sonner';
 import {
     Tick01Icon,
@@ -138,7 +139,7 @@ export default function AdminIssueClusters() {
     return (
         <div className="w-full space-y-6">
             <motion.div initial="hidden" animate="visible" variants={fadeIn}>
-                <h1 className="text-2xl md:text-3xl font-extrabold uppercase tracking-tight text-foreground flex items-center gap-3">
+                <h1 className="text-2xl md:text-3xl font-black uppercase tracking-tight text-foreground flex items-center gap-3">
                     <Grid01Icon size={28} className="text-primary" />
                     Issue Clusters
                 </h1>
@@ -148,17 +149,17 @@ export default function AdminIssueClusters() {
             </motion.div>
 
             <motion.div initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: 0.05 }} className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                <div className="border border-border/60 rounded-2xl p-6 bg-card shadow-sm">
-                    <p className="text-xs text-muted-foreground font-medium mb-1">Total Issues</p>
-                    <p className="text-3xl font-bold text-foreground">{totalIssues}</p>
+                <div className="border border-border/60 rounded-xl p-5 bg-card">
+                    <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-medium mb-1">Total Issues</p>
+                    <p className="text-3xl font-black text-foreground">{totalIssues}</p>
                 </div>
-                <div className="border border-border/60 rounded-2xl p-6 bg-card shadow-sm">
-                    <p className="text-xs text-muted-foreground font-medium mb-1">Clusters Found</p>
-                    <p className="text-3xl font-bold text-foreground">{clusters.length}</p>
+                <div className="border border-border/60 rounded-xl p-5 bg-card">
+                    <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-medium mb-1">Clusters Found</p>
+                    <p className="text-3xl font-black text-foreground">{clusters.length}</p>
                 </div>
-                <div className="border border-border/60 rounded-2xl p-6 bg-card shadow-sm">
-                    <p className="text-xs text-muted-foreground font-medium mb-1">Hotspot Type</p>
-                    <p className="text-lg font-semibold text-primary truncate">
+                <div className="border border-border/60 rounded-xl p-5 bg-card">
+                    <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground font-medium mb-1">Hotspot Type</p>
+                    <p className="text-lg font-black text-primary truncate">
                         {clusters.length > 0 ? clusters[0].incidentType : '—'}
                     </p>
                 </div>
@@ -169,7 +170,7 @@ export default function AdminIssueClusters() {
                     <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
                 </div>
             ) : clusters.length === 0 ? (
-                <div className="border border-dashed border-border rounded-2xl p-32 bg-card text-center">
+                <div className="border border-dashed border-border rounded-xl p-32 bg-card text-center">
                     <p className="text-sm text-muted-foreground font-medium">Queue clear — no clusters found</p>
                 </div>
             ) : (
@@ -183,7 +184,7 @@ export default function AdminIssueClusters() {
                             <motion.div
                                 key={`${cluster.incidentType}-${cluster.latitude}-${cluster.longitude}-${i}`}
                                 initial="hidden" animate="visible" variants={fadeIn} transition={{ delay: i * 0.04 }}
-                                className={`border border-border/80 rounded-2xl bg-card hover:border-primary/30 hover:shadow-xl transition-all overflow-hidden ${expandedIndex === i ? 'ring-2 ring-primary/10' : ''}`}
+                                className={`border border-border/80 rounded-xl bg-card hover:border-primary/30 hover:shadow-xl transition-all overflow-hidden ${expandedIndex === i ? 'ring-2 ring-primary/10' : ''}`}
                             >
                                 <div className="p-6 cursor-pointer" onClick={() => {
                                     const next = expandedIndex === i ? null : i;
@@ -276,17 +277,18 @@ export default function AdminIssueClusters() {
                                                 </div>
 
                                                 <div className="flex items-center gap-4 pt-2">
-                                                    <button
+                                                    <RichButton
+                                                        color="primary"
                                                         onClick={(e) => { e.stopPropagation(); handleGenerateFlow(cluster, i); }}
                                                         disabled={isFlowLoading}
-                                                        className="h-11 inline-flex items-center justify-center gap-2 px-6 rounded-xl bg-primary text-primary-foreground border border-primary text-[10px] font-black uppercase tracking-[0.2em] hover:opacity-90 transition-all shadow-lg shadow-primary/10 active:scale-[0.98] disabled:opacity-50"
+                                                        className="text-[10px] font-black uppercase tracking-[0.2em]"
                                                     >
                                                         {isFlowLoading ? (
                                                             <><span className="w-3.5 h-3.5 border-2 border-primary-foreground border-t-transparent rounded-full animate-spin" />Generating…</>
                                                         ) : (
                                                             <>{flow ? <RefreshIcon size={14} /> : <Route01Icon size={14} />} {flow ? 'Regenerate' : 'Generate'} Resolution Flow</>
                                                         )}
-                                                    </button>
+                                                    </RichButton>
                                                     {flow && !isFlowLoading && (
                                                         <span className="flex items-center gap-2 text-xs text-emerald-600 font-medium">
                                                             <Tick01Icon size={14} variant="solid" /> Workflow Active
@@ -296,7 +298,7 @@ export default function AdminIssueClusters() {
 
                                                 {(isFlowLoading || flow) && (
                                                     <div className="space-y-8 mt-4">
-                                                        <div className="bg-card border border-border/80 rounded-2xl overflow-hidden shadow-sm">
+                                                        <div className="bg-card border border-border/80 rounded-xl overflow-hidden shadow-sm">
                                                             <div className="px-6 py-4 bg-muted/30 border-b border-border/50 flex items-center justify-between">
                                                                 <p className="text-sm font-medium text-muted-foreground flex items-center gap-2">
                                                                     <Route01Icon size={14} variant="solid" className="text-primary" /> Visual Logic

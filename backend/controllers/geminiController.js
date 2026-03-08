@@ -1,5 +1,6 @@
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const { S3Client, GetObjectCommand } = require('@aws-sdk/client-s3');
+const prisma = require("../config/prisma"); 
 
 const geminiKey = process.env.GEMINI_API_KEY || process.env.GEMINI_API_URL || "dummy_key";
 const genAI = new GoogleGenerativeAI(geminiKey);
@@ -15,24 +16,32 @@ const s3Client = new S3Client({
 exports.generateDescription = async (req, res) => {
     try {
         const { currentDescription, department, incidentType } = req.body;
+
+        // Fetch user profile for age/gender context
+        const profile = await prisma.citizenProfile.findUnique({
+            where: { userId: req.user.userId },
+            select: { age: true, gender: true },
+        });
+        const age = profile?.age || null;
+        const gender = profile?.gender || null;
+        const persona = [age && `${age} year old`, gender].filter(Boolean).join(' ') || 'citizen';
         
-        let prompt = `Act as a civil infrastructure expert. Generate a professional, detailed, and urgent incident report description for the ${department || 'municipal'} department regarding a ${incidentType || 'issue'}.`;
+        let prompt = `Write a very brief 1-2 sentence description of this civic issue as reported by a ${persona} from India. English only. The issue is about "${incidentType || 'an issue'}" for the ${department || 'municipal'} department.`;
                 
                 if (currentDescription && currentDescription.trim().length > 0) {
-                    prompt += ` Incorporate the following user context: "${currentDescription}".`;
+                    prompt += ` The reporter says: "${currentDescription}".`;
                 } else {
-                    prompt += ` The user has not provided a text description, so rely primarily on the image analysis.`;
+                    prompt += ` The user has not provided text — describe solely based on the image.`;
                 }
 
                 prompt += `
-                Guidelines:
-                - Be objective, factual, and concise.
-                - Highlight potential safety hazards and urgency.
-                - Estimate the severity if possible.
-                - Use professional language suitable for official records.
-                - Do not include greetings or sign-offs.
-                - Output ONLY the description text.
-                `;
+Rules:
+- Maximum 2 sentences, keep it very short and clear.
+- Write in first person as if the citizen is reporting it.
+- Be factual, mention what is visible.
+- Do NOT include greetings, sign-offs, or filler.
+- Output ONLY the description text.
+`;
         const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
         let result;
 

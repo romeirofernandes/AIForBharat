@@ -24,6 +24,7 @@ import ChallanDetails from './pages/user/ChallanDetails';
 import DiscussionForum from './pages/user/DiscussionForum';
 import ReportBribery from './pages/user/ReportBribery';
 import MyBriberyReports from './pages/user/MyBriberyReports';
+import WhatsAppPage from './pages/user/WhatsAppPage';
 
 // Admin pages
 import AdminDashboard from './pages/admin/AdminDashboard';
@@ -64,6 +65,7 @@ export default function App() {
           <Route path="traffic/report-bribery" element={<ReportBribery />} />
           <Route path="traffic/my-reports" element={<MyBriberyReports />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="whatsapp" element={<WhatsAppPage />} />
         </Route>
 
         {/* Admin routes */}

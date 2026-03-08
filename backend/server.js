@@ -7,6 +7,7 @@ const app = express();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // Routes
 const authRoutes = require("./routes/authRoutes");
@@ -16,6 +17,7 @@ const geminiRoutes = require("./routes/geminiRoutes");
 const trafficRoutes = require("./routes/trafficRoutes");
 const forumRoutes = require("./routes/forumRoutes");
 const briberyRoutes = require("./routes/briberyRoutes");
+const whatsappRoutes = require("./routes/whatsappRoutes");
 
 app.use("/api/auth", authRoutes);
 app.use("/api/issues", issueRoutes);
@@ -24,6 +26,7 @@ app.use("/api/gemini", geminiRoutes);
 app.use("/api/traffic", trafficRoutes);
 app.use("/api/forum", forumRoutes);
 app.use("/api/bribery", briberyRoutes);
+app.use("/api/whatsapp", whatsappRoutes);
 
 app.get("/", (req, res) => {
     res.json({ message: "Civic Intelligence API running" });

@@ -9,5 +9,6 @@ router.post("/signup", authController.signup);
 router.post("/login", authController.login);
 router.get("/profile", requireAuth, authController.getProfile);
 router.put("/profile", requireAuth, upload.single("profileImage"), authController.updateProfile);
+router.post("/whatsapp/generate-otp", requireAuth, authController.generateWhatsappOtp);
 
 module.exports = router;

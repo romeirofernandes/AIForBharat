@@ -20,6 +20,7 @@ import {
     MessageMultiple01Icon as ForumIcon,
     DatabaseIcon as ClustersIcon,
     SecurityCheckIcon as BriberyIcon,
+    SmartPhone01Icon as WhatsAppIcon,
 } from 'hugeicons-react';
 
 const userLinks = [
@@ -28,6 +29,7 @@ const userLinks = [
     { to: '/user/complaints', label: 'My Complaints', icon: Complaints },
     { to: '/user/forum', label: 'The Civic Wire', icon: ForumIcon },
     { to: '/user/traffic', label: 'Traffic', icon: TrafficIcon },
+    { to: '/user/whatsapp', label: 'WhatsApp Bot', icon: WhatsAppIcon },
 ];
 
 const adminLinks = [

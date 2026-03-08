@@ -143,7 +143,7 @@ export default function ReputationBadge({ reputation, compact = false }) {
                     { label: 'Votes Cast', value: stats?.votesCast ?? 0, icon: Agreement01Icon },
                 ].map((stat) => (
                     <div key={stat.label} className="border border-border rounded-lg p-4 bg-card text-center group">
-                        <stat.icon size={16} className="mx-auto mb-1 text-muted-foreground group-hover:text-primary transition-colors" />
+                        <HugeiconsIcon icon={stat.icon} size={16} color="currentColor" strokeWidth={1.5} className="mx-auto mb-1 text-muted-foreground group-hover:text-primary transition-colors" />
                         <p className="text-2xl font-black text-foreground">{stat.value}</p>
                         <p className="text-xs font-medium text-muted-foreground mt-0.5">{stat.label}</p>
                     </div>
@@ -153,8 +153,8 @@ export default function ReputationBadge({ reputation, compact = false }) {
             {/* Achievements */}
             {achievements && achievements.length > 0 && (
                 <div>
-                    <p className="text-xs font-medium text-muted-foreground mb-3 flex items-center gap-2">
-                        <ChampionIcon size={12} /> Achievements
+                    <p className="text-[10px] font-bold uppercase tracking-[0.25em] text-muted-foreground mb-3 flex items-center gap-2">
+                        <HugeiconsIcon icon={ChampionIcon} size={12} color="currentColor" strokeWidth={1.5} /> Achievements
                     </p>
                     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
                         {achievements.map((a) => (

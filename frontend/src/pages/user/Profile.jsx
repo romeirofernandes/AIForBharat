@@ -9,6 +9,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import ReputationBadge from '../../components/ReputationBadge';
 import { getMyReputation } from '../../api/users';
+import { RichButton } from '../../components/ui/rich-button';
 import {
     UserIcon,
     Camera01Icon,
@@ -250,9 +251,9 @@ export default function Profile() {
                             </div>
                         </div>
                         {!isEditing && (
-                            <button onClick={() => setIsEditing(true)} className="h-11 inline-flex items-center gap-2 px-6 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground font-black text-[10px] uppercase tracking-[0.2em] rounded-xl transition-all border border-primary/20 shadow-lg shadow-primary/5 active:scale-[0.98] cursor-pointer">
+                            <RichButton color="primary" onClick={() => setIsEditing(true)}>
                                 <Edit01Icon size={14} /> Edit Profile
-                            </button>
+                            </RichButton>
                         )}
                     </div>
 
@@ -325,16 +326,17 @@ export default function Profile() {
                             </div>
 
                             <div className="flex items-center gap-3 pt-4 border-t border-border/50">
-                                <button
+                                <RichButton
                                     type="submit"
+                                    color="primary"
                                     disabled={isLoading}
-                                    className="h-10 px-6 bg-primary text-primary-foreground rounded-lg font-bold text-[10px] uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer"
                                 >
                                     {isLoading ? 'Saving...' : 'Save Changes'}
-                                </button>
+                                </RichButton>
                                 {profile.name && (
-                                    <button
+                                    <RichButton
                                         type="button"
+                                        color="default"
                                         onClick={() => {
                                             setIsEditing(false);
                                             setFormData({ name: profile.name || '', age: profile.age || '', gender: profile.gender || '' });
@@ -343,10 +345,9 @@ export default function Profile() {
                                             setProfileImage(null);
                                             setImagePreview(null);
                                         }}
-                                        className="h-10 px-6 bg-muted/50 text-muted-foreground hover:text-foreground rounded-lg font-bold text-[10px] uppercase tracking-wider transition-colors cursor-pointer"
                                     >
                                         Cancel
-                                    </button>
+                                    </RichButton>
                                 )}
                             </div>
                         </form>
@@ -430,12 +431,9 @@ export default function Profile() {
                             <div className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${whatsappUser?.isActive ? 'bg-green-500/10 text-green-600' : 'bg-muted/50 text-muted-foreground'}`}>
                                 {whatsappUser?.isActive ? '● Active' : '○ Inactive'}
                             </div>
-                            <button
-                                onClick={() => navigate('/user/whatsapp')}
-                                className="px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-primary-foreground font-bold text-[10px] uppercase tracking-wider rounded-md transition-all cursor-pointer"
-                            >
+                            <RichButton color="default" size="sm" onClick={() => navigate('/user/whatsapp')}>
                                 Docs
-                            </button>
+                            </RichButton>
                         </div>
                     </div>
 
@@ -451,13 +449,13 @@ export default function Profile() {
                                     placeholder="+919876543210"
                                     className="flex-1 h-11 px-4 rounded-lg bg-muted/40 border border-border focus:border-primary focus:ring-1 focus:ring-primary outline-none transition-all text-sm font-mono"
                                 />
-                                <button
+                                <RichButton
+                                    color="primary"
                                     onClick={handleGenerateOtp}
                                     disabled={otpLoading}
-                                    className="h-11 px-5 bg-primary text-primary-foreground rounded-lg font-bold text-[10px] uppercase tracking-wider hover:opacity-90 transition-opacity disabled:opacity-50 cursor-pointer whitespace-nowrap"
                                 >
                                     {otpLoading ? 'Generating...' : 'Generate OTP'}
-                                </button>
+                                </RichButton>
                             </div>
                             <p className="text-[10px] text-muted-foreground ml-1">10-digit number · +91 added automatically for India</p>
                         </div>

@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "prisma generate && nodemon server.js",
-    "start": "node server.js",
+    "dev": "prisma migrate deploy && prisma generate && nodemon server.js",
+    "start": "prisma migrate deploy && prisma generate && node server.js",
     "prisma": "prisma",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev"

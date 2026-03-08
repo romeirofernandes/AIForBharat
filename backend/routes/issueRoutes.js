@@ -11,6 +11,8 @@ router.get("/my", requireAuth, issueController.getMyIssues);
 
 // Admin routes
 router.get("/all", requireAuth, requireAdmin, issueController.getAllIssues);
+router.get("/aggregated", requireAuth, requireAdmin, issueController.getAggregatedIssues);
+router.post("/resolution-flow", requireAuth, requireAdmin, issueController.getResolutionFlow);
 router.patch("/:id/status", requireAuth, requireAdmin, issueController.updateIssueStatus);
 
 // Stats (admin)

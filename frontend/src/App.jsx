@@ -26,6 +26,7 @@ import DiscussionForum from './pages/user/DiscussionForum';
 // Admin pages
 import AdminDashboard from './pages/admin/AdminDashboard';
 import AdminIssues from './pages/admin/AdminIssues';
+import AdminIssueClusters from './pages/admin/AdminIssueClusters';
 import AdminUsers from './pages/admin/AdminUsers';
 import AdminAnalytics from './pages/admin/AdminAnalytics';
 
@@ -67,6 +68,7 @@ export default function App() {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<AdminDashboard />} />
           <Route path="issues" element={<AdminIssues />} />
+          <Route path="clusters" element={<AdminIssueClusters />} />
           <Route path="users" element={<AdminUsers />} />
           <Route path="analytics" element={<AdminAnalytics />} />
           <Route path="profile" element={<Profile />} />

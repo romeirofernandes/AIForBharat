@@ -26,3 +26,15 @@ export function updateIssueStatus(id, status) {
 export function getStats() {
     return apiFetch('/issues/stats');
 }
+
+export function getAggregatedIssues() {
+    return apiFetch('/issues/aggregated');
+}
+
+export function getResolutionFlow({ incidentType, department, count, sampleDescriptions }) {
+    return apiFetch('/issues/resolution-flow', {
+        method: 'POST',
+        body: JSON.stringify({ incidentType, department, count, sampleDescriptions }),
+    });
+}
+
